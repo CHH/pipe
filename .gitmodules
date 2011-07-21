@@ -1,0 +1,6 @@
+[submodule "vendor/Symfony/Component/Finder"]
+	path = vendor/Symfony/Component/Finder
+	url = git://github.com/symfony/Finder
+[submodule "vendor/Symfony/Component/HttpFoundation"]
+	path = vendor/Symfony/Component/HttpFoundation
+	url = git://github.com/symfony/HttpFoundation.git
