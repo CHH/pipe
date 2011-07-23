@@ -15,4 +15,8 @@ class Context extends \SplDoublyLinkedList
     {
         return $this->environment;
     }
+
+    function toString()
+    {
+    }
 }

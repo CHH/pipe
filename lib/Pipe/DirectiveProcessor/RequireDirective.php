@@ -21,11 +21,17 @@ class RequireDirective implements Directive
 
     function execute(Context $context, array $argv)
     {
-        if ($this->processor->hasProcessed($argv[0])) {
+        $path = $argv[0];
+
+        if ($this->processor->hasProcessed($path)) {
             return;
         }
 
+        if (preg_match('/^\.(\/|\\\\)/', $path)) {
+            $path = $this->processor->getDirname() . DIRECTORY_SEPARATOR . $path;
+        }
+
         $env = $context->getEnvironment();
-        $context->push($env[$argv[0]]);
+        $context->push($env[$path]);
     }
 }

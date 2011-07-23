@@ -2,7 +2,8 @@
 
 namespace Pipe;
 
-use Pipe\DirectiveProcessor\Directive,
+use Pipe\DirectiveProcessor\Parser,
+    Pipe\DirectiveProcessor\Directive,
     Pipe\DirectiveProcessor\RequireDirective;
 
 /**
@@ -42,20 +43,6 @@ class DirectiveProcessor extends Template
     protected $directives;
 
     /**
-     * List of processed files, to avoid following circular references
-     * @var array
-     */
-    protected $processed = array();
-
-    function __construct(Parser $parser = null)
-    {
-        $this->parser = $parser ?: new Parser;
-
-        // Require Standard Directives
-        $this->register(new RequireDirective);
-    }
-
-    /**
      * Checks if the Directive is registered
      *
      * @param string $name
@@ -92,11 +79,16 @@ class DirectiveProcessor extends Template
 
     function prepare()
     {
+        $this->parser = new Parser;
+
+        // Require Standard Directives
+        $this->register(new RequireDirective);
+
         $this->processed = array();
         $this->tokens = $this->parser->parse($this->getData());
     }
 
-    function evaluate(Context $context, $vars)
+    function evaluate(Context $context, $vars = null)
     {
         $newSource = '';
 
@@ -115,7 +107,7 @@ class DirectiveProcessor extends Template
                     throw new \RuntimeException(sprintf(
                         "Undefined Directive \"%s\" in %s on line %d",
                         $directive,
-                        $asset->getSourceRoot() . DIRECTORY_SEPARATOR . $asset->getSourcePath(),
+                        $this->file,
                         $line
                     ));
                 }
@@ -124,13 +116,5 @@ class DirectiveProcessor extends Template
         }
 
         return $newSource;
-    }
-
-    /**
-     * Checks if the source file has been processed
-     */
-    function hasProcessed($sourceFile)
-    {
-        return in_array($sourceFile, $this->processed);
     }
 }
