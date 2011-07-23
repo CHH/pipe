@@ -23,15 +23,14 @@ class RequireDirective implements Directive
     {
         $path = $argv[0];
 
-        if ($this->processor->hasProcessed($path)) {
-            return;
-        }
-
         if (preg_match('/^\.(\/|\\\\)/', $path)) {
             $path = $this->processor->getDirname() . DIRECTORY_SEPARATOR . $path;
         }
 
-        $env = $context->getEnvironment();
-        $context->push($env[$path]);
+        if ($context->has($path)) {
+            return false;
+        }
+
+        $context->push($context->getEnvironment()->find($path));
     }
 }

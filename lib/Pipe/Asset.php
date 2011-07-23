@@ -9,7 +9,7 @@ class Asset
     /**
      * @var SplFileInfo
      */
-    protected $file;
+    protected $path;
 
     /**
      * List of the file's extensions
@@ -17,10 +17,10 @@ class Asset
      */
     protected $extensions;
 
-    function __construct(Environment $environment, $file)
+    function __construct(Environment $environment, $path)
     {
         $this->environment = $environment;
-        $this->file = $file;
+        $this->path = $path;
     }
 
     /**
@@ -46,6 +46,16 @@ class Asset
 
     function getBasename()
     {
-        return pathinfo($this->file, PATHINFO_BASENAME);
+        return pathinfo($this->path, PATHINFO_BASENAME);
+    }
+
+    function getDirname()
+    {
+        return pathinfo($this->path, PATHINFO_DIRNAME);
+    }
+
+    function getPath()
+    {
+        return $this->path;
     }
 }

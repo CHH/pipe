@@ -14,10 +14,57 @@ class Template
      */
     protected $data;
 
-    function __construct($file)
+    /**
+     * Engine specific options
+     * @var array
+     */
+    protected $options;
+
+    static protected $engineInitialized = false;
+
+    /**
+     * Constructor
+     *
+     * @param string|callback Either a file name, data, or a callback
+     *                        which returns the template data
+     * @param array $options
+     */
+    function __construct($fileOrData, array $options = array())
     {
-        $this->file = $file;
+        if (realpath($fileOrData)) {
+            $this->file = $fileOrData;
+            $this->data = @file_get_contents($fileOrData);
+        
+        // Call a supplied file reader
+        } else if (is_callable($fileOrData)) {
+            $this->data = call_user_func($fileOrData, $this);
+
+        } else if (is_string($fileOrData)) {
+            $this->data = $fileOrData;
+
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                "Constructor expects either a file path, the template data
+                or a file reader callback as first argument, %s given",
+                gettype($fileOrData)
+            ));
+        }
+
+        $this->options = $options;
+
+        if (!static::$engineInitialized) {
+            static::initEngine();
+            static::$engineInitialized = true;
+        }
+
+        $this->prepare();
     }
+
+    function prepare()
+    {}
+
+    static function initEngine()
+    {}
 
     /**
      * Renders the template and returns its content
@@ -35,9 +82,6 @@ class Template
         return $this->getData();
     }
 
-    function prepare()
-    {}
-
     function setData($data)
     {
         $this->data = $data;
@@ -45,7 +89,7 @@ class Template
 
     function getData()
     {
-        return $this->data ?: $this->data = @file_get_contents($this->file);
+        return $this->data;
     }
 
     function getDirname()

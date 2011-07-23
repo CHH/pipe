@@ -17,11 +17,81 @@ class Environment implements \ArrayAccess
      * Mapping of extension to mime type
      * @var array
      */
-    protected $mimeTypes;
+    protected $mimeTypes = array(
+        'js' => 'application/javascript',
+        'css' => 'text/css'
+    );
+
+    /**
+     * Holds the processors for each mimeType
+     */
+    protected $processors = array();
+
+    /**
+     * Processors, which are run indepently of content type before
+     * the content-specific processor is run.
+     */
+    protected $preProcessors = array();
 
     function __construct()
     {
         $this->loadPaths = new PathStack;
+
+        // Register default processors
+        $this->registerPreProcessor('\\Pipe\\DirectiveProcessor');
+    }
+
+    function getPreProcessors()
+    {
+        return $this->preProcessors;
+    }
+
+    function getProcessorsForMimeType($mimeType)
+    {
+        if (empty($this->processors[$mimeType])) {
+            return array();
+        }
+        return $this->processors[$mimeType];
+    }
+
+    function registerPreProcessor($processor)
+    {
+        if (!class_exists($processor)) {
+            throw new \InvalidArgumentException("Class $processor is not defined");
+        }
+
+        if (!is_subclass_of($processor, "\\Pipe\\Template")) {
+            throw new \InvalidArgumentException(sprintf(
+                "A Processor must be a subclass of \\Pipe\\Template, subclass 
+                of %s given",
+                get_parent_class($processor)
+            ));
+        }
+
+        $this->preProcessors[] = $processor;
+        return $this;
+    }
+
+    function registerProcessor($mimeType, $processor)
+    {
+        if (!class_exists($processor)) {
+            throw new \InvalidArgumentException("Class $processor is not defined");
+        }
+
+        if (!is_subclass_of($processor, "\\Pipe\\Template")) {
+            throw new \InvalidArgumentException(sprintf(
+                "A Processor must be a subclass of \\Pipe\\Template, subclass 
+                of %s given",
+                get_parent_class($processor)
+            ));
+        }
+
+        if (!is_array($this->processors[$mimeType])) {
+            $this->processors[$mimeType] = array();
+        }
+
+        $this->processors[$mimeType][] = $processor;
+        return $this;
     }
 
     /**
@@ -55,18 +125,19 @@ class Environment implements \ArrayAccess
         }
 
         $finder = $this->getFinder()->name($path->toString());
-
-        if (1 === iterator_count($finder)) {
-            $file = current($finder);
-            return new Asset($this, (string) $file);
-        }
-
         $self = $this;
 
-        return array_map(
-            function($file) use ($self) { return new Asset($self, (string) $file); },
+        $assets = array_map(
+            function($file) use ($self) { 
+                return new Asset($self, (string) $file); 
+            },
             iterator_to_array($finder)
         );
+
+        if (1 == sizeof($assets)) {
+            return current($assets);
+        }
+        return $assets;
     }
 
     function registerMimeType($extension, $mimeType)
@@ -81,9 +152,7 @@ class Environment implements \ArrayAccess
         $extension = Pathname::normalizeExtension($extension);
 
         if (!$this->hasMimeType($extension)) {
-            throw new \OutOfBoundsException(
-                "No MIME Type registered for extension \"$extension\""
-            );
+            return "appliction/octet-stream";
         }
         return $this->mimeTypes[$extension];
     }
