@@ -20,6 +20,6 @@ class DirectiveProcessorTest extends \PHPUnit_Framework_TestCase
 
         $context = new Context($env);
 
-        echo $processor->render($context);
+        $processor->render($context);
     }
 }

@@ -124,20 +124,8 @@ class Environment implements \ArrayAccess
             return new Asset($this, $path->toString());
         }
 
-        $finder = $this->getFinder()->name($path->toString());
-        $self = $this;
-
-        $assets = array_map(
-            function($file) use ($self) { 
-                return new Asset($self, (string) $file); 
-            },
-            iterator_to_array($finder)
-        );
-
-        if (1 == sizeof($assets)) {
-            return current($assets);
-        }
-        return $assets;
+        $assetPath = $this->loadPaths->find($path);
+        return new Asset($this, $assetPath);
     }
 
     function registerMimeType($extension, $mimeType)

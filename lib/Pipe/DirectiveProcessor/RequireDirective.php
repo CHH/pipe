@@ -3,7 +3,8 @@
 namespace Pipe\DirectiveProcessor;
 
 use Pipe\Context,
-    Pipe\DirectiveProcessor;
+    Pipe\DirectiveProcessor,
+    Pipe\Asset;
 
 class RequireDirective implements Directive
 {
@@ -27,10 +28,12 @@ class RequireDirective implements Directive
             $path = $this->processor->getDirname() . DIRECTORY_SEPARATOR . $path;
         }
 
-        if ($context->has($path)) {
-            return false;
+        $asset = $context->getEnvironment()->find($path);
+
+        if (!$asset instanceof Asset) {
+            throw new \RuntimeException("Asset $path not found");
         }
 
-        $context->push($context->getEnvironment()->find($path));
+        $context->push($asset->process($context));
     }
 }

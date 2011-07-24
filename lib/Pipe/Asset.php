@@ -4,6 +4,9 @@ namespace Pipe;
 
 class Asset
 {
+    /**
+     * @var Environment
+     */
     protected $environment;
 
     /**
@@ -57,5 +60,39 @@ class Asset
     function getPath()
     {
         return $this->path;
+    }
+
+    function process(Context $context)
+    {
+        $preProcessors = $this->environment->getPreProcessors();
+
+        $content = null;
+        foreach ($preProcessors as $processorClass) {
+            $p = new $processorClass($this->getPath(), $content);
+            $c = $p->render($context);
+            $content = function() use ($c) {
+                return $c;
+            };
+        }
+
+        $processors = array();
+        foreach ($this->getExtensions() as $ext) {
+            $mimeType = $this->environment->getMimeType($ext);
+            $processors = array_merge(
+                $processors, 
+                $this->environment->getProcessorsForMimeType($mimeType)
+            );
+        }
+
+        $content = null;
+        foreach ($processors as $processorClass) {
+            $p = new $processorClass($this->getPath(), $content);
+            $c = $p->render($context);
+            $content = function() use ($c) {
+                return $c;
+            };
+        }
+
+        $context->push($c);
     }
 }

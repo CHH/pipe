@@ -20,50 +20,51 @@ class Template
      */
     protected $options;
 
+    /**
+     * Indicates that the underlying template engine (if any) 
+     * is initialized, this happens only once
+     * @var boolean
+     */
     static protected $engineInitialized = false;
 
     /**
      * Constructor
      *
-     * @param string|callback Either a file name, data, or a callback
-     *                        which returns the template data
-     * @param array $options
+     * @param string   $file     Template File Name
+     * @param callback $reader   Callback which returns the template's data
+     * @param array    $options  Engine Options
      */
-    function __construct($fileOrData, array $options = array())
+    function __construct($file, $reader = null, array $options = array())
     {
-        if (realpath($fileOrData)) {
-            $this->file = $fileOrData;
-            $this->data = @file_get_contents($fileOrData);
-        
-        // Call a supplied file reader
-        } else if (is_callable($fileOrData)) {
-            $this->data = call_user_func($fileOrData, $this);
-
-        } else if (is_string($fileOrData)) {
-            $this->data = $fileOrData;
-
-        } else {
-            throw new \InvalidArgumentException(sprintf(
-                "Constructor expects either a file path, the template data
-                or a file reader callback as first argument, %s given",
-                gettype($fileOrData)
-            ));
-        }
-
+        $this->file = $file;
         $this->options = $options;
 
+        if (is_callable($reader)) {
+            $this->data = call_user_func($reader, $this);
+        } else {
+            $this->data = @file_get_contents($this->file);
+        }
+
+        // Call the initializ
         if (!static::$engineInitialized) {
-            static::initEngine();
+            $this->initEngine();
             static::$engineInitialized = true;
         }
 
         $this->prepare();
     }
 
+    /**
+     * Called after the constructor
+     */
     function prepare()
     {}
 
-    static function initEngine()
+    /**
+     * Called only once to initialize underlying engine, for example
+     * require it.
+     */
+    function initEngine()
     {}
 
     /**
@@ -90,6 +91,11 @@ class Template
     function getData()
     {
         return $this->data;
+    }
+
+    function getPath()
+    {
+        return $this->file;
     }
 
     function getDirname()

@@ -20,18 +20,18 @@ class Server
 
     function dispatch(Request $request)
     {
-	$path    = ltrim($request->getRequestUri(), '/');
-	$context = new Context($this->environment);
-	$asset   = $this->environment[$path];
+        $path    = ltrim($request->getRequestUri(), '/');
+        $context = new Context($this->environment);
+        $asset   = $this->environment[$path];
 
-	$context->push($context->process($asset));
+        $asset->process($context);
 
-	$response = new Response($context->getConcatenation());
-	$extensions = $asset->getExtensions();
+        $response = new Response($context->getConcatenation());
+        $extensions = $asset->getExtensions();
 
-	$contentType = $this->environment->getMimeType(array_shift($extensions));
-	$response->headers->set('Content-Type', $contentType);
+        $contentType = $this->environment->getMimeType(array_shift($extensions));
+        $response->headers->set('Content-Type', $contentType);
 
-	return $response;
+        return $response;
     }
 }
