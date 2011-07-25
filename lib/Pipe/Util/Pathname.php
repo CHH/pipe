@@ -25,9 +25,6 @@ class Pathname
 
     static function normalizeExtension($extension)
     {
-        if (empty($extension)) {
-            throw new \InvalidArgumentException("Extension cannot be empty");
-        }
         $extension = strtolower($extension);
 
         if ('.' == $extension[0]) {

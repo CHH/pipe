@@ -20,17 +20,16 @@ class Server
 
     function dispatch(Request $request)
     {
-        $path    = ltrim($request->getRequestUri(), '/');
-        $context = new Context($this->environment);
-        $asset   = $this->environment[$path];
+        $path  = ltrim($request->getRequestUri(), '/');
+        $asset = $this->environment[$path];
 
-        $asset->process($context);
+        $lastModified = new \DateTime;
+        $lastModified->setTimestamp($asset->getLastModified());
+        $lastModified->setTimezone(new \DateTimeZone("UTC"));
 
-        $response = new Response($context->getConcatenation());
-        $extensions = $asset->getExtensions();
-
-        $contentType = $this->environment->getMimeType(array_shift($extensions));
-        $response->headers->set('Content-Type', $contentType);
+        $response = new Response($asset->getBody());
+        $response->headers->set('Content-Type', $asset->getContentType());
+        $response->headers->set('Last-Modified', $lastModified->format(\DateTime::RFC1123));
 
         return $response;
     }

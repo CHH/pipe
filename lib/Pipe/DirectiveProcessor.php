@@ -29,7 +29,7 @@ use Pipe\DirectiveProcessor\Parser,
  *
  * @author Christoph Hochstrasser <christoph.hochstrasser@gmail.com>
  */
-class DirectiveProcessor extends Template
+class DirectiveProcessor extends Template\Base
 {
     /**
      * @var Pipe\DirectiveProcessor\Parser

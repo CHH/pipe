@@ -2,6 +2,9 @@
 
 namespace Pipe;
 
+use Pipe\Environment,
+    Pipe\Context;
+
 class Asset
 {
     /**
@@ -14,16 +17,88 @@ class Asset
      */
     protected $path;
 
+    protected $body;
+
     /**
      * List of the file's extensions
      * @var array
      */
     protected $extensions;
 
+    protected $dependencies = array();
+
     function __construct(Environment $environment, $path)
     {
         $this->environment = $environment;
         $this->path = $path;
+    }
+
+    function getBody()
+    {
+        if (null === $this->body) {
+            $ctx    = new Context($this->environment);
+            $result = "";
+
+            $body = $ctx->evaluate($this->path);
+
+            $this->dependencies = array_merge($this->dependencies, $ctx->getDependencyPaths());
+            
+            $result .= join("\n", $ctx->getDependencyAssets());
+            $result .= $body;
+
+            $this->body = $result;
+        }
+        return $this->body;
+    }
+
+    function getLastModified()
+    {
+        // Load the asset, if it's not loaded
+        if (!$this->body) {
+            $this->getBody();
+        }
+
+        $dependenciesLastModified = array_map(
+            function($dep) {
+                return filemtime($dep);
+            },
+            $this->dependencies
+        );
+
+        return max(filemtime($this->path), max($dependenciesLastModified));
+    }
+
+    function getContentType()
+    {
+        return $this->environment->getContentTypes()->get(
+            $this->getFormatExtension()
+        );
+    }
+
+    function getFormatExtension()
+    {
+        $environment = $this->environment;
+
+        return current(array_filter(
+            $this->getExtensions(), 
+            function($ext) use ($environment) {
+                return 
+                    $environment->getContentTypes()->get($ext) 
+                    and !$environment->getEngine($ext);
+            }
+        ));
+    }
+
+    function getEngineExtensions()
+    {
+        $environment = $this->environment;
+
+        return array_filter(
+            $this->getExtensions(),
+            function($ext) use ($environment) {
+                return $environment->getEngine($ext);
+            }
+        );
     }
 
     /**
@@ -42,9 +117,33 @@ class Asset
                 return array();
             }
 
-            $this->extensions = array_reverse(explode('.', substr($basename, $pos + 1)));
+            $this->extensions = explode('.', substr($basename, $pos + 1));
         }
         return $this->extensions;
+    }
+
+    function getProcessors()
+    {
+        $formatExtension = $this->getFormatExtension();
+        $contentType = $this->environment->getContentTypes()->get($formatExtension);
+
+        return array_merge(
+            $this->environment->getPreProcessors($contentType),
+            array_reverse($this->getEngines()),
+            $this->environment->getPostProcessors($contentType)
+        );
+    }
+
+    function getEngines()
+    {
+        $env = $this->environment;
+
+        return array_map(
+            function($ext) use ($env) {
+                return $env->getEngine($ext);
+            },
+            $this->getEngineExtensions()
+        );
     }
 
     function getBasename()
@@ -62,37 +161,14 @@ class Asset
         return $this->path;
     }
 
-    function process(Context $context)
+    protected function getEngineContentType()
     {
-        $preProcessors = $this->environment->getPreProcessors();
+        foreach ($this->getEngineExtensions() as $ext) {
+            $engine = $this->environment->getEngine($ext);
 
-        $content = null;
-        foreach ($preProcessors as $processorClass) {
-            $p = new $processorClass($this->getPath(), $content);
-            $c = $p->render($context);
-            $content = function() use ($c) {
-                return $c;
-            };
+            if (is_callable(array($engine, "getDefaultContentType"))) {
+                return $engine::getDefaultContentType();
+            }
         }
-
-        $processors = array();
-        foreach ($this->getExtensions() as $ext) {
-            $mimeType = $this->environment->getMimeType($ext);
-            $processors = array_merge(
-                $processors, 
-                $this->environment->getProcessorsForMimeType($mimeType)
-            );
-        }
-
-        $content = null;
-        foreach ($processors as $processorClass) {
-            $p = new $processorClass($this->getPath(), $content);
-            $c = $p->render($context);
-            $content = function() use ($c) {
-                return $c;
-            };
-        }
-
-        $context->push($c);
     }
 }

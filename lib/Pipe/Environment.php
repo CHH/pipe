@@ -4,6 +4,9 @@ namespace Pipe;
 
 use Pipe\Util\PathStack,
     Pipe\Util\Pathname,
+    Pipe\Util\ProcessorRegistry,
+    Pipe\Util\EngineRegistry,
+    Pipe\Util\ContentTypeRegistry,
     Symfony\Component\Finder\Finder;
 
 class Environment implements \ArrayAccess
@@ -14,84 +17,85 @@ class Environment implements \ArrayAccess
     protected $loadPaths;
 
     /**
-     * Mapping of extension to mime type
-     * @var array
+     * @var ContentTypeRegistry
      */
-    protected $mimeTypes = array(
-        'js' => 'application/javascript',
-        'css' => 'text/css'
-    );
+    protected $contentTypes;
 
     /**
-     * Holds the processors for each mimeType
+     * Engines per file extension
      */
-    protected $processors = array();
+    protected $engines = array();
 
     /**
-     * Processors, which are run indepently of content type before
-     * the content-specific processor is run.
+     * Processors are like engines, but are associated with
+     * a specific content type and one processor can be 
+     * associated with one or more content types
      */
-    protected $preProcessors = array();
+    protected $preProcessors;
+    protected $postProcessors;
 
     function __construct()
     {
         $this->loadPaths = new PathStack;
 
+        $this->contentTypes = new ContentTypeRegistry(array(
+            'css' => 'text/css',
+            'js' => 'application/javascript'
+        ));
+
+        $this->engines        = new EngineRegistry;
+        $this->preProcessors  = new ProcessorRegistry;
+        $this->postProcessors = new ProcessorRegistry;
+
         // Register default processors
-        $this->registerPreProcessor('\\Pipe\\DirectiveProcessor');
+        $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
+        $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
     }
 
-    function getPreProcessors()
+    function getPreProcessors($contentType = null)
     {
-        return $this->preProcessors;
+        if (null === $contentType) {
+            return $this->preProcessors;
+        }
+        return $this->preProcessors->get($contentType);
     }
 
-    function getProcessorsForMimeType($mimeType)
+    function getPostProcessors($contentType = null)
     {
-        if (empty($this->processors[$mimeType])) {
-            return array();
+        if (null === $contentType)
+        {
+            return $this->postProcessors;
         }
-        return $this->processors[$mimeType];
+        return $this->postProcessors->get($contentType);
     }
 
-    function registerPreProcessor($processor)
+    function getEngine($extension)
     {
-        if (!class_exists($processor)) {
-            throw new \InvalidArgumentException("Class $processor is not defined");
-        }
+        $extension = Pathname::normalizeExtension($extension);
+        return $this->engines->get($extension);
+    }
 
-        if (!is_subclass_of($processor, "\\Pipe\\Template")) {
-            throw new \InvalidArgumentException(sprintf(
-                "A Processor must be a subclass of \\Pipe\\Template, subclass 
-                of %s given",
-                get_parent_class($processor)
-            ));
-        }
-
-        $this->preProcessors[] = $processor;
+    function registerEngine($extension, $engine)
+    {
+        $this->engines->register($extension, $engine);
         return $this;
     }
 
-    function registerProcessor($mimeType, $processor)
+    function registerPreProcessor($mimeType, $processor)
     {
-        if (!class_exists($processor)) {
-            throw new \InvalidArgumentException("Class $processor is not defined");
-        }
-
-        if (!is_subclass_of($processor, "\\Pipe\\Template")) {
-            throw new \InvalidArgumentException(sprintf(
-                "A Processor must be a subclass of \\Pipe\\Template, subclass 
-                of %s given",
-                get_parent_class($processor)
-            ));
-        }
-
-        if (!is_array($this->processors[$mimeType])) {
-            $this->processors[$mimeType] = array();
-        }
-
-        $this->processors[$mimeType][] = $processor;
+        $this->preProcessors->register($mimeType, $processor);
         return $this;
+    }
+
+    function registerPostProcessor($mimeType, $processor)
+    {
+        $this->postProcessors->register($mimeType, $processor);
+        return $this;
+    }
+
+    function getContentTypes()
+    {
+        return $this->contentTypes;
     }
 
     /**
@@ -126,28 +130,6 @@ class Environment implements \ArrayAccess
 
         $assetPath = $this->loadPaths->find($path);
         return new Asset($this, $assetPath);
-    }
-
-    function registerMimeType($extension, $mimeType)
-    {
-        $extension = Pathname::normalizeExtension($extension);
-        $this->mimeTypes[$extension] = $mimeType;
-        return $this;
-    }
-
-    function getMimeType($extension)
-    {
-        $extension = Pathname::normalizeExtension($extension);
-
-        if (!$this->hasMimeType($extension)) {
-            return "appliction/octet-stream";
-        }
-        return $this->mimeTypes[$extension];
-    }
-
-    function hasMimeType($extension)
-    {
-        return isset($this->mimeTypes[Pathname::normalizeExtension($extension)]);
     }
 
     /**

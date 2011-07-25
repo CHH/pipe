@@ -1,10 +1,10 @@
 <?php
 
-namespace Pipe;
+namespace Pipe\Template;
 
 use Pipe\Context;
 
-class Template
+class Base
 {
     protected $file;
 
@@ -36,6 +36,10 @@ class Template
      */
     function __construct($file, $reader = null, array $options = array())
     {
+        if (!file_exists($file) or !is_readable($file)) {
+            throw new \InvalidArgumentException("File $file does not exist or is not readable");
+        }
+
         $this->file = $file;
         $this->options = $options;
 
@@ -93,9 +97,19 @@ class Template
         return $this->data;
     }
 
+    function getLastModified()
+    {
+        return filemtime($this->file);
+    }
+
     function getPath()
     {
         return $this->file;
+    }
+
+    function getBasename()
+    {
+        return basename($this->file);
     }
 
     function getDirname()

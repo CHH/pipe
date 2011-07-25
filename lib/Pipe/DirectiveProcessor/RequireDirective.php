@@ -28,12 +28,10 @@ class RequireDirective implements Directive
             $path = $this->processor->getDirname() . DIRECTORY_SEPARATOR . $path;
         }
 
-        $asset = $context->getEnvironment()->find($path);
-
-        if (!$asset instanceof Asset) {
-            throw new \RuntimeException("Asset $path not found");
+        if (!pathinfo($path, PATHINFO_EXTENSION)) {
+            $path .= '.' . pathinfo($this->processor->getPath(), PATHINFO_EXTENSION);
         }
 
-        $context->push($asset->process($context));
+        $context->requireAsset($path);
     }
 }
