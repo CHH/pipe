@@ -20,7 +20,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getExtensionsAsArrayProvider
      */
-    function testGetExtensionsAsArrayOrder($path, $expected)
+    function testGetExtensionsAsArray($path, $expected)
     {
         $asset = new Asset(new Environment, $path);;
 

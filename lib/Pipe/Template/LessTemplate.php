@@ -20,7 +20,7 @@ class LessTemplate extends Base
         return "text/css";
     }
 
-    function render(Context $context, $vars = null)
+    protected function evaluate($context, $vars = null)
     {
         $lessBin = isset($options['less_bin']) 
             ? $options['less_bin'] : '/usr/local/bin/lessc';

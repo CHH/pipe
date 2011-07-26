@@ -77,7 +77,7 @@ class DirectiveProcessor extends Template\Base
         return $this;
     }
 
-    function prepare()
+    protected function prepare()
     {
         $this->parser = new Parser;
 
@@ -88,7 +88,7 @@ class DirectiveProcessor extends Template\Base
         $this->tokens = $this->parser->parse($this->getData());
     }
 
-    function evaluate(Context $context, $vars = null)
+    protected function evaluate($context, $vars = null)
     {
         $newSource = '';
 

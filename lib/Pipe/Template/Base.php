@@ -61,14 +61,14 @@ class Base
     /**
      * Called after the constructor
      */
-    function prepare()
+    protected function prepare()
     {}
 
     /**
      * Called only once to initialize underlying engine, for example
      * require it.
      */
-    function initEngine()
+    protected function initEngine()
     {}
 
     /**
@@ -77,12 +77,17 @@ class Base
      * @param  array $data
      * @return string
      */
-    function render(Context $context, $vars = null)
+    function render($scope, $vars = null)
     {
-        return $this->evaluate($context, $vars);
+        if (!is_object($scope)) {
+            throw new \InvalidArgumentException(
+                "Scope has to be an object"
+            );
+        }
+        return $this->evaluate($scope, $vars);
     }
 
-    function evaluate(Context $context, $vars = null)
+    protected function evaluate($scope, $vars = null)
     {
         return $this->getData();
     }

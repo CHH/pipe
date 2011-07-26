@@ -1,6 +1,6 @@
 <phpunit bootstrap="./tests/bootstrap.php">
     <php>
-        <!--<env name="LESS_BIN" value="/usr/local/bin/less" />-->
+        <env name="LESS_BIN" value="/usr/local/bin/less" />
     </php>
     <testsuites>
         <testsuite name="Pipe Test Suite">
