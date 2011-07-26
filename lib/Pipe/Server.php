@@ -22,12 +22,21 @@ class Server
     {
         $path  = ltrim($request->getRequestUri(), '/');
         $asset = $this->environment[$path];
+        
+        $modifiedSince = $request->headers->get('If-Modified-Since');
 
         $lastModified = new \DateTime;
         $lastModified->setTimestamp($asset->getLastModified());
         $lastModified->setTimezone(new \DateTimeZone("UTC"));
 
-        $response = new Response($asset->getBody());
+        $response = new Response;
+
+        if ($modifiedSince == $lastModified->format(\DateTime::RFC1123)) {
+            $response->setNotModified();
+            return $response;
+        }
+
+        $response->setContent($asset->getBody());
         $response->headers->set('Content-Type', $asset->getContentType());
         $response->headers->set('Last-Modified', $lastModified->format(\DateTime::RFC1123));
 
