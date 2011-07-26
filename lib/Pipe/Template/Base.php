@@ -34,7 +34,7 @@ class Base
      * @param callback $reader   Callback which returns the template's data
      * @param array    $options  Engine Options
      */
-    function __construct($file, $reader = null, array $options = array())
+    function __construct($file, array $options = array(), $reader = null)
     {
         if (!file_exists($file) or !is_readable($file)) {
             throw new \InvalidArgumentException("File $file does not exist or is not readable");
