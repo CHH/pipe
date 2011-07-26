@@ -4,3 +4,6 @@
 [submodule "vendor/Symfony/Component/HttpFoundation"]
 	path = vendor/Symfony/Component/HttpFoundation
 	url = git://github.com/symfony/HttpFoundation.git
+[submodule "vendor/Symfony/Component/Process"]
+	path = vendor/Symfony/Component/Process
+	url = git://github.com/symfony/Process.git
