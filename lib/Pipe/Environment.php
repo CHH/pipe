@@ -2,7 +2,7 @@
 
 namespace Pipe;
 
-use Pipe\Util\PathStack,
+use Pipe\Util\Pathstack,
     Pipe\Util\Pathname,
     Pipe\Util\ProcessorRegistry,
     Pipe\Util\EngineRegistry,
@@ -12,7 +12,7 @@ use Pipe\Util\PathStack,
 class Environment implements \ArrayAccess
 {
     /**
-     * @var PathStack
+     * @var Pathstack
      */
     protected $loadPaths;
 
@@ -37,7 +37,7 @@ class Environment implements \ArrayAccess
 
     function __construct()
     {
-        $this->loadPaths = new PathStack;
+        $this->loadPaths = new Pathstack;
 
         $this->contentTypes = new ContentTypeRegistry(array(
             'css' => 'text/css',
@@ -52,7 +52,8 @@ class Environment implements \ArrayAccess
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
         $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
 
-        $this->registerEngine('less', '\\Pipe\\Template\\LessTemplate');
+        $this->registerEngine('\\Pipe\\Template\\LessTemplate', '.less');
+		$this->registerEngine('\\Pipe\\Template\\PhpTemplate', array('.php', '.phtml'));
     }
 
     function getPreProcessors($contentType = null)
@@ -78,9 +79,9 @@ class Environment implements \ArrayAccess
         return $this->engines->get($extension);
     }
 
-    function registerEngine($extension, $engine)
+    function registerEngine($engine, $extension)
     {
-        $this->engines->register($extension, $engine);
+        $this->engines->register($engine, $extension);
         return $this;
     }
 
@@ -104,7 +105,7 @@ class Environment implements \ArrayAccess
     /**
      * Returns the Stack of Load Paths
      *
-     * @return PathStack
+     * @return Pathstack
      */
     function getLoadPaths()
     {

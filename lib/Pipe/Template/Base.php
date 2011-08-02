@@ -35,10 +35,6 @@ class Base
      */
     function __construct($file, array $options = array())
     {
-        if (!file_exists($file) or !is_readable($file)) {
-            throw new \InvalidArgumentException("File $file does not exist or is not readable");
-        }
-
         $this->file = $file;
         $this->options = $options;
 
@@ -47,7 +43,8 @@ class Base
 
         if (is_callable($reader)) {
             $this->data = call_user_func($reader, $this);
-        } else {
+
+        } else if (file_exists($file) and is_readable($file)) {
             $this->data = @file_get_contents($this->file);
         }
 
@@ -104,21 +101,21 @@ class Base
 
     function getLastModified()
     {
-        return filemtime($this->file);
+        if ($this->file) return filemtime($this->file);
     }
 
-    function getPath()
+    function getFile()
     {
         return $this->file;
     }
 
     function getBasename()
     {
-        return basename($this->file);
+        if ($this->file) return basename($this->file);
     }
 
     function getDirname()
     {
-        return dirname($this->file);
+        if ($this->file) return dirname($this->file);
     }
 }

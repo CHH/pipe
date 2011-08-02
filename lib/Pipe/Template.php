@@ -60,7 +60,13 @@ class Template
             ));
         }
 
-        $extension = Pathname::normalizeExtension($extension);
-        static::$engines[$extension] = $engine;
+        $extensions = (array) $extension;
+
+        foreach ($extensions as $e) {
+            $e = Pathname::normalizeExtension($e);
+            static::$engines[$e] = $engine;
+        }
     }
 }
+
+Template::register('\\Pipe\\Template\\PhpTemplate', array('php', 'phtml'));

@@ -29,7 +29,7 @@ class RequireDirective implements Directive
         }
 
         if (!pathinfo($path, PATHINFO_EXTENSION)) {
-            $path .= '.' . pathinfo($this->processor->getPath(), PATHINFO_EXTENSION);
+            $path .= '.' . pathinfo($this->processor->getFile(), PATHINFO_EXTENSION);
         }
 
         $context->requireAsset($path);

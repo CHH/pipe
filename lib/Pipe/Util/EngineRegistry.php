@@ -4,7 +4,14 @@ namespace Pipe\Util;
 
 class EngineRegistry extends \ArrayObject
 {
-    function register($extension, $engine)
+	/**
+	 * Registers an engine with one or more extensions
+	 *
+	 * @param  string $engine Engine Class
+	 * @param  string|array $extension One or more extensions
+	 * @return EngineRegistry
+	 */
+    function register($engine, $extension)
     {
         if (!class_exists($engine)) {
             throw new \InvalidArgumentException("Class $engine is not defined");
@@ -18,8 +25,13 @@ class EngineRegistry extends \ArrayObject
             ));
         }
 
-        $extension = Pathname::normalizeExtension($extension);
-        $this[$extension] = $engine;
+		$extensions = (array) $extension;
+
+		foreach ($extensions as $extension) {
+			$extension = Pathname::normalizeExtension($extension);
+			$this[$extension] = $engine;
+		}
+
         return $this;
     }
 

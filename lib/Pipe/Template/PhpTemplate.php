@@ -4,10 +4,6 @@ namespace Pipe\Template;
 
 class PhpTemplate extends Base
 {
-    protected function prepare()
-    {
-    }
-
     protected function evaluate($context, $vars = null)
     {
         list($templateClass, $source) = $this->getPrecompiled();
@@ -48,7 +44,9 @@ class PhpTemplate extends Base
                     $compiled .= $content;
                     break;
             }
+            unset($token, $content);
         }
+        unset($tokens);
 
         $template  = $this->getTemplateTemplate();
         $id        = md5($this->data);

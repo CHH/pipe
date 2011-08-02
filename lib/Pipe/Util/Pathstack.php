@@ -2,7 +2,7 @@
 
 namespace Pipe\Util;
 
-class PathStack extends \SplStack
+class Pathstack extends \SplStack
 {
     function __construct(array $paths = array())
     {
