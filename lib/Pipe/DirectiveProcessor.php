@@ -4,7 +4,8 @@ namespace Pipe;
 
 use Pipe\DirectiveProcessor\Parser,
     Pipe\DirectiveProcessor\Directive,
-    Pipe\DirectiveProcessor\RequireDirective;
+    Pipe\DirectiveProcessor\RequireDirective,
+    Pipe\DirectiveProcessor\DependOnDirective;
 
 /**
  * A Filter which processes special directive comments.
@@ -83,6 +84,7 @@ class DirectiveProcessor extends Template\Base
 
         // Require Standard Directives
         $this->register(new RequireDirective);
+        $this->register(new DependOnDirective);
 
         $this->processed = array();
         $this->tokens = $this->parser->parse($this->getData());

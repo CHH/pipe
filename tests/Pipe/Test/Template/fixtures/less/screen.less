@@ -1,9 +1,5 @@
-
-.rounded(@radius: 3px) {
-    border-radius: @radius;
-    -moz-border-radius: @radius;
-    -webkit-border-radius: @radius;
-}
+//= depend_on mixins/borders.less
+@import url(mixins/borders.less);
 
 #nav-main {
     .rounded(6px);

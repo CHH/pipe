@@ -36,9 +36,11 @@ class Context
         $asset = $this->environment->find($path);
 
         foreach ($asset->getProcessors() as $processor) {
-            $p = new $processor($path, array(), function() use ($data) {
-                return $data;
-            });
+			$p = new $processor($path, array(
+				'reader' => function() use ($data) {
+					return $data;
+				}
+			));
 
             $data = $p->render($this);
         }

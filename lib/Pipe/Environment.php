@@ -23,8 +23,9 @@ class Environment implements \ArrayAccess
 
     /**
      * Engines per file extension
+     * @var EngineRegistry
      */
-    protected $engines = array();
+    protected $engines;
 
     /**
      * Processors are like engines, but are associated with
@@ -40,7 +41,7 @@ class Environment implements \ArrayAccess
 
         $this->contentTypes = new ContentTypeRegistry(array(
             'css' => 'text/css',
-            'js' => 'application/javascript'
+            'js'  => 'application/javascript'
         ));
 
         $this->engines        = new EngineRegistry;

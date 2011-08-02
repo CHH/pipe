@@ -31,10 +31,9 @@ class Base
      * Constructor
      *
      * @param string   $file     Template File Name
-     * @param callback $reader   Callback which returns the template's data
      * @param array    $options  Engine Options
      */
-    function __construct($file, array $options = array(), $reader = null)
+    function __construct($file, array $options = array())
     {
         if (!file_exists($file) or !is_readable($file)) {
             throw new \InvalidArgumentException("File $file does not exist or is not readable");
@@ -42,6 +41,9 @@ class Base
 
         $this->file = $file;
         $this->options = $options;
+
+        $reader = isset($options['reader']) ? $options['reader'] : null;
+        unset($options['reader']);
 
         if (is_callable($reader)) {
             $this->data = call_user_func($reader, $this);
@@ -77,12 +79,10 @@ class Base
      * @param  array $data
      * @return string
      */
-    function render($scope, $vars = null)
+    function render($scope = null, $vars = null)
     {
-        if (!is_object($scope)) {
-            throw new \InvalidArgumentException(
-                "Scope has to be an object"
-            );
+        if (null === $scope) {
+            $scope = new \StdClass;
         }
         return $this->evaluate($scope, $vars);
     }

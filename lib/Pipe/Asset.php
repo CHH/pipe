@@ -1,4 +1,11 @@
 <?php
+/**
+ * Asset Base Class
+ *
+ * @copyright Copyright (c) 2011 Christoph Hochstrasser
+ * @license MIT License
+ * @author Christoph Hochstrasser <christoph.hochstrasser@gmail.com>
+ */
 
 namespace Pipe;
 
@@ -25,6 +32,10 @@ class Asset
      */
     protected $extensions;
 
+    /**
+     * The Asset's declared Dependencies
+     * @var array
+     */
     protected $dependencies = array();
 
     function __construct(Environment $environment, $path)
