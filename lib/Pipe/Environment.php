@@ -52,8 +52,12 @@ class Environment implements \ArrayAccess
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
         $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
 
+        // Register default Template Engines
+        foreach (Template::getEngines() as $ext => $engine) {
+            $this->registerEngine($engine, $ext);
+        }
+
         $this->registerEngine('\\Pipe\\Template\\LessTemplate', '.less');
-		$this->registerEngine('\\Pipe\\Template\\PhpTemplate', array('.php', '.phtml'));
     }
 
     function getPreProcessors($contentType = null)
@@ -124,16 +128,16 @@ class Environment implements \ArrayAccess
      *
      * @return array|Asset
      */
-    function find($path)
+    function find($logicalPath)
     {
-        $path = new Pathname($path);
+        $path = new Pathname($logicalPath);
 
         if ($path->isAbsolute()) {
             return new Asset($this, $path->toString());
         }
 
-        $assetPath = $this->loadPaths->find($path);
-        return new Asset($this, $assetPath);
+        $realPath = $this->loadPaths->find($path);
+        return new Asset($this, $realPath);
     }
 
     /**

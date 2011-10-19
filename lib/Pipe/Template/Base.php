@@ -76,7 +76,7 @@ class Base
      * @param  array $data
      * @return string
      */
-    function render($scope = null, $vars = null)
+    function render($scope = null, array $vars = array())
     {
         if (null === $scope) {
             $scope = new \StdClass;
@@ -84,14 +84,9 @@ class Base
         return $this->evaluate($scope, $vars);
     }
 
-    protected function evaluate($scope, $vars = null)
+    protected function evaluate($scope, array $vars = array())
     {
         return $this->getData();
-    }
-
-    function setData($data)
-    {
-        $this->data = $data;
     }
 
     function getData()

@@ -90,7 +90,7 @@ class DirectiveProcessor extends Template\Base
         $this->tokens = $this->parser->parse($this->getData());
     }
 
-    protected function evaluate($context, $vars = null)
+    protected function evaluate($context, array $vars = array())
     {
         $newSource = '';
 

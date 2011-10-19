@@ -2,11 +2,15 @@
 
 namespace Pipe;
 
-use Pipe\Util\Pathname;
+use Pipe\Util\Pathname,
+    Pipe\Util\EngineRegistry;
 
+/**
+ * The static engine registry
+ */
 class Template
 {
-    static protected $engines = array();
+    static protected $engines;
 
     /**
      * Returns the engine class for the given path
@@ -17,11 +21,7 @@ class Template
     static function get($template)
     {
         $extension = pathinfo($template, PATHINFO_EXTENSION);
-        $extension = Pathname::normalizeExtension($extension);
-
-        if (!empty(static::$engines[$extension])) {
-            return static::$engines[$extension];
-        }
+        return static::getEngines()->get($extension);
     }
 
     /**
@@ -48,25 +48,16 @@ class Template
      */
     static function register($engine, $extension)
     {
-        if (!class_exists($engine)) {
-            throw new \InvalidArgumentException("Engine Class \"$engine\" not found.");
-        }
+        static::getEngines()->register($engine, $extension);
+    }
 
-        if (!is_subclass_of($engine, '\\Pipe\\Template\\Base')) {
-            throw new \RuntimeException(sprintf(
-                "Template engines must inherit from \\Pipe\\Engine\\Base, 
-                subclass of %s given.",
-                get_parent_class($engine)
-            ));
+    static function getEngines()
+    {
+        if (null === static::$engines) {
+            static::$engines = new EngineRegistry;
         }
-
-        $extensions = (array) $extension;
-
-        foreach ($extensions as $e) {
-            $e = Pathname::normalizeExtension($e);
-            static::$engines[$e] = $engine;
-        }
+        return static::$engines;
     }
 }
 
-Template::register('\\Pipe\\Template\\PhpTemplate', array('php', 'phtml'));
+Template::register('\\Pipe\\Template\\PHPTemplate', array('php', 'phtml'));
