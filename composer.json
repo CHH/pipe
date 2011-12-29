@@ -1,0 +1,35 @@
+{
+    "name": "chh/pipe",
+    "require": {
+        "php": ">=5.3.2",
+        "chh/meta-template": "*",
+        "symfony/finder": ">=2.0.0,<2.1.0dev"
+    },
+    "recommended": {
+        "symfony/class-loader": ">=2.0.0,<2.1.0dev"
+    },
+    "description": "Pipe smokes your Assets",
+    "keywords": [
+        "assets"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/CHH/Pipe",
+    "autoload": {
+        "psr-0": {
+            "Pipe": "lib/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Christoph Hochstrasser",
+            "email": "christoph.hochstrasser@gmail.com"
+        }
+    ],
+    "repositories": {
+        "meta-template dev": {
+            "vcs": {
+                "url": "git://github.com/CHH/meta-template.git"
+            }
+        }
+    }
+}
