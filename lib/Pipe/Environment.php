@@ -126,9 +126,14 @@ class Environment implements \ArrayAccess
         return $this->find($offset);
     }
 
-    function offsetSet($offset, $value) {}
-    function offsetExists($offset) {}
-    function offsetUnset($offset) {}
+    function offsetSet($offset, $value)
+    {}
+
+    function offsetExists($offset)
+    {}
+
+    function offsetUnset($offset)
+    {}
 
     protected function getFinder()
     {
