@@ -40,6 +40,10 @@ class Pathname
      */
     function isAbsolute()
     {
+        if (strlen($this->originalPath) === 0) {
+            return false;
+        }
+
         if ($this->isWindows()) {
             return
                 '\\' == $this->originalPath[0] 

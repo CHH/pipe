@@ -38,8 +38,7 @@ class Context
             $processor = new $processorClass(function() use ($data) {
                 return $data;
             });
-            $processor->source = $asset->path;
-
+            $this->path = $processor->source = $asset->path;
             $data = $processor->render($this);
         }
 
