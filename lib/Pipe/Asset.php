@@ -15,16 +15,19 @@ use Pipe\Environment,
 
 class Asset
 {
+    var $path;
+    var $logicalPath;
+
+    /**
+     * The Asset's declared Dependencies
+     * @var array
+     */
+    var $dependencies = array();
+
     /**
      * @var Environment
      */
     protected $environment;
-
-    /**
-     * @var SplFileInfo
-     */
-    protected $path;
-
     protected $body;
 
     /**
@@ -32,14 +35,6 @@ class Asset
      * @var array
      */
     protected $extensions;
-
-    /**
-     * The Asset's declared Dependencies
-     * @var array
-     */
-    protected $dependencies = array();
-
-    protected $logicalPath;
 
     function __construct(Environment $environment, $path, $logicalPath = null)
     {
@@ -57,7 +52,7 @@ class Asset
             $body = $ctx->evaluate($this->path);
 
             $this->dependencies = array_merge($this->dependencies, $ctx->getDependencyPaths());
-            
+
             $result .= join("\n", $ctx->getDependencyAssets());
             $result .= $body;
 
@@ -135,7 +130,7 @@ class Asset
 
             // Avoid treating name of a dotfile as extension by
             // ignoring dots at the first offset in the string
-            if (false === ($pos = strpos($basename, '.', 1))) {
+            if (!$basename or false === ($pos = strpos($basename, '.', 1))) {
                 return array();
             }
 
@@ -174,17 +169,12 @@ class Asset
 
     function getBasename()
     {
-        return pathinfo($this->path, PATHINFO_BASENAME);
+        return basename($this->path);
     }
 
     function getDirname()
     {
-        return pathinfo($this->path, PATHINFO_DIRNAME);
-    }
-
-    function getPath()
-    {
-        return $this->path;
+        return dirname($this->path);
     }
 
     protected function getEngineContentType()

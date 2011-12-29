@@ -10,7 +10,7 @@ namespace Pipe\Util;
  */
 class Pathname
 {
-    protected $originalPath;
+    protected $originalPath = '';
 
     /**
      * @var array
@@ -19,7 +19,7 @@ class Pathname
 
     function __construct($path)
     {
-        $this->originalPath = $path;
+        $this->originalPath = (string) $path;
         $this->pathinfo = pathinfo($path);
     }
 

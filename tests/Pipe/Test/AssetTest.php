@@ -22,7 +22,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
      */
     function testGetExtensionsAsArray($path, $expected)
     {
-        $asset = new Asset(new Environment, $path);;
+        $asset = new Asset(new Environment, $path);
 
         $this->assertEquals(
             $expected,

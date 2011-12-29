@@ -112,7 +112,7 @@ class Environment implements \ArrayAccess
             return new Asset($this, $path->toString(), $path->toString());
         }
 
-        $realPath = $this->loadPaths->find($path);
+        $realPath = $this->loadPaths->find($logicalPath);
         return new Asset($this, $realPath, $logicalPath);
     }
 
@@ -137,7 +137,7 @@ class Environment implements \ArrayAccess
 
     protected function getFinder()
     {
-        $loadPaths = iterator_to_array($this->loadPaths);
+        $loadPaths = iterator_to_array($this->loadPaths->getIterator());
         return Finder::create()->in($loadPaths)->files();
     }
 }

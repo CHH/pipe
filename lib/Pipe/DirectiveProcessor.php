@@ -2,10 +2,7 @@
 
 namespace Pipe;
 
-use Pipe\DirectiveProcessor\Parser,
-    Pipe\DirectiveProcessor\Directive,
-    Pipe\DirectiveProcessor\RequireDirective,
-    Pipe\DirectiveProcessor\DependOnDirective;
+use Pipe\DirectiveProcessor\Parser;
 
 /**
  * A Filter which processes special directive comments.
@@ -54,27 +51,12 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
         return isset($this->directives[$name]);
     }
 
-    /**
-     * Register a directive
-     *
-     * @param Directive $directive
-     * @return DirectiveProcessor
-     */
-    function register(Directive $directive)
+    function register($name, $directive)
     {
-        $name = $directive->getName();
-
-        if (empty($name)) {
-            throw new \UnexpectedValueException(sprintf(
-                "No Name found for Directive %s, please return the Name with the
-                Directive's getName() Method",
-                get_class($directive)
-            ));
+        if (!is_callable($directive)) {
+            throw new \InvalidArgumentException('Directive should be something callable');
         }
-
-        $directive->setProcessor($this);
         $this->directives[$name] = $directive;
-
         return $this;
     }
 
@@ -82,9 +64,15 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
     {
         $this->parser = new Parser;
 
-        // Require Standard Directives
-        $this->register(new RequireDirective);
-        $this->register(new DependOnDirective);
+        $this->register('require', function($context, $argv = array()) {
+            $path = array_shift($argv);
+            $context->requireAsset($path);
+        });
+
+        $this->register('depend_on', function($context, $argv = array()) {
+            $path = array_shift($argv);
+            $context->dependOn($path);
+        });
 
         $this->processed = array();
         $this->tokens = $this->parser->parse($this->getData());
@@ -105,18 +93,23 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
                 $argv = explode(' ', $content);
                 $directive = array_shift($argv);
 
-                if (!$this->isRegistered($directive)) {
-                    throw new \RuntimeException(sprintf(
-                        "Undefined Directive \"%s\" in %s on line %d",
-                        $directive,
-                        $this->file,
-                        $line
-                    ));
-                }
-                $this->directives[$directive]->execute($context, $argv);
+                $context->path = $this->source;
+                $this->executeDirective($directive, $context, $argv);
             }
         }
 
         return $newSource;
+    }
+
+    protected function executeDirective($directive, $context, $argv) 
+    {
+        if (!$this->isRegistered($directive)) {
+            throw new \RuntimeException(sprintf(
+                "Undefined Directive \"%s\" in %s on line %d", $directive, $this->source, $line
+            ));
+        }
+
+        $callback = $this->directives[$directive];
+        return $callback($context, $argv);
     }
 }

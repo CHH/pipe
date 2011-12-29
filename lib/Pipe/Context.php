@@ -6,13 +6,12 @@ use Pipe\Util\Pathname;
 
 class Context
 {
-    protected $environment;
+    var $path;
 
+    protected $environment;
     protected $requiredPaths    = array();
     protected $dependencyPaths  = array();
     protected $dependencyAssets = array();
-
-    protected $path;
 
     function __construct(Environment $environment)
     {
@@ -25,7 +24,7 @@ class Context
         return $this;
     }
 
-    function evaluate($path, array $options = array())
+    function evaluate($path, $options = array())
     {
         if (isset($options['data'])) {
             $data = $options['data'];
@@ -35,14 +34,13 @@ class Context
 
         $asset = $this->environment->find($path);
 
-        foreach ($asset->getProcessors() as $processor) {
-			$p = new $processor($path, array(
-				'reader' => function() use ($data) {
-					return $data;
-				}
-			));
+        foreach ($asset->getProcessors() as $processorClass) {
+            $processor = new $processorClass(function() use ($data) {
+                return $data;
+            });
+            $processor->source = $asset->path;
 
-            $data = $p->render($this);
+            $data = $processor->render($this);
         }
 
         return $data;
@@ -85,6 +83,18 @@ class Context
 
     protected function resolve($path)
     {
+        // If the path has no extension, then use the extension of the
+        // current source file.
+        if (!pathinfo($path, PATHINFO_EXTENSION)) {
+            $path .= Pathname::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
+        }
+
+        // Skip the load path if the path starts with `./`
+        if (preg_match('{^\.(/|\\\\)}', $path)) {
+            $path = dirname($this->path) . DIRECTORY_SEPARATOR . $path;
+            return realpath($path);
+        }
+
         $pathinfo = new Pathname($path);
 
         if ($pathinfo->isAbsolute()) {
