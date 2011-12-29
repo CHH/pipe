@@ -30,7 +30,7 @@ use Pipe\DirectiveProcessor\Parser,
  *
  * @author Christoph Hochstrasser <christoph.hochstrasser@gmail.com>
  */
-class DirectiveProcessor extends Template\Base
+class DirectiveProcessor extends \MetaTemplate\Template\Base
 {
     /**
      * @var Pipe\DirectiveProcessor\Parser
@@ -90,7 +90,7 @@ class DirectiveProcessor extends Template\Base
         $this->tokens = $this->parser->parse($this->getData());
     }
 
-    protected function evaluate($context, array $vars = array())
+    function render($context = null, $vars = array())
     {
         $newSource = '';
 

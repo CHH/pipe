@@ -25,11 +25,11 @@ class RequireDirective implements Directive
         $path = $argv[0];
 
         if (preg_match('/^\.(\/|\\\\)/', $path)) {
-            $path = $this->processor->getDirname() . DIRECTORY_SEPARATOR . $path;
+            $path = dirname($this->processor->source) . DIRECTORY_SEPARATOR . $path;
         }
 
         if (!pathinfo($path, PATHINFO_EXTENSION)) {
-            $path .= '.' . pathinfo($this->processor->getFile(), PATHINFO_EXTENSION);
+            $path .= '.' . pathinfo($this->processor->source, PATHINFO_EXTENSION);
         }
 
         $context->requireAsset($path);

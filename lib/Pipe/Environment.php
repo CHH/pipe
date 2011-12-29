@@ -5,8 +5,8 @@ namespace Pipe;
 use Pipe\Util\Pathstack,
     Pipe\Util\Pathname,
     Pipe\Util\ProcessorRegistry,
-    Pipe\Util\EngineRegistry,
-    Pipe\Util\ContentTypeRegistry,
+    MetaTemplate\Template,
+    MetaTemplate\Util\EngineRegistry,
     Symfony\Component\Finder\Finder;
 
 class Environment implements \ArrayAccess
@@ -14,18 +14,18 @@ class Environment implements \ArrayAccess
     /**
      * @var Pathstack
      */
-    protected $loadPaths;
+    var $loadPaths;
 
     /**
      * @var ContentTypeRegistry
      */
-    protected $contentTypes;
+    var $contentTypes;
 
     /**
      * Engines per file extension
      * @var EngineRegistry
      */
-    protected $engines;
+    var $engines;
 
     /**
      * Processors are like engines, but are associated with
@@ -39,10 +39,10 @@ class Environment implements \ArrayAccess
     {
         $this->loadPaths = new Pathstack;
 
-        $this->contentTypes = new ContentTypeRegistry(array(
-            'css' => 'text/css',
-            'js'  => 'application/javascript'
-        ));
+        $this->contentTypes = array(
+            '.css' => 'text/css',
+            '.js'  => 'application/javascript'
+        );
 
         $this->engines        = new EngineRegistry;
         $this->preProcessors  = new ProcessorRegistry;
@@ -53,11 +53,9 @@ class Environment implements \ArrayAccess
         $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
 
         // Register default Template Engines
-        foreach (Template::getEngines() as $ext => $engine) {
+        foreach (Template::getEngines()->getEngines() as $ext => $engine) {
             $this->registerEngine($engine, $ext);
         }
-
-        $this->registerEngine('\\Pipe\\Template\\LessTemplate', '.less');
     }
 
     function getPreProcessors($contentType = null)
@@ -75,12 +73,6 @@ class Environment implements \ArrayAccess
             return $this->postProcessors;
         }
         return $this->postProcessors->get($contentType);
-    }
-
-    function getEngine($extension)
-    {
-        $extension = Pathname::normalizeExtension($extension);
-        return $this->engines->get($extension);
     }
 
     function registerEngine($engine, $extension)
@@ -101,25 +93,9 @@ class Environment implements \ArrayAccess
         return $this;
     }
 
-    function getContentTypes()
-    {
-        return $this->contentTypes;
-    }
-
-    /**
-     * Returns the Stack of Load Paths
-     *
-     * @return Pathstack
-     */
-    function getLoadPaths()
-    {
-        return $this->loadPaths;
-    }
-
     function addLoadPath($path)
     {
         $this->loadPaths->push($path);
-        return $this;
     }
 
     /**
@@ -133,11 +109,11 @@ class Environment implements \ArrayAccess
         $path = new Pathname($logicalPath);
 
         if ($path->isAbsolute()) {
-            return new Asset($this, $path->toString());
+            return new Asset($this, $path->toString(), $path->toString());
         }
 
         $realPath = $this->loadPaths->find($path);
-        return new Asset($this, $realPath);
+        return new Asset($this, $realPath, $logicalPath);
     }
 
     /**

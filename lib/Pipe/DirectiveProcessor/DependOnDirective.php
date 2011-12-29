@@ -26,7 +26,7 @@ class DependOnDirective implements Directive
 		$pathinfo = new Pathname($path);
 
 		if (!$pathinfo->isAbsolute()) {
-			$path = $this->processor->getDirname() . '/' . $path;
+			$path = dirname($this->processor->source) . '/' . $path;
 		}
 
 		$context->dependOn($path);

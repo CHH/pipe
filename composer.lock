@@ -1,1 +1,22 @@
-[{"package":"symfony\/finder","version":"2.0.7"},{"package":"symfony\/process","version":"2.0.7"},{"package":"chh\/meta-template","version":"master-dev"}]
+[
+    {
+        "package": "symfony\/finder",
+        "version": "2.0.7"
+    },
+    {
+        "package": "symfony\/process",
+        "version": "2.0.7"
+    },
+    {
+        "package": "chh\/meta-template",
+        "version": "master-dev"
+    },
+    {
+        "package": "symfony\/class-loader",
+        "version": "2.0.7"
+    },
+    {
+        "package": "symfony\/http-foundation",
+        "version": "2.0.7"
+    }
+]

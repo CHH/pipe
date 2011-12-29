@@ -10,7 +10,8 @@
 namespace Pipe;
 
 use Pipe\Environment,
-    Pipe\Context;
+    Pipe\Context,
+    Pipe\Util\Pathname;
 
 class Asset
 {
@@ -38,10 +39,13 @@ class Asset
      */
     protected $dependencies = array();
 
-    function __construct(Environment $environment, $path)
+    protected $logicalPath;
+
+    function __construct(Environment $environment, $path, $logicalPath = null)
     {
         $this->environment = $environment;
         $this->path = $path;
+        $this->logicalPath = $logicalPath;
     }
 
     function getBody()
@@ -60,6 +64,11 @@ class Asset
             $this->body = $result;
         }
         return $this->body;
+    }
+
+    function __toString()
+    {
+        return $this->getBody();
     }
 
     function getLastModified()
@@ -81,9 +90,11 @@ class Asset
 
     function getContentType()
     {
-        return $this->environment->getContentTypes()->get(
-            $this->getFormatExtension()
-        );
+        $formatExtension = $this->getFormatExtension();
+
+        return isset($this->environment->contentTypes[$formatExtension])
+            ? $this->environment->contentTypes[$formatExtension]
+            : false;
     }
 
     function getFormatExtension()
@@ -93,9 +104,9 @@ class Asset
         return current(array_filter(
             $this->getExtensions(), 
             function($ext) use ($environment) {
-                return 
-                    $environment->getContentTypes()->get($ext) 
-                    and !$environment->getEngine($ext);
+                return
+                    isset($environment->contentTypes[$ext])
+                    and !$environment->engines->get($ext);
             }
         ));
     }
@@ -107,7 +118,7 @@ class Asset
         return array_filter(
             $this->getExtensions(),
             function($ext) use ($environment) {
-                return $environment->getEngine($ext);
+                return $environment->engines->get($ext);
             }
         );
     }
@@ -129,6 +140,10 @@ class Asset
             }
 
             $this->extensions = explode('.', substr($basename, $pos + 1));
+
+            $this->extensions = array_map(function($ext) {
+                return Pathname::normalizeExtension($ext);
+            }, $this->extensions);
         }
         return $this->extensions;
     }
@@ -136,7 +151,7 @@ class Asset
     function getProcessors()
     {
         $formatExtension = $this->getFormatExtension();
-        $contentType = $this->environment->getContentTypes()->get($formatExtension);
+        $contentType = $this->environment->contentTypes[$formatExtension];
 
         return array_merge(
             $this->environment->getPreProcessors($contentType),

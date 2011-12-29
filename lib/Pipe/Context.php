@@ -91,7 +91,7 @@ class Context
             return realpath($path);
         }
 
-        $loadPaths = $this->environment->getLoadPaths();
+        $loadPaths = $this->environment->loadPaths;
 
         return realpath($loadPaths->find($path));
     }

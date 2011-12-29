@@ -27,8 +27,8 @@ class Pathname
     {
         $extension = strtolower($extension);
 
-        if ('.' == $extension[0]) {
-            $extension = substr($extension, 1);
+        if ('.' != $extension[0]) {
+            $extension = ".$extension";
         }
         return $extension;
     }
