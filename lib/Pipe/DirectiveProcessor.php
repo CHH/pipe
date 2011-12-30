@@ -93,7 +93,6 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
                 $argv = explode(' ', $content);
                 $directive = array_shift($argv);
 
-                $context->path = $this->source;
                 $this->executeDirective($directive, $context, $argv);
             }
         }

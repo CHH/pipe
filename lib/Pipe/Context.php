@@ -7,9 +7,9 @@ use Pipe\Util\Pathname;
 class Context
 {
     var $path;
+    var $requiredPaths    = array();
 
     protected $environment;
-    protected $requiredPaths    = array();
     protected $dependencyPaths  = array();
     protected $dependencyAssets = array();
 
@@ -33,14 +33,19 @@ class Context
         }
 
         $asset = $this->environment->find($path);
+        $subContext = $this->createSubContext();
 
         foreach ($asset->getProcessors() as $processorClass) {
             $processor = new $processorClass(function() use ($data) {
                 return $data;
             });
-            $this->path = $processor->source = $asset->path;
-            $data = $processor->render($this);
+            $subContext->path = $processor->source = $asset->path;
+            $data = $processor->render($subContext);
         }
+
+        $this->requiredPaths = array_merge($this->requiredPaths, $subContext->requiredPaths);
+        $this->dependencyPaths = array_merge($this->dependencyPaths, $subContext->getDependencyPaths());
+        $this->dependencyAssets = array_merge($this->dependencyAssets, $subContext->getDependencyAssets());
 
         return $data;
     }
@@ -103,5 +108,14 @@ class Context
         $loadPaths = $this->environment->loadPaths;
 
         return realpath($loadPaths->find($path));
+    }
+
+    protected function createSubContext()
+    {
+        $context = new static($this->environment);
+        $context->path = $this->path;
+        $context->requiredPaths = $this->requiredPaths;
+
+        return $context;
     }
 }
