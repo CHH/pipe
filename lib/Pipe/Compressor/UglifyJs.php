@@ -6,6 +6,11 @@ use Symfony\Component\Process\Process;
 
 class UglifyJs extends \MetaTemplate\Template\Base
 {
+    static function getDefaultContentType()
+    {
+        return "application/javascript";
+    }
+
     function render($context = null, $vars = array())
     {
         $cmd = "/usr/local/bin/uglifyjs";
