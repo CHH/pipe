@@ -6,9 +6,6 @@
         "symfony/finder": ">=2.0.0,<2.1.0dev",
         "symfony/http-foundation": ">=2.0.0,<2.1.0dev"
     },
-    "recommend": {
-        "symfony/class-loader": ">=2.0.0,<2.1.0dev"
-    },
     "description": "Pipe smokes your Assets",
     "keywords": [
         "assets"
