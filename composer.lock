@@ -18,5 +18,9 @@
     {
         "package": "symfony\/http-foundation",
         "version": "2.0.7"
+    },
+    {
+        "package": "phly\/mustache",
+        "version": "master-dev"
     }
 ]
