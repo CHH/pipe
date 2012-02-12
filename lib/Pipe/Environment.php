@@ -6,11 +6,14 @@ use Pipe\Util\Pathstack,
     Pipe\Util\Pathname,
     Pipe\Util\ProcessorRegistry,
     MetaTemplate\Template,
-    MetaTemplate\Util\EngineRegistry,
-    Symfony\Component\Finder\Finder;
+    MetaTemplate\Util\EngineRegistry;
 
 class Environment implements \ArrayAccess
 {
+    var $compressors = array(
+        "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
+    );
+
     /**
      * @var Pathstack
      */
@@ -34,6 +37,7 @@ class Environment implements \ArrayAccess
      */
     protected $preProcessors;
     protected $postProcessors;
+    protected $bundleProcessors;
 
     function __construct()
     {
@@ -44,9 +48,10 @@ class Environment implements \ArrayAccess
             '.js'  => 'application/javascript'
         );
 
-        $this->engines        = new EngineRegistry;
-        $this->preProcessors  = new ProcessorRegistry;
-        $this->postProcessors = new ProcessorRegistry;
+        $this->engines          = new EngineRegistry;
+        $this->preProcessors    = new ProcessorRegistry;
+        $this->postProcessors   = new ProcessorRegistry;
+        $this->bundleProcessors = new ProcessorRegistry;
 
         // Register default processors
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
@@ -68,11 +73,18 @@ class Environment implements \ArrayAccess
 
     function getPostProcessors($contentType = null)
     {
-        if (null === $contentType)
-        {
+        if (null === $contentType) {
             return $this->postProcessors;
         }
         return $this->postProcessors->get($contentType);
+    }
+
+    function getBundleProcessors($contentType = null) 
+    {
+        if (null === $contentType) {
+            return $this->bundleProcessors;
+        }
+        return $this->bundleProcessors->get($contentType);
     }
 
     function registerEngine($engine, $extension)
@@ -81,29 +93,36 @@ class Environment implements \ArrayAccess
         return $this;
     }
 
-    function registerPreProcessor($mimeType, $processor)
+    function registerPreProcessor($contentType, $processor)
     {
-        $this->preProcessors->register($mimeType, $processor);
+        $this->preProcessors->register($contentType, $processor);
         return $this;
     }
 
-    function registerPostProcessor($mimeType, $processor)
+    function registerPostProcessor($contentType, $processor)
     {
-        $this->postProcessors->register($mimeType, $processor);
+        $this->postProcessors->register($contentType, $processor);
         return $this;
     }
 
-    function addLoadPath($path)
+    function registerBundleProcessor($contentType, $processor)
+    {
+        $this->bundleProcessors->register($contentType, $processor);
+        return $this;
+    }
+
+    function prependPath($path)
+    {
+        $this->loadPaths->unshift($path);
+        return $this;
+    }
+
+    function appendPath($path)
     {
         $this->loadPaths->push($path);
+        return $this;
     }
 
-    /**
-     * Finds an Asset in the load paths or creates one from 
-     * an absolute path
-     *
-     * @return array|Asset
-     */
     function find($logicalPath)
     {
         $path = new Pathname($logicalPath);
@@ -113,31 +132,24 @@ class Environment implements \ArrayAccess
         }
 
         $realPath = $this->loadPaths->find($logicalPath);
+
+        if (null === $realPath) {
+            return;
+        }
         return new Asset($this, $realPath, $logicalPath);
     }
 
-    /**
-     * Sugar for find()
-     *
-     * @alias find()
-     */
-    function offsetGet($offset)
+    # Sugar for find().
+    #
+    # logicalPath - The path relative to the virtual file system.
+    #
+    # Returns an Asset.
+    function offsetGet($logicalPath)
     {
-        return $this->find($offset);
+        return $this->find($logicalPath);
     }
 
-    function offsetSet($offset, $value)
-    {}
-
-    function offsetExists($offset)
-    {}
-
-    function offsetUnset($offset)
-    {}
-
-    protected function getFinder()
-    {
-        $loadPaths = iterator_to_array($this->loadPaths->getIterator());
-        return Finder::create()->in($loadPaths)->files();
-    }
+    function offsetSet($offset, $value) {}
+    function offsetExists($offset) {}
+    function offsetUnset($offset) {}
 }

@@ -6,27 +6,39 @@ class Pathstack extends \SplStack
 {
     function __construct(array $paths = array())
     {
-        foreach ($paths as $path) {
-            $this->push($path);
-        }
+        empty($paths) ?: $this->pushAll($paths);
     }
 
     function unshift($path)
     {
-        if (!is_dir($path)) {
-            throw new \InvalidArgumentException("Path $path does not exist");
+        $path = (array) $path;
+
+        foreach ($path as $p) {
+            if (!is_dir($p)) {
+                throw new \InvalidArgumentException("Path $p does not exist");
+            }
+            parent::unshift($p);
         }
-        parent::unshift($path);
     }
 
     function push($path)
     {
-        if (!is_dir($path)) {
-            throw new \InvalidArgumentException("Path $path does not exist");
+        $path = (array) $path;
+
+        foreach ($path as $p) {
+            if (!is_dir($p)) {
+                throw new \InvalidArgumentException("Path $p does not exist");
+            }
+            parent::push($p);
         }
-        parent::push($path);
     }
 
+    # Resolves a sub path relative to the stack of paths.
+    #
+    # subPath - Path to find in the load paths.
+    #
+    # Returns the absolute path as String, or Null when the Sub Path was
+    # not found.
     function find($subPath)
     {
         foreach ($this as $path) {
@@ -36,6 +48,10 @@ class Pathstack extends \SplStack
                 return $pathToFind;
             }
         }
-        return false;
+    }
+
+    function toArray()
+    {
+        return iterator_to_array($this);
     }
 }

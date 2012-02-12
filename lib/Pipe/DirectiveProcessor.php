@@ -4,53 +4,49 @@ namespace Pipe;
 
 use Pipe\DirectiveProcessor\Parser;
 
-/**
- * A Filter which processes special directive comments.
- *
- * Directive comments start with the comment prefix and are then
- * followed by an "=". 
- *
- * For example:
- *
- * // Javascript:
- * //= require "foo"
- *
- * # Coffeescript:
- * #= require "foo"
- * 
- * / * CSS
- *   *= require "foo"
- *   * /
- * ( ^ This space must be here, otherwise PHP triggers an Parse Error)
- *
- * Directives must be in the Header of the Source File to be picked up.
- *
- * @author Christoph Hochstrasser <christoph.hochstrasser@gmail.com>
- */
+# A Filter which processes special comments.
+#
+# Directive Comments start with a comment prefix and are then
+# followed by an equal sign. Directives *must* be in the header
+# of the source file. The parser stops after code is encountered.
+#
+# Examples
+#
+#   // Javascript:
+#   //= require "foo"
+#   
+#   # Coffeescript
+#   #= require "foo"
+#   
+#   /* CSS
+#    *= require "foo"
+#    */
+#
 class DirectiveProcessor extends \MetaTemplate\Template\Base
 {
-    /**
-     * @var Pipe\DirectiveProcessor\Parser
-     */
+    # Parser for directives.
     protected $parser;
 
-    /**
-     * Map of available directives
-     * @var array
-     */
+    # Map of directive name and the closure which is
+    # invoked when the directive was used.
     protected $directives;
 
-    /**
-     * Checks if the Directive is registered
-     *
-     * @param string $name
-     * @return bool
-     */
+    # Is the directive registered?
+    #
+    # name - Directive Name.
+    #
+    # Returns True or False.
     function isRegistered($name)
     {
         return isset($this->directives[$name]);
     }
 
+    # Registers a directive.
+    #
+    # name      - Directive Name.
+    # directive - Closure which is called when the directive is used.
+    #
+    # Returns This.
     function register($name, $directive)
     {
         if (!is_callable($directive)) {
@@ -60,6 +56,9 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
         return $this;
     }
 
+    # Sets up the processor.
+    #
+    # Returns nothing.
     protected function prepare()
     {
         $this->parser = new Parser;
@@ -78,6 +77,13 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
         $this->tokens = $this->parser->parse($this->getData());
     }
 
+    # Loops through all tokens returned by the parser and invokes
+    # the directives.
+    #
+    # context - Pipe\Context
+    # vars    - An array of var => value pairs.
+    #
+    # Returns the processed asset, with all directives stripped.
     function render($context = null, $vars = array())
     {
         $newSource = '';
@@ -100,7 +106,14 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
         return $newSource;
     }
 
-    protected function executeDirective($directive, $context, $argv) 
+    # Executes a directive.
+    #
+    # directive - Name of the Directive.
+    # context   - Pipe\Context.
+    # argv      - Array of the directive arguments.
+    #
+    # Returns the return value of the directive's callback.
+    protected function executeDirective($directive, $context, $argv)
     {
         if (!$this->isRegistered($directive)) {
             throw new \RuntimeException(sprintf(

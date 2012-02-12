@@ -11,7 +11,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     function setUp()
     {
         $env = new Environment;
-        $env->addLoadPath(__DIR__ . "/fixtures");
+        $env->appendPath(__DIR__ . "/fixtures");
 
         $this->environment = $env;
     }
@@ -20,5 +20,10 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     {
         $asset = $this->environment['asset1.js'];
         $this->assertInstanceOf('\\Pipe\\Asset', $asset);
+    }
+
+    function testReturnsNullWhenAssetIsNotFound()
+    {
+        $this->assertNull($this->environment['foo/bar/baz']);
     }
 }

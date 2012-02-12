@@ -2,9 +2,10 @@
 
 namespace Bob;
 
-desc('Write Hello World to STDOUT');
-task('example', function() {
-    println("Hello World!");
-    println("To add some tasks open the `bob_config.php` in your project root"
-        ." at ".getcwd());
+task('test', array('phpunit.xml'), function() {
+    echo `phpunit tests/`;
+});
+
+fileTask('phpunit.xml', array('phpunit.dist.xml'), function($task) {
+    copy($task->prereqisites[0], $task->name);
 });

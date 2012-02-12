@@ -13,7 +13,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
     function setUp()
     {
         $env = new Environment;
-        $env->addLoadPath(__DIR__ . "/fixtures/directive_processor");
+        $env->appendPath(__DIR__ . "/fixtures/directive_processor");
 
         $this->server = new Server($env);
     }

@@ -13,7 +13,7 @@ class DirectiveProcessorTest extends \PHPUnit_Framework_TestCase
     function setUp()
     {
         $this->env = new Environment;
-        $this->env->addLoadPath(__DIR__.'/fixtures/directive_processor');
+        $this->env->appendPath(__DIR__.'/fixtures/directive_processor');
     }
 
     function testDependsOnInfluencesLastModified()

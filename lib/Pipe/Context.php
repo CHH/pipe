@@ -7,7 +7,7 @@ use Pipe\Util\Pathname;
 class Context
 {
     var $path;
-    var $requiredPaths    = array();
+    var $requiredPaths = array();
 
     protected $environment;
     protected $dependencyPaths  = array();
@@ -74,6 +74,10 @@ class Context
     {
         $resolvedPath = $this->resolve($path);
 
+        if (null === $resolvedPath) {
+            throw new \UnexpectedValueException("Asset $path not found");
+        }
+
         if (in_array($resolvedPath, $this->requiredPaths)) {
             return $this;
         }
@@ -106,8 +110,7 @@ class Context
         }
 
         $loadPaths = $this->environment->loadPaths;
-
-        return realpath($loadPaths->find($path));
+        return $loadPaths->find($path);
     }
 
     protected function createSubContext()
