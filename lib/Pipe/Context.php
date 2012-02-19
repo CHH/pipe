@@ -2,7 +2,8 @@
 
 namespace Pipe;
 
-use Pipe\Util\Pathname;
+use Pipe\Util\Pathname,
+    UnexpectedValueException;
 
 class Context
 {
@@ -33,6 +34,11 @@ class Context
         }
 
         $asset = $this->environment->find($path);
+
+        if (!$asset) {
+            throw new UnexpectedValueException("Asset $path not found");
+        }
+
         $subContext = $this->createSubContext();
 
         foreach ($asset->getProcessors() as $processorClass) {
