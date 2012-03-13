@@ -12,7 +12,7 @@
         "assets"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/CHH/Pipe",
+    "homepage": "https://github.com/CHH/pipe",
     "autoload": {
         "psr-0": {
             "Pipe": "lib/"
