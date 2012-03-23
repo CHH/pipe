@@ -1,11 +1,4 @@
 <?php
-/**
- * Asset Base Class
- *
- * @copyright Copyright (c) 2011 Christoph Hochstrasser
- * @license MIT License
- * @author Christoph Hochstrasser <christoph.hochstrasser@gmail.com>
- */
 
 namespace Pipe;
 
@@ -96,14 +89,16 @@ class Asset
     {
         $environment = $this->environment;
 
-        return current(array_filter(
-            $this->getExtensions(), 
+        $formatExtension = current(array_filter(
+            $this->getExtensions(),
             function($ext) use ($environment) {
                 return
                     isset($environment->contentTypes[$ext])
                     and !$environment->engines->get($ext);
             }
         ));
+
+        return $formatExtension ?: array_search($this->getEngineContentType(), $environment->contentTypes);
     }
 
     function getEngineExtensions()
@@ -118,11 +113,9 @@ class Asset
         );
     }
 
-    /**
-     * Returns a list of the File's Extensions, in reverse order
-     *
-     * @return array
-     */
+    # Collects the file's extensions in reverse order.
+    #
+    # Returns an Array of normalized extensions.
     function getExtensions()
     {
         if (null === $this->extensions) {
@@ -146,7 +139,11 @@ class Asset
     function getProcessors()
     {
         $formatExtension = $this->getFormatExtension();
-        $contentType = $this->environment->contentTypes[$formatExtension];
+
+        # TODO: Throw error if content type/format ext was not found?
+        if ($formatExtension) {
+            $contentType = @$this->environment->contentTypes[$formatExtension];
+        }
 
         return array_merge(
             $this->environment->getPreProcessors($contentType),
@@ -166,6 +163,8 @@ class Asset
             $this->getEngineExtensions()
         );
     }
+
+    # TODO: Add method for getting basename without extension?
 
     function getBasename()
     {
