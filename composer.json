@@ -24,11 +24,7 @@
             "email": "christoph.hochstrasser@gmail.com"
         }
     ],
-    "repositories": {
-        "meta-template dev": {
-            "vcs": {
-                "url": "git://github.com/CHH/meta-template.git"
-            }
-        }
-    }
+    "repositories": [
+        {"type": "vcs", "url": "git://github.com/CHH/meta-template.git"}
+    ]
 }

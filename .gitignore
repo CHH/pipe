@@ -2,3 +2,5 @@ vendor/
 coverage/
 tags
 phpunit.xml
+composer.lock
+

@@ -164,11 +164,36 @@ class Asset
         );
     }
 
-    # TODO: Add method for getting basename without extension?
-
-    function getBasename()
+    function write($directory = '')
     {
-        return basename($this->path);
+        $filename = $this->getTargetName();
+
+        if ($directory) {
+            $filename = $directory . '/' . $filename;
+        }
+
+        @file_put_contents($filename, $this->getBody());
+    }
+
+    function getSha1()
+    {
+        return sha1($this->getBody());
+    }
+
+    function getTargetName()
+    {
+        return $this->getBasename(true) . '-' . $this->getSha1() . $this->getFormatExtension();
+    }
+
+    function getBasename($withoutExtensions = false)
+    {
+        $basename = basename($this->path);
+
+        if ($withoutExtensions) {
+            $basename = substr($basename, 0, strpos($basename, '.'));
+        }
+
+        return $basename;
     }
 
     function getDirname()

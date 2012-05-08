@@ -10,31 +10,21 @@ use Pipe\Util\Pathstack,
 
 class Environment implements \ArrayAccess
 {
-    var $compressors = array(
-        "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
-    );
-
-    /**
-     * @var Pathstack
-     */
+    # Stack of Load Paths for Assets.
     var $loadPaths;
 
-    /**
-     * @var ContentTypeRegistry
-     */
-    var $contentTypes;
+    # Map of file extension to content type.
+    var $contentTypes = array(
+        '.css' => 'text/css',
+        '.js'  => 'application/javascript'
+    );
 
-    /**
-     * Engines per file extension
-     * @var EngineRegistry
-     */
+    # Engine Registry, stores engines per file extension.
     var $engines;
 
-    /**
-     * Processors are like engines, but are associated with
-     * a specific content type and one processor can be 
-     * associated with one or more content types
-     */
+    # Processors are like engines, but are associated with
+    # a specific content type and one processor can be 
+    # associated with one or more content types
     protected $preProcessors;
     protected $postProcessors;
     protected $bundleProcessors;
@@ -43,21 +33,16 @@ class Environment implements \ArrayAccess
     {
         $this->loadPaths = new Pathstack;
 
-        $this->contentTypes = array(
-            '.css' => 'text/css',
-            '.js'  => 'application/javascript'
-        );
-
         $this->engines          = new EngineRegistry;
         $this->preProcessors    = new ProcessorRegistry;
         $this->postProcessors   = new ProcessorRegistry;
         $this->bundleProcessors = new ProcessorRegistry;
 
-        // Register default processors
+        # Register default processors
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
         $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
 
-        // Register default Template Engines
+        # Register default Template Engines
         foreach (Template::getEngines()->getEngines() as $ext => $engine) {
             $this->registerEngine($engine, $ext);
         }

@@ -41,10 +41,17 @@ class Context
 
         $subContext = $this->createSubContext();
 
-        foreach ($asset->getProcessors() as $processorClass) {
-            $processor = new $processorClass(function() use ($data) {
+        if (array_key_exists("processors", $options)) {
+            $processors = $options["processors"];
+        } else {
+            $processors = $asset->getProcessors();
+        }
+
+        foreach ($processors as $class) {
+            $processor = new $class(function() use ($data) {
                 return $data;
             });
+
             $subContext->path = $processor->source = $asset->path;
             $data = $processor->render($subContext);
         }

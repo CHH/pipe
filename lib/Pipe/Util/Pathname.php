@@ -2,26 +2,15 @@
 
 namespace Pipe\Util;
 
-/**
- * Wrapper around the pathinfo() function, provides also some additional 
- * path inspecting, like checking if the path is absolute 
- *
- * @author Christoph Hochstrasser <christoph.hochstrasser@gmail.com>
- */
+# Wrapper around the pathinfo() function, provides also some additional
+# path inspecting, like checking if the path is absolute.
 class Pathname
 {
-    protected $originalPath = '';
+    protected
+        $originalPath = '',
 
-    /**
-     * @var array
-     */
-    protected $pathinfo;
-
-    function __construct($path)
-    {
-        $this->originalPath = (string) $path;
-        $this->pathinfo = pathinfo($path);
-    }
+        # Array returned by pathinfo().
+        $pathinfo;
 
     static function normalizeExtension($extension)
     {
@@ -33,11 +22,15 @@ class Pathname
         return $extension;
     }
 
-    /**
-     * Checks if the pathname is an absolute path
-     *
-     * @return bool
-     */
+    function __construct($path)
+    {
+        $this->originalPath = (string) $path;
+        $this->pathinfo = pathinfo($path);
+    }
+
+    # Checks if the path is absolute.
+    #
+    # Returns true or false.
     function isAbsolute()
     {
         if (strlen($this->originalPath) === 0) {
@@ -46,7 +39,7 @@ class Pathname
 
         if ($this->isWindows()) {
             return
-                '\\' == $this->originalPath[0] 
+                '\\' == $this->originalPath[0]
                 or
                 preg_match('/^[a-zA-Z]\:\\\\/', $this->originalPath);
         }
