@@ -158,7 +158,7 @@ class Asset
 
         return array_map(
             function($ext) use ($env) {
-                return $env->getEngine($ext);
+                return $env->engines->get($ext);
             },
             $this->getEngineExtensions()
         );
@@ -179,7 +179,7 @@ class Asset
     protected function getEngineContentType()
     {
         foreach ($this->getEngineExtensions() as $ext) {
-            $engine = $this->environment->getEngine($ext);
+            $engine = $this->environment->engines->get($ext);
 
             if (is_callable(array($engine, "getDefaultContentType"))) {
                 return $engine::getDefaultContentType();

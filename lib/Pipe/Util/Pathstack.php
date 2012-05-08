@@ -45,7 +45,7 @@ class Pathstack extends \SplStack
             $pathToFind = $path . DIRECTORY_SEPARATOR . $subPath;
 
             if (file_exists($pathToFind)) {
-                return $pathToFind;
+                return realpath($pathToFind);
             }
         }
     }
