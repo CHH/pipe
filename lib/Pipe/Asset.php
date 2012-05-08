@@ -44,9 +44,9 @@ class Asset
 
             $body = $ctx->evaluate($this->path);
 
-            $this->dependencies = array_merge($this->dependencies, $ctx->getDependencyPaths());
+            $this->dependencies = array_merge($this->dependencies, $ctx->dependencyPaths);
 
-            $result .= join("\n", $ctx->getDependencyAssets());
+            $result .= join("\n", $ctx->dependencyAssets);
             $result .= $body;
 
             $this->body = $result;
@@ -121,17 +121,17 @@ class Asset
         if (null === $this->extensions) {
             $basename = $this->getBasename();
 
-            // Avoid treating name of a dotfile as extension by
-            // ignoring dots at the first offset in the string
+            # Avoid treating name of a dotfile as extension by
+            # ignoring dots at the first offset in the string
             if (!$basename or false === ($pos = strpos($basename, '.', 1))) {
                 return array();
             }
 
-            $this->extensions = explode('.', substr($basename, $pos + 1));
+            $extensions = explode('.', substr($basename, $pos + 1));
 
             $this->extensions = array_map(function($ext) {
                 return Pathname::normalizeExtension($ext);
-            }, $this->extensions);
+            }, $extensions);
         }
         return $this->extensions;
     }

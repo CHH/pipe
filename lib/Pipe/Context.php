@@ -7,12 +7,15 @@ use Pipe\Util\Pathname,
 
 class Context
 {
-    var $path;
-    var $requiredPaths = array();
+    public
+        $path,
 
-    protected $environment;
-    protected $dependencyPaths  = array();
-    protected $dependencyAssets = array();
+        $requiredPaths    = array(),
+        $dependencyPaths  = array(),
+        $dependencyAssets = array();
+
+    protected
+        $environment;
 
     function __construct(Environment $environment)
     {
@@ -57,30 +60,10 @@ class Context
         }
 
         $this->requiredPaths = array_merge($this->requiredPaths, $subContext->requiredPaths);
-        $this->dependencyPaths = array_merge($this->dependencyPaths, $subContext->getDependencyPaths());
-        $this->dependencyAssets = array_merge($this->dependencyAssets, $subContext->getDependencyAssets());
+        $this->dependencyPaths = array_merge($this->dependencyPaths, $subContext->dependencyPaths);
+        $this->dependencyAssets = array_merge($this->dependencyAssets, $subContext->dependencyAssets);
 
         return $data;
-    }
-
-    function getDependencyAssets()
-    {
-        return $this->dependencyAssets;
-    }
-
-    function getDependencyPaths()
-    {
-        return $this->dependencyPaths;
-    }
-
-    function getRequiredPaths()
-    {
-        return $this->requiredPaths;
-    }
-
-    function getEnvironment()
-    {
-        return $this->environment;
     }
 
     function requireAsset($path)
@@ -104,13 +87,13 @@ class Context
 
     protected function resolve($path)
     {
-        // If the path has no extension, then use the extension of the
-        // current source file.
+        # If the path has no extension, then use the extension of the
+        # current source file.
         if (!pathinfo($path, PATHINFO_EXTENSION)) {
             $path .= Pathname::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
         }
 
-        // Skip the load path if the path starts with `./`
+        # Skip the load path if the path starts with `./`
         if (preg_match('{^\.(/|\\\\)}', $path)) {
             $path = dirname($this->path) . DIRECTORY_SEPARATOR . $path;
             return realpath($path);
