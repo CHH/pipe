@@ -59,9 +59,13 @@ class Asset
         return $this->getBody();
     }
 
+    # Public: Calculates the date when this asset and its dependencies
+    # wer last modified.
+    #
+    # Returns a timestamp as Integer.
     function getLastModified()
     {
-        // Load the asset, if it's not loaded
+        # Load the asset, if it's not loaded
         if (!$this->body) {
             $this->getBody();
         }
@@ -76,6 +80,10 @@ class Asset
         return max(filemtime($this->path), max($dependenciesLastModified));
     }
 
+    # Public: Determines the asset's content type, based on its extensions.
+    #
+    # Returns the content type as String, or False when the content type
+    # couldn't be detected.
     function getContentType()
     {
         $formatExtension = $this->getFormatExtension();
@@ -164,6 +172,13 @@ class Asset
         );
     }
 
+    # Public: Writes the asset's content to the directory.
+    #
+    # directory  - Directory to write the asset to, optional.
+    # digestFile - Additionally write a file named like the asset,
+    #              but contains the asset's SHA1 hash.
+    #
+    # Returns Nothing.
     function write($directory = '', $digestFile = true)
     {
         $filename = $this->getTargetName();
@@ -186,11 +201,19 @@ class Asset
         }
     }
 
+    # Returns the SHA1 Hash of the Body as String.
     function getSha1()
     {
         return sha1($this->getBody());
     }
 
+    # Public: Returns the filename with extension, that's appropiate
+    # after the asset was processed.
+    #
+    # includeHash - Include the SHA1 hash of the asset's body in the filename,
+    #               defaults to True.
+    #
+    # Returns the file name as String.
     function getTargetName($includeHash = true)
     {
         $target = $this->getBasename(false);
@@ -203,6 +226,12 @@ class Asset
         return $target;
     }
 
+    # Public: Returns the asset's basename.
+    #
+    # includeExtensions: Set to false to strip all extensions from the filename,
+    #                    defaults to True.
+    #
+    # Returns the basename as String.
     function getBasename($includeExtensions = true)
     {
         $basename = basename($this->path);
