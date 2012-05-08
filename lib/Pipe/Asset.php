@@ -164,7 +164,7 @@ class Asset
         );
     }
 
-    function write($directory = '')
+    function write($directory = '', $digestFile = true)
     {
         $filename = $this->getTargetName();
 
@@ -172,7 +172,18 @@ class Asset
             $filename = $directory . '/' . $filename;
         }
 
+        if (!is_dir(dirname($filename))) {
+            mkdir(dirname($filename), 0777, true);
+        }
+
         @file_put_contents($filename, $this->getBody());
+
+        if ($digestFile) {
+            # Write a file which includes the asset's digest, so
+            # the filename can be reconstructed using the asset's name
+            # and this file.
+            @file_put_contents($this->getTargetName(false) . ".digest", $this->getSha1());
+        }
     }
 
     function getSha1()
@@ -180,16 +191,23 @@ class Asset
         return sha1($this->getBody());
     }
 
-    function getTargetName()
+    function getTargetName($includeHash = true)
     {
-        return $this->getBasename(true) . '-' . $this->getSha1() . $this->getFormatExtension();
+        $target = $this->getBasename(false);
+
+        if ($includeHash) {
+            $target .= '-' . $this->getSha1();
+        }
+
+        $target .= $this->getFormatExtension();
+        return $target;
     }
 
-    function getBasename($withoutExtensions = false)
+    function getBasename($includeExtensions = true)
     {
         $basename = basename($this->path);
 
-        if ($withoutExtensions) {
+        if (!$includeExtensions) {
             $basename = substr($basename, 0, strpos($basename, '.'));
         }
 
