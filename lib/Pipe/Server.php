@@ -2,9 +2,8 @@
 
 namespace Pipe;
 
-use Pipe\Util\Pathname,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation,
+    DateTime;
 
 class Server
 {
@@ -18,18 +17,21 @@ class Server
         $this->environment = $environment;
     }
 
-    function dispatch(Request $request)
+    function dispatch(HttpFoundation\Request $request)
     {
         $path  = ltrim($request->getRequestUri(), '/');
         $asset = $this->environment[$path];
-        
+
+        if (!$asset or $path == '') {
+            return $this->renderNotFound($request);
+        }
+
+        $response = new HttpFoundation\Response;
         $modifiedSince = $request->headers->get('If-Modified-Since');
 
         $lastModified = new \DateTime;
         $lastModified->setTimestamp($asset->getLastModified());
         $lastModified->setTimezone(new \DateTimeZone("UTC"));
-
-        $response = new Response;
 
         if ($modifiedSince == $lastModified->format(\DateTime::RFC1123)) {
             $response->setNotModified();
@@ -39,6 +41,18 @@ class Server
         $response->setContent($asset->getBody());
         $response->headers->set('Content-Type', $asset->getContentType());
         $response->headers->set('Last-Modified', $lastModified->format(\DateTime::RFC1123));
+
+        return $response;
+    }
+
+    protected function renderNotFound($request)
+    {
+        $response = new HttpFoundation\Response;
+
+        ob_start();
+        include(__DIR__ . "/res/404.html");
+        $response->setContent(ob_get_clean());
+        $response->setStatusCode(404);
 
         return $response;
     }

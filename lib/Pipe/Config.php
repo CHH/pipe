@@ -12,15 +12,14 @@ class Config
         "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
     );
 
-    protected
-        $config = array();
+    protected $config = array();
 
     function __construct($config = array())
     {
         $this->config = $config;
     }
 
-    # Creates a config object from the YAML file/string.
+    # Public: Creates a config object from the YAML file/string.
     #
     # Returns a new Config object.
     static function fromYaml($yaml)

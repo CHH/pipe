@@ -10,6 +10,7 @@ class Context
     public
         $path,
 
+        # All paths which were already required.
         $requiredPaths    = array(),
         $dependencyPaths  = array(),
         $dependencyAssets = array();
@@ -74,13 +75,11 @@ class Context
             throw new \UnexpectedValueException("Asset $path not found");
         }
 
-        if (in_array($resolvedPath, $this->requiredPaths)) {
-            return $this;
+        if (!in_array($resolvedPath, $this->requiredPaths)) {
+            $this->dependOn($resolvedPath);
+            $this->dependencyAssets[] = $this->evaluate($resolvedPath);
+            $this->requiredPaths[] = $resolvedPath;
         }
-
-        $this->dependOn($resolvedPath);
-        $this->dependencyAssets[] = $this->evaluate($resolvedPath);
-        $this->requiredPaths[] = $resolvedPath;
 
         return $this;
     }

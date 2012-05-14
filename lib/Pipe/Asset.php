@@ -11,24 +11,20 @@ class Asset
     var $path;
     var $logicalPath;
 
-    /**
-     * The Asset's declared Dependencies
-     * @var array
-     */
+    # The asset's declared dependencies.
     var $dependencies = array();
 
-    /**
-     * @var Environment
-     */
     protected $environment;
     protected $body;
 
-    /**
-     * List of the file's extensions
-     * @var array
-     */
+    # List of the file's extensions.
     protected $extensions;
 
+    # Initializes the asset.
+    #
+    # environment - The Environment object.
+    # path        - The absolute path to the asset.
+    # logicalPath - The path relative to the environment.
     function __construct(Environment $environment, $path, $logicalPath = null)
     {
         $this->environment = $environment;
@@ -36,6 +32,9 @@ class Asset
         $this->logicalPath = $logicalPath;
     }
 
+    # Processes and stores the asset's body.
+    #
+    # Returns the body as String.
     function getBody()
     {
         if (null === $this->body) {
@@ -51,16 +50,18 @@ class Asset
 
             $this->body = $result;
         }
+
         return $this->body;
     }
 
+    # Alias for `getBody()`.
     function __toString()
     {
         return $this->getBody();
     }
 
     # Public: Calculates the date when this asset and its dependencies
-    # wer last modified.
+    # were last modified.
     #
     # Returns a timestamp as Integer.
     function getLastModified()
@@ -121,7 +122,7 @@ class Asset
         );
     }
 
-    # Collects the file's extensions in reverse order.
+    # Collects the file's extensions.
     #
     # Returns an Array of normalized extensions.
     function getExtensions()
@@ -141,6 +142,7 @@ class Asset
                 return Pathname::normalizeExtension($ext);
             }, $extensions);
         }
+
         return $this->extensions;
     }
 
@@ -181,11 +183,7 @@ class Asset
     # Returns Nothing.
     function write($directory = '', $digestFile = true)
     {
-        $filename = $this->getTargetName();
-
-        if ($directory) {
-            $filename = $directory . '/' . $filename;
-        }
+        $filename = $directory . '/' . $this->getTargetName();
 
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
@@ -197,12 +195,12 @@ class Asset
             # Write a file which includes the asset's digest, so
             # the filename can be reconstructed using the asset's name
             # and this file.
-            @file_put_contents($this->getTargetName(false) . ".digest", $this->getSha1());
+            @file_put_contents($directory . '/' . $this->getTargetName(false) . ".digest", $this->getChecksum());
         }
     }
 
-    # Returns the SHA1 Hash of the Body as String.
-    function getSha1()
+    # Returns the body's checksum as String.
+    function getChecksum()
     {
         return sha1($this->getBody());
     }
@@ -219,7 +217,7 @@ class Asset
         $target = $this->getBasename(false);
 
         if ($includeHash) {
-            $target .= '-' . $this->getSha1();
+            $target .= '-' . $this->getChecksum();
         }
 
         $target .= $this->getFormatExtension();
