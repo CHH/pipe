@@ -16,7 +16,7 @@ class UglifyJs extends \MetaTemplate\Template\Base
         $cmd = "/usr/local/bin/uglifyjs";
 
         $process = new Process($cmd);
-        $process->setStdin($this->getData());
+        $process->setStdin($this->data);
 
         $process->run();
 

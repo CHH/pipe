@@ -19,28 +19,31 @@ class Server
 
     function dispatch(HttpFoundation\Request $request)
     {
-        $path  = ltrim($request->getRequestUri(), '/');
-        $asset = $this->environment[$path];
+        $path  = ltrim($request->getPathInfo(), '/');
+        $asset = $this->environment->find($path, true);
+        $debug = $request->query->get("debug", false);
 
         if (!$asset or $path == '') {
             return $this->renderNotFound($request);
         }
 
-        $response = new HttpFoundation\Response;
-        $modifiedSince = $request->headers->get('If-Modified-Since');
+        if ($debug) {
+            $this->environment->getBundleProcessors()->clear();
+        }
 
-        $lastModified = new \DateTime;
+        $lastModified = new \DateTime();
         $lastModified->setTimestamp($asset->getLastModified());
-        $lastModified->setTimezone(new \DateTimeZone("UTC"));
 
-        if ($modifiedSince == $lastModified->format(\DateTime::RFC1123)) {
-            $response->setNotModified();
+        $response = new HttpFoundation\Response;
+        $response->setPublic();
+        $response->setLastModified($lastModified);
+
+        if ($response->isNotModified($request)) {
             return $response;
         }
 
         $response->setContent($asset->getBody());
         $response->headers->set('Content-Type', $asset->getContentType());
-        $response->headers->set('Last-Modified', $lastModified->format(\DateTime::RFC1123));
 
         return $response;
     }

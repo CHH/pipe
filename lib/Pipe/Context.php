@@ -31,16 +31,16 @@ class Context
 
     function evaluate($path, $options = array())
     {
-        if (isset($options['data'])) {
-            $data = $options['data'];
-        } else {
-            $data = @file_get_contents($path);
-        }
-
         $asset = $this->environment->find($path);
 
         if (!$asset) {
             throw new UnexpectedValueException("Asset $path not found");
+        }
+
+        if (isset($options['data'])) {
+            $data = $options['data'];
+        } else {
+            $data = @file_get_contents($path);
         }
 
         $subContext = $this->createSubContext();

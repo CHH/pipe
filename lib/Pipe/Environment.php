@@ -108,7 +108,7 @@ class Environment implements \ArrayAccess
         return $this;
     }
 
-    function find($logicalPath)
+    function find($logicalPath, $bundled = false)
     {
         $path = new Pathname($logicalPath);
 
@@ -121,7 +121,14 @@ class Environment implements \ArrayAccess
         if (null === $realPath) {
             return;
         }
-        return new Asset($this, $realPath, $logicalPath);
+
+        if ($bundled) {
+            $asset = new BundledAsset($this, $realPath, $logicalPath);
+        } else {
+            $asset = new Asset($this, $realPath, $logicalPath);
+        }
+
+        return $asset;
     }
 
     # Sugar for find().

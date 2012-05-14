@@ -12,6 +12,9 @@ class Config
         "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
     );
 
+    var $jsCompression = true;
+    var $cssCompression = true;
+
     protected $config = array();
 
     function __construct($config = array())
@@ -35,7 +38,7 @@ class Config
         $loadPaths = $this->get('load_paths') ?: array();
         $env->appendPath($loadPaths);
 
-        if ($jsCompressor = $this->get('js_compressor')) {
+        if ($this->jsCompression and $jsCompressor = $this->get('js_compressor')) {
             if ($compressor = @$this->compressors[$jsCompressor]) {
                 $env->registerBundleProcessor('application/javascript', $compressor);
             } else {
@@ -43,7 +46,7 @@ class Config
             }
         }
 
-        if ($cssCompressor = $this->get("css_compressor")) {
+        if ($this->cssCompression and $cssCompressor = $this->get("css_compressor")) {
             if ($compressor = @$this->compressors[$cssCompressor]) {
                 $env->registerBundleProcessor('text/css', $compressor);
             } else {

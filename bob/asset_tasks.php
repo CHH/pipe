@@ -26,10 +26,10 @@ task("assets:dump", function() {
     $manifests = $config->get("manifests");
 
     foreach ($manifests as $manifest) {
-        $asset = $env->find("$manifest");
+        $asset = $env->find("$manifest", true);
 
         if (!$asset) {
-            println("Asset $manifest not found!", STDERR);
+            println("Asset '$manifest' not found!", STDERR);
             exit(1);
         }
 
@@ -43,7 +43,7 @@ task("server", function() {
     $host = @$_ENV["host"] ?: "0.0.0.0";
 
     php(
-        array("-S", "$host:$port", "-t", getcwd() . "/htdocs/", getcwd() . "/htdocs/index.php"),
+        array("-S", "$host:$port", getcwd() . "/htdocs/index.php"),
         null,
         1e18
     );

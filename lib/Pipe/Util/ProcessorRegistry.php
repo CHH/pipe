@@ -34,6 +34,11 @@ class ProcessorRegistry
         return $this;
     }
 
+    function clear()
+    {
+        $this->processors = array();
+    }
+
     function get($mimeType)
     {
         if (empty($this->processors[$mimeType])) {

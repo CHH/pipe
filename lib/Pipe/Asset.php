@@ -67,17 +67,11 @@ class Asset
     function getLastModified()
     {
         # Load the asset, if it's not loaded
-        if (!$this->body) {
+        if (null === $this->body) {
             $this->getBody();
         }
 
-        $dependenciesLastModified = array_map(
-            function($dep) {
-                return filemtime($dep);
-            },
-            $this->dependencies
-        );
-
+        $dependenciesLastModified = array_map("filemtime", $this->dependencies);
         return max(filemtime($this->path), max($dependenciesLastModified));
     }
 
@@ -148,12 +142,7 @@ class Asset
 
     function getProcessors()
     {
-        $formatExtension = $this->getFormatExtension();
-
-        # TODO: Throw error if content type/format ext was not found?
-        if ($formatExtension) {
-            $contentType = @$this->environment->contentTypes[$formatExtension];
-        }
+        $contentType = $this->getContentType();
 
         return array_merge(
             $this->environment->getPreProcessors($contentType),
