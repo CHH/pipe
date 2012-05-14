@@ -2,7 +2,8 @@
 
 namespace Pipe;
 
-use Pipe\DirectiveProcessor\Parser;
+use Pipe\DirectiveProcessor\Parser,
+    Pipe\Util\Shellwords;
 
 # A Filter which processes special comments.
 #
@@ -96,7 +97,7 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
 
             } else {
                 // TODO: Split by Shell Argument Rules
-                $argv = explode(' ', $content);
+                $argv = Shellwords::split($content);
                 $directive = array_shift($argv);
 
                 $this->executeDirective($directive, $context, $argv);

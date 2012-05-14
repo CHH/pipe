@@ -51,7 +51,7 @@ class Parser
             } else if (self::T_COMMENT == substr($line, 0, 2)) {
                 $comment = array(self::T_COMMENT, $line, $lineNumber);
 
-            } else if (self::T_ALT_COMMENT == substr($line, 0, 2)) {
+            } else if (self::T_ALT_COMMENT == substr($line, 0, 1)) {
                 $comment = array(self::T_ALT_COMMENT, $line, $lineNumber);
 
             } else if (self::T_ML_COMMENT == $line[0]) {

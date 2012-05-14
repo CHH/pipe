@@ -33,12 +33,6 @@ task("assets:dump", function() {
             exit(1);
         }
 
-        $content = $asset->getBody();
-
-        if (!is_dir(dirname($manifest))) {
-            mkdir(dirname($manifest), 0777, true);
-        }
-
         println("Dumping '$manifest' as '{$asset->getTargetName()}'");
         $asset->write($targetDir);
     }
