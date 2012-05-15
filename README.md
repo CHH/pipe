@@ -161,6 +161,41 @@ with either single or double quotes.
 //= require "some name with spaces.js"
 ```
 
+### Serving Assets dynamically.
+
+Pipe includes a `Pipe\Server` which is able to serve assets dynamically
+via HTTP. The server is designed to be called in `.php` file, served via
+`mod_php` or FastCGI.
+
+The Server must be initialized with an Environment instance.
+
+```php
+<?php
+
+use Pipe\Server,
+    Pipe\Environment;
+
+$env = new Environment;
+$env->appendPath("vendor_assets");
+$env->appendPath("assets");
+
+$server = new Server($env);
+```
+
+To serve an asset use the server's `dispatch` method. It takes an
+`Symfony\Component\HttpFoundation\Request` and returns a Response object.
+
+Call `send` on the response object to send the asset to the client.
+
+```php
+<?php
+
+use Symfony\Component\HttpFoundation\Request;
+
+$response = $server->dispatch(Request::createFromGlobals());
+$response->send();
+```
+
 ## License
 
 The MIT License
