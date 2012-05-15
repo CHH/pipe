@@ -102,8 +102,8 @@ $config = Config::fromYaml("pipe_config.yml");
 $env = $config->createEnvironment();
 ```
 
-To retrieve the value of a custom config key, use the config's `get`
-method.
+To retrieve a custom config key, use the config object as
+array.
 
 ```php
 <?php
