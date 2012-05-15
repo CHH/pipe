@@ -108,7 +108,55 @@ method.
 ```php
 <?php
 
-$key = $config->get("my_custom_key");
+$key = $config["my_custom_key"];
+```
+
+### Dumping an Asset to a File
+
+To dump an asset to a file, use the `write` method. The `write` method
+has the following signature:
+
+    write($directory = '', $digestFile = true)
+
+The directory is the prefix of the file. A hash of the asset's contents
+is automatically included in the resulting filename. This hash is
+written to a file named `.digest` and dumped to the same directory as
+the asset itself. You can use the digest from the file to get the 
+hash for reconstructing the filename.
+
+### Enabling Compression
+
+You can turn on compression by setting the `js_compressor` and
+`css_compressor` config keys.
+
+For now only the `uglify_js` compressor is supported.
+
+### Defining Dependencies
+
+Each file with content type "application/javascript" or "text/css" is
+processed by the `DirectiveProcessor`. The `DirectiveProcessor` parses
+the head of these files for special comments starting with an equals
+sign.
+
+```
+/* CSS
+ *= require foo.css
+ *= depend_on bar.css
+ */
+
+# CoffeeScript
+#= require foo.coffee
+
+// Javascript:
+//= require foo.js
+```
+
+The arguments for each directive are split by the Bourne Shell's
+rules. This means you have to quote arguments which contain spaces
+with either single or double quotes.
+
+```
+//= require "some name with spaces.js"
 ```
 
 ## License
