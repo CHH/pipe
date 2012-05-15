@@ -12,9 +12,6 @@ class Config extends \ArrayObject
         "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
     );
 
-    var $jsCompression = true;
-    var $cssCompression = true;
-
     # Public: Creates a config object from the YAML file/string.
     #
     # Returns a new Config object.
@@ -24,6 +21,9 @@ class Config extends \ArrayObject
         return new static($config);
     }
 
+    # Creates an environment from the config keys.
+    #
+    # Returns a new Environment instance.
     function createEnvironment()
     {
         $env = new Environment;
@@ -31,7 +31,7 @@ class Config extends \ArrayObject
         $loadPaths = $this['load_paths'] ?: array();
         $env->appendPath($loadPaths);
 
-        if ($this->jsCompression and $jsCompressor = $this['js_compressor']) {
+        if ($jsCompressor = $this['js_compressor']) {
             if ($compressor = @$this->compressors[$jsCompressor]) {
                 $env->registerBundleProcessor('application/javascript', $compressor);
             } else {
@@ -39,7 +39,7 @@ class Config extends \ArrayObject
             }
         }
 
-        if ($this->cssCompression and $cssCompressor = $this["css_compressor"]) {
+        if ($cssCompressor = $this["css_compressor"]) {
             if ($compressor = @$this->compressors[$cssCompressor]) {
                 $env->registerBundleProcessor('text/css', $compressor);
             } else {
@@ -50,6 +50,12 @@ class Config extends \ArrayObject
         return $env;
     }
 
+    # Retrieves a config key. Makes no notices if the key
+    # does not exist.
+    #
+    # key - The config key to return.
+    #
+    # Returns the config value or null.
     function offsetGet($key)
     {
         if (isset($this[$key])) {
