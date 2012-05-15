@@ -12,7 +12,11 @@ class Context
 
         # All paths which were already required.
         $requiredPaths    = array(),
+
+        # Array of all dependency paths.
         $dependencyPaths  = array(),
+
+        # Array of the dependencies' contents.
         $dependencyAssets = array();
 
     protected

@@ -3,7 +3,7 @@
 namespace Pipe;
 
 use Pipe\DirectiveProcessor\Parser,
-    Pipe\Util\Shellwords;
+    CHH\Shellwords;
 
 # A Filter which processes special comments.
 #
