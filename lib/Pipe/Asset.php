@@ -172,7 +172,7 @@ class Asset
     # Returns Nothing.
     function write($directory = '', $digestFile = true)
     {
-        $filename = $directory . '/' . $this->getTargetName();
+        $filename = ($directory ? "$directory/" : '') . $this->getTargetName();
 
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
@@ -184,7 +184,7 @@ class Asset
             # Write a file which includes the asset's digest, so
             # the filename can be reconstructed using the asset's name
             # and this file.
-            @file_put_contents($directory . '/' . $this->getTargetName(false) . ".digest", $this->getChecksum());
+            @file_put_contents(($directory ? "$directory/" : '') . $this->getTargetName(false) . ".digest", $this->getChecksum());
         }
     }
 
