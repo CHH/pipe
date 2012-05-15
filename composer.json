@@ -5,8 +5,14 @@
         "chh/meta-template": "*",
         "symfony/finder": ">=2.0.0,<2.1.0dev",
         "symfony/http-foundation": ">=2.0.0,<2.1.0dev",
-        "symfony/yaml": ">=2.0.0"
+        "symfony/yaml": ">=2.0.0",
+        "ulrichsg/getopt-php": "*",
+        "react/socket": "*",
+        "react/event-loop": "*",
+        "react/http": "*"
     },
+    "bin": ["bin/pipe-server"],
+    "minimum-stability": "dev",
     "description": "Pipe smokes your Assets",
     "keywords": [
         "assets"
