@@ -23,7 +23,7 @@ task("assets:dump", function() {
     $env = getEnvironment();
     $config = getConfig();
 
-    $manifests = $config->get("manifests");
+    $manifests = $config["manifests"];
 
     foreach ($manifests as $manifest) {
         $asset = $env->find("$manifest", true);

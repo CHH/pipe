@@ -4,7 +4,7 @@ namespace Pipe;
 
 use Symfony\Component\Yaml\Yaml;
 
-class Config
+class Config extends \ArrayObject
 {
     # Maps compressor names (available as js_compressor/css_compressor) 
     # to template classes.
@@ -14,13 +14,6 @@ class Config
 
     var $jsCompression = true;
     var $cssCompression = true;
-
-    protected $config = array();
-
-    function __construct($config = array())
-    {
-        $this->config = $config;
-    }
 
     # Public: Creates a config object from the YAML file/string.
     #
@@ -35,10 +28,10 @@ class Config
     {
         $env = new Environment;
 
-        $loadPaths = $this->get('load_paths') ?: array();
+        $loadPaths = $this['load_paths'] ?: array();
         $env->appendPath($loadPaths);
 
-        if ($this->jsCompression and $jsCompressor = $this->get('js_compressor')) {
+        if ($this->jsCompression and $jsCompressor = $this['js_compressor']) {
             if ($compressor = @$this->compressors[$jsCompressor]) {
                 $env->registerBundleProcessor('application/javascript', $compressor);
             } else {
@@ -46,7 +39,7 @@ class Config
             }
         }
 
-        if ($this->cssCompression and $cssCompressor = $this->get("css_compressor")) {
+        if ($this->cssCompression and $cssCompressor = $this["css_compressor"]) {
             if ($compressor = @$this->compressors[$cssCompressor]) {
                 $env->registerBundleProcessor('text/css', $compressor);
             } else {
@@ -57,10 +50,10 @@ class Config
         return $env;
     }
 
-    function get($key)
+    function offsetGet($key)
     {
-        if (array_key_exists($key, $this->config)) {
-            return $this->config[$key];
+        if (isset($this[$key])) {
+            return parent::offsetGet($key);
         }
     }
 }

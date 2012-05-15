@@ -25,9 +25,9 @@ class Environment implements \ArrayAccess
     # Processors are like engines, but are associated with
     # a specific content type and one processor can be 
     # associated with one or more content types
-    protected $preProcessors;
-    protected $postProcessors;
-    protected $bundleProcessors;
+    var $preProcessors;
+    var $postProcessors;
+    var $bundleProcessors;
 
     function __construct()
     {
@@ -46,30 +46,6 @@ class Environment implements \ArrayAccess
         foreach (Template::getEngines()->getEngines() as $ext => $engine) {
             $this->registerEngine($engine, $ext);
         }
-    }
-
-    function getPreProcessors($contentType = null)
-    {
-        if (null === $contentType) {
-            return $this->preProcessors;
-        }
-        return $this->preProcessors->get($contentType);
-    }
-
-    function getPostProcessors($contentType = null)
-    {
-        if (null === $contentType) {
-            return $this->postProcessors;
-        }
-        return $this->postProcessors->get($contentType);
-    }
-
-    function getBundleProcessors($contentType = null) 
-    {
-        if (null === $contentType) {
-            return $this->bundleProcessors;
-        }
-        return $this->bundleProcessors->get($contentType);
     }
 
     function registerEngine($engine, $extension)

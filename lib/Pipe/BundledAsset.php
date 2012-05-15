@@ -16,7 +16,7 @@ class BundledAsset extends Asset
         if (null === $this->body) {
             $body = parent::getBody();
 
-            $bundleProcessors = $this->environment->getBundleProcessors($this->getContentType());
+            $bundleProcessors = $this->environment->bundleProcessors->get($this->getContentType());
             $context = new Context($this->environment);
 
             $this->body = $context->evaluate($this->path, array(

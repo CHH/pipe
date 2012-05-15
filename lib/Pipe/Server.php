@@ -28,7 +28,7 @@ class Server
         }
 
         if ($debug) {
-            $this->environment->getBundleProcessors()->clear();
+            $this->environment->bundleProcessors->clear();
         }
 
         $lastModified = new \DateTime();

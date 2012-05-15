@@ -145,9 +145,9 @@ class Asset
         $contentType = $this->getContentType();
 
         return array_merge(
-            $this->environment->getPreProcessors($contentType),
+            $this->environment->preProcessors->get($contentType),
             array_reverse($this->getEngines()),
-            $this->environment->getPostProcessors($contentType)
+            $this->environment->postProcessors->get($contentType)
         );
     }
 
