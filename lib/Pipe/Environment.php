@@ -94,6 +94,10 @@ class Environment implements \ArrayAccess
 
         $realPath = $this->loadPaths->find($logicalPath);
 
+        if (!is_file($realPath)) {
+            return;
+        }
+
         if (null === $realPath) {
             return;
         }
