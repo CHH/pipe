@@ -116,7 +116,9 @@ $key = $config["my_custom_key"];
 To dump an asset to a file, use the `write` method. The `write` method
 has the following signature:
 
-    write($directory = '', $digestFile = true)
+```php
+write($directory = '', $digestFile = true)
+```
 
 The directory is the prefix of the file. A hash of the asset's contents
 is automatically included in the resulting filename. This hash is
