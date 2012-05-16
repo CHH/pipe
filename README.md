@@ -149,7 +149,7 @@ sign.
 # CoffeeScript
 #= require foo.coffee
 
-// Javascript:
+// Javascript
 //= require foo.js
 ```
 
