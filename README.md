@@ -183,8 +183,7 @@ last modified time is calculated, but the contents get not prepended.
 ### Engines
 
 Engines are used to process assets before they're dumped. Each engine is
-mapped to one or more file extension (e.g. CoffeeScript to `.coffee`).
-
+mapped to one or more file extension (e.g. CoffeeScript to `.coffee`). 
 Each asset can be processed by one or more engines. Which engines are
 used on the asset and their order is determined by the asset's file
 extensions.
@@ -224,6 +223,15 @@ file extensions:
         <td>.markdown, .md</td>
     </tr>
 </table>
+
+Under the hood, Pipe Engines are [meta-template][] templates. Look at
+its `README` for more information on building your own engines.
+
+To add an engine class to Pipe, use the environment's `registerEngine`
+method, which takes the engine's class name as first argument and an
+array of extensions as second argument.
+
+[meta-template]: https://github.com/CHH/meta-template
 
 ### Serving Assets dynamically.
 
