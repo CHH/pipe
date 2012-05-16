@@ -183,7 +183,8 @@ $server = new Server($env);
 ```
 
 To serve an asset use the server's `dispatch` method. It takes an
-`Symfony\Component\HttpFoundation\Request` and returns a Response object.
+`Symfony\Component\HttpFoundation\Request` and returns a Response object (Symfony HttpFoundation
+is included with Pipe).
 
 Call `send` on the response object to send the asset to the client.
 
