@@ -180,6 +180,51 @@ Defines that the `path` is a dependency of the current asset, but does
 not process anything. Assets defined this way get considered when the
 last modified time is calculated, but the contents get not prepended.
 
+### Engines
+
+Engines are used to process assets before they're dumped. Each engine is
+mapped to one or more file extension (e.g. CoffeeScript to `.coffee`).
+
+Each asset can be processed by one or more engines. Which engines are
+used on the asset and their order is determined by the asset's file
+extensions.
+
+For example, to process an asset first by the PHP engine and then
+by the LESS compiler, give the asset the `.less.php` suffix.
+
+Here's a list of the engines provided by default and their mapping to
+file extensions:
+
+<table>
+    <tr>
+        <th>Engine</th>
+        <th>Extensions</th>
+    </tr>
+    <tr>
+        <td>CoffeeScript</td>
+        <td>.coffee</td>
+    </tr>
+    <tr>
+        <td>LESS</td>
+        <td>.less</td>
+    </tr>
+    <tr>
+        <td>PHP</td>
+        <td>.php, .phtml</td>
+    </tr>
+    <tr>
+        <td>
+            Mustache (requires
+            <a href="https://github.com/weierophinney/phly_mustache">Phly/Mustache</a>)
+        </td>
+        <td>.mustache</td>
+    </tr>
+    <tr>
+        <td>Markdown (requires <a href="https://github.com/michelf/php-markdown">php-markdown</a> to be loaded)</td>
+        <td>.markdown, .md</td>
+    </tr>
+</table>
+
 ### Serving Assets dynamically.
 
 Pipe includes a `Pipe\Server` which is able to serve assets dynamically
