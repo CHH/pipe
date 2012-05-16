@@ -133,9 +133,9 @@ You can turn on compression by setting the `js_compressor` and
 
 For now only the `uglify_js` compressor is supported.
 
-### Defining Dependencies
+### Directives
 
-Each file with content type "application/javascript" or "text/css" is
+Each file with content type `application/javascript` or `text/css` is
 processed by the `DirectiveProcessor`. The `DirectiveProcessor` parses
 the head of these files for special comments starting with an equals
 sign.
@@ -160,6 +160,25 @@ with either single or double quotes.
 ```
 //= require "some name with spaces.js"
 ```
+
+#### require
+
+    require <path>
+
+The require directive takes an asset path as argument, processes the
+asset and puts the dependency's contents before the asset's contents.
+
+The path can also start with `./`, which skips the load path for the
+path resolution and looks up the file in the same path as the current
+asset.
+
+#### depend\_on
+
+    depend_on <path>
+
+Defines that the `path` is a dependency of the current asset, but does
+not process anything. Assets defined this way get considered when the
+last modified time is calculated, but the contents get not prepended.
 
 ### Serving Assets dynamically.
 
