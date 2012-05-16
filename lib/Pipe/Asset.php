@@ -101,7 +101,9 @@ class Asset
             }
         ));
 
-        return $formatExtension ?: array_search($this->getEngineContentType(), $environment->contentTypes);
+        return $formatExtension 
+            ?: array_search($this->getEngineContentType(), $environment->contentTypes) 
+            ?: join('', $this->getExtensions());
     }
 
     function getEngineExtensions()
