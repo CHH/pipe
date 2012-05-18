@@ -19,7 +19,8 @@ $opts = new Getopt(array(
 function displayUsage()
 {
     return <<<EOT
-pipe-server [-p <port>] [-h <host>] [-c <config>]
+Usage: pipe-server [-p <port>] [-h <host>] [-c <config>]
+
 EOT;
 }
 
@@ -29,7 +30,7 @@ array_shift($argv);
 try {
     $opts->parse($argv);
 } catch (\InvalidArgumentException $e) {
-    displayUsage();
+    fwrite(STDERR, displayUsage());
     exit(255);
 }
 

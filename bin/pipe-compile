@@ -11,8 +11,27 @@ $opts = new Getopt(array(
     array("c", "config", Getopt::OPTIONAL_ARGUMENT)
 ));
 
-$opts->parse();
+function displayUsage()
+{
+    return <<<EOT
+Usage: pipe-compile [-c|--config <config>] <file> [> <file>]
+
+EOT;
+}
+
+try {
+    $opts->parse();
+} catch (\InvalidArgumentException $e) {
+    fwrite(STDERR, displayUsage());
+    exit(255);
+}
+
 $files = $opts->getOperands();
+
+if (count($files) < 1) {
+    fwrite(STDERR, displayUsage());
+    exit(255);
+}
 
 $config = $opts->getOption("config") ?: "pipe_config.yml";
 
