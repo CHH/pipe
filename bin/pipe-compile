@@ -14,7 +14,7 @@ $opts = new Getopt(array(
 function displayUsage()
 {
     return <<<EOT
-Usage: pipe-compile [-c|--config <config>] <file> [> <file>]
+Usage: pipe-compile [-c|--config <config>] <file> [> <output_file>]
 
 EOT;
 }

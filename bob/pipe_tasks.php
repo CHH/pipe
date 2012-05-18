@@ -38,14 +38,3 @@ task("assets:dump", function() {
     }
 });
 
-task("server", function() {
-    $port = @$_ENV["port"] ?: 4000;
-    $host = @$_ENV["host"] ?: "0.0.0.0";
-
-    php(
-        array("-S", "$host:$port", getcwd() . "/htdocs/index.php"),
-        null,
-        1e18
-    );
-});
-
