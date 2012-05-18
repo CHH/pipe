@@ -16,56 +16,67 @@ $opts = new Getopt(array(
     array("c", "config", Getopt::OPTIONAL_ARGUMENT)
 ));
 
+function displayUsage()
+{
+    return <<<EOT
+pipe-server [-p <port>] [-h <host>] [-c <config>]
+EOT;
+}
+
 $argv = $_SERVER['argv'];
 array_shift($argv);
 
 try {
     $opts->parse($argv);
-
-    $loop = new StreamSelectLoop;
-    $socketServer = new SocketServer($loop);
-    $httpServer = new HttpServer($socketServer);
-
-    $configFile = $opts->getOption("config") ?: "pipe_config.yml";
-    $config = Config::fromYaml($configFile);
-    $env = $config->createEnvironment();
-
-    $host = $opts->getOption("host") ?: "127.0.0.1";
-    $port = $opts->getOption("port") ?: "4000";
-
-    $httpServer->on("request", function($request, $response) use ($env) {
-        $query = $request->getQuery();
-        $headers = $request->getHeaders();
-        $debug = false;
-
-        $path = ltrim($request->getPath(), '/');
-
-        if (@$query["debug"]) {
-            $debug = true;
-        }
-
-        $asset = $env->find($path, !$debug);
-
-        if (!$asset) {
-            $response->writeHead(404);
-            fwrite(STDERR, sprintf("pipe-server: [404] Asset '%s' not found.\n", $path));
-            return $response->end();
-        }
-
-        $body = $asset->getBody();
-
-        $response->writeHead(200, array(
-            "Content-Type" => $asset->getContentType(),
-            "Max-Age" => 60
-        ));
-
-        $response->end($body);
-    });
-
-    $socketServer->listen($port, $host);
-    $loop->run();
 } catch (\InvalidArgumentException $e) {
-    echo $e;
+    displayUsage();
+    exit(255);
 }
 
+$loop = new StreamSelectLoop;
+$socketServer = new SocketServer($loop);
+$httpServer = new HttpServer($socketServer);
+
+$configFile = $opts->getOption("config") ?: "pipe_config.yml";
+$config = Config::fromYaml($configFile);
+$env = $config->createEnvironment();
+
+$host = $opts->getOption("host") ?: "127.0.0.1";
+$port = $opts->getOption("port") ?: "4000";
+
+$httpServer->on("request", function($request, $response) use ($env) {
+    $query = $request->getQuery();
+    $headers = $request->getHeaders();
+    $debug = false;
+
+    $path = ltrim($request->getPath(), '/');
+
+    if (@$query["debug"]) {
+        $debug = true;
+    }
+
+    $asset = $env->find($path, !$debug);
+
+    if (!$asset) {
+        $response->writeHead(404);
+        fwrite(STDERR, sprintf("pipe-server: [404] Asset '%s' not found.\n", $path));
+        return $response->end();
+    }
+
+    $body = $asset->getBody();
+
+    $response->writeHead(200, array(
+        "Content-Type" => $asset->getContentType(),
+        "Max-Age" => 60
+    ));
+
+    $response->end($body);
+});
+
+$socketServer->listen($port, $host);
+
+fwrite(STDERR, "Server running on $host:$port\n");
+fwrite(STDERR, "Kill with [ctrl] + [c]\n");
+
+$loop->run();
 

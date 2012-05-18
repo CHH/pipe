@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
+
+use Ulrichsg\Getopt,
+    Pipe\Environment,
+    Pipe\Config;
+
+$opts = new Getopt(array(
+    array("c", "config", Getopt::OPTIONAL_ARGUMENT)
+));
+
+$opts->parse();
+$files = $opts->getOperands();
+
+$config = $opts->getOption("config") ?: "pipe_config.yml";
+
+if (file_exists($config)) {
+    $config = Config::fromYaml($config);
+    $env = $config->createEnvironment();
+} else {
+    $env = new Environment;
+}
+
+$env->appendPath(getcwd());
+
+$asset = $env->find($files[0], true);
+
+if (!$asset) {
+    fwrite(STDERR, "pipe-compile: Asset '{$files[0]}' not found.");
+    exit(1);
+}
+
+echo $asset->getBody();
+
