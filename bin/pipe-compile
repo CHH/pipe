@@ -8,13 +8,15 @@ use Ulrichsg\Getopt,
     Pipe\Config;
 
 $opts = new Getopt(array(
-    array("c", "config", Getopt::OPTIONAL_ARGUMENT)
+    array("c", "config", Getopt::REQUIRED_ARGUMENT),
+    array('p', 'path', Getopt::REQUIRED_ARGUMENT),
+    array(null, 'js-compressor', Getopt::REQUIRED_ARGUMENT),
 ));
 
 function displayUsage()
 {
     return <<<EOT
-Usage: pipe-compile [-c|--config <config>] <file> [> <output_file>]
+Usage: pipe-compile [-c|--config <config>] [-p|--path <path>] [--js-compressor <compressor>] <file> [> <output_file>]
 
 EOT;
 }
@@ -33,21 +35,31 @@ if (count($files) < 1) {
     exit(255);
 }
 
-$config = $opts->getOption("config") ?: "pipe_config.yml";
+$paths  = explode(":", $opts->getOption("path"));
+$configFile = $opts->getOption("config") ?: "pipe_config.yml";
+$jsCompressor = $opts->getOption("js-compressor");
 
-if (file_exists($config)) {
-    $config = Config::fromYaml($config);
-    $env = $config->createEnvironment();
+if (file_exists($configFile)) {
+    $config = Config::fromYaml($configFile);
 } else {
-    $env = new Environment;
+    $config = new Config();
 }
 
+if ($jsCompressor) {
+    $config["js_compressor"] = $jsCompressor;
+}
+
+$env = $config->createEnvironment();
 $env->appendPath(getcwd());
+
+foreach ($paths as $path) {
+    $env->appendPath($path);
+}
 
 $asset = $env->find($files[0], true);
 
 if (!$asset) {
-    fwrite(STDERR, "pipe-compile: Asset '{$files[0]}' not found.");
+    fwrite(STDERR, "pipe-compile: Asset '{$files[0]}' not found.\n");
     exit(1);
 }
 
