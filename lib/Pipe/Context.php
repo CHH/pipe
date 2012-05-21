@@ -35,9 +35,7 @@ class Context
 
     function evaluate($path, $options = array())
     {
-        $asset = $this->environment->find($path);
-
-        if (!$asset) {
+        if (!is_file($path)) {
             throw new UnexpectedValueException("Asset $path not found");
         }
 
@@ -52,7 +50,7 @@ class Context
         if (array_key_exists("processors", $options)) {
             $processors = $options["processors"];
         } else {
-            $processors = $asset->getProcessors();
+            $processors = array();
         }
 
         foreach ($processors as $class) {
@@ -60,7 +58,7 @@ class Context
                 return $data;
             });
 
-            $subContext->path = $processor->source = $asset->path;
+            $subContext->path = $processor->source = $path;
             $data = $processor->render($subContext);
         }
 
@@ -73,10 +71,10 @@ class Context
 
     function dataUri($path)
     {
-        $data = $this->evalute($this->resolve($path));
+        $data = $this->evaluate($this->resolve($path));
 
         return sprintf("data:%s;base64,%s",
-            $this->contentType($path), urlencode(base64_encode($data));
+            $this->contentType($path), urlencode(base64_encode($data))
         );
     }
 
@@ -94,9 +92,15 @@ class Context
             throw new \UnexpectedValueException("Asset $path not found");
         }
 
+        $asset = $this->environment->find($resolvedPath);
+
         if (!in_array($resolvedPath, $this->requiredPaths)) {
             $this->dependOn($resolvedPath);
-            $this->dependencyAssets[] = $this->evaluate($resolvedPath);
+
+            $this->dependencyAssets[] = $this->evaluate($resolvedPath, array(
+                "processors" => $asset->getProcessors()
+            ));
+
             $this->requiredPaths[] = $resolvedPath;
         }
 

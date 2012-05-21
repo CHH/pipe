@@ -29,6 +29,7 @@ class DirectiveProcessorTest extends \PHPUnit_Framework_TestCase
     function test()
     {
         $asset = $this->env->find('application.js');
+
         $asserted = <<<'EOL'
 // util.js
 // Some Utils

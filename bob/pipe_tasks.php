@@ -24,6 +24,7 @@ task("assets:dump", function() {
     $config = getConfig();
 
     $manifests = $config["manifests"];
+    $generateDigest = $config["include_digests"] ?: false;
 
     foreach ($manifests as $manifest) {
         $asset = $env->find("$manifest", true);
@@ -33,8 +34,8 @@ task("assets:dump", function() {
             exit(1);
         }
 
-        println("Dumping '$manifest' as '{$asset->getTargetName()}'");
-        $asset->write($targetDir, $config["include_digests"] ?: false);
+        println("Dumping '$manifest' as '{$asset->getTargetName($generateDigest)}'");
+        $asset->write($targetDir, $generateDigest);
     }
 });
 

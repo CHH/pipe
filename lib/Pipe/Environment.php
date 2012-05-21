@@ -13,10 +13,14 @@ class Environment implements \ArrayAccess
     # Stack of Load Paths for Assets.
     var $loadPaths;
 
-    # Map of file extension to content type.
+    # Map of file extensions to content types.
     var $contentTypes = array(
         '.css' => 'text/css',
-        '.js'  => 'application/javascript'
+        '.js'  => 'application/javascript',
+        '.jpeg' => 'image/jpeg',
+        '.jpg' => 'image/jpeg',
+        '.png' => 'image/png',
+        '.gif' => 'image/gif'
     );
 
     # Engine Registry, stores engines per file extension.
@@ -89,7 +93,7 @@ class Environment implements \ArrayAccess
         $path = new Pathname($logicalPath);
 
         if ($path->isAbsolute()) {
-            return new Asset($this, $path->toString(), $path->toString());
+            return new ProcessedAsset($this, $path->toString(), $path->toString());
         }
 
         $realPath = $this->loadPaths->find($logicalPath);
@@ -105,7 +109,7 @@ class Environment implements \ArrayAccess
         if ($bundled) {
             $asset = new BundledAsset($this, $realPath, $logicalPath);
         } else {
-            $asset = new Asset($this, $realPath, $logicalPath);
+            $asset = new ProcessedAsset($this, $realPath, $logicalPath);
         }
 
         return $asset;

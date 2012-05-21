@@ -7,5 +7,5 @@ task('test', array('phpunit.xml'), function() {
 });
 
 fileTask('phpunit.xml', array('phpunit.dist.xml'), function($task) {
-    copy($task->prereqisites[0], $task->name);
+    copy($task->prerequisites[0], $task->name);
 });
