@@ -34,7 +34,7 @@ task("assets:dump", function() {
         }
 
         println("Dumping '$manifest' as '{$asset->getTargetName()}'");
-        $asset->write($targetDir);
+        $asset->write($targetDir, $config["include_digests"] ?: false);
     }
 });
 

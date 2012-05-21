@@ -71,6 +71,21 @@ class Context
         return $data;
     }
 
+    function dataUri($path)
+    {
+        $data = $this->evalute($this->resolve($path));
+
+        return sprintf("data:%s;base64,%s",
+            $this->contentType($path), urlencode(base64_encode($data));
+        );
+    }
+
+    function contentType($path)
+    {
+        $asset = $this->environment->find($this->resolve($path));
+        return $asset->getContentType();
+    }
+
     function requireAsset($path)
     {
         $resolvedPath = $this->resolve($path);
