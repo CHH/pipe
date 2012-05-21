@@ -11,6 +11,7 @@ $opts = new Getopt(array(
     array("c", "config", Getopt::REQUIRED_ARGUMENT),
     array('p', 'path', Getopt::REQUIRED_ARGUMENT),
     array(null, 'js-compressor', Getopt::REQUIRED_ARGUMENT),
+    array(null, 'css-compressor', Getopt::REQUIRED_ARGUMENT),
 ));
 
 function displayUsage()
@@ -35,9 +36,8 @@ if (count($files) < 1) {
     exit(255);
 }
 
-$paths  = explode(":", $opts->getOption("path"));
+$paths = array_filter(explode(':', $opts->getOption("path")));
 $configFile = $opts->getOption("config") ?: "pipe_config.yml";
-$jsCompressor = $opts->getOption("js-compressor");
 
 if (file_exists($configFile)) {
     $config = Config::fromYaml($configFile);
@@ -45,7 +45,11 @@ if (file_exists($configFile)) {
     $config = new Config();
 }
 
-if ($jsCompressor) {
+if ($cssCompressor = $opts->getOption("css-compressor")) {
+    $config["css_compressor"] = $cssCompressor;
+}
+
+if ($jsCompressor = $opts->getOption("js-compressor")) {
     $config["js_compressor"] = $jsCompressor;
 }
 
