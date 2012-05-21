@@ -174,7 +174,7 @@ class Asset
     # Returns Nothing.
     function write($directory = '', $digestFile = true)
     {
-        $filename = ($directory ? "$directory/" : '') . $this->getTargetName();
+        $filename = ($directory ? "$directory/" : '') . $this->getTargetName($digestFile);
 
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
