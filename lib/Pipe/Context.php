@@ -81,6 +81,11 @@ class Context
     function contentType($path)
     {
         $asset = $this->environment->find($this->resolve($path));
+
+        if (!$asset) {
+            throw new \Exception("Asset '$path' not found.");
+        }
+
         return $asset->getContentType();
     }
 
@@ -97,8 +102,10 @@ class Context
         if (!in_array($resolvedPath, $this->requiredPaths)) {
             $this->dependOn($resolvedPath);
 
+            $processors = is_callable(array($asset, "getProcessors")) ? $asset->getProcessors() : array();
+
             $this->dependencyAssets[] = $this->evaluate($resolvedPath, array(
-                "processors" => $asset->getProcessors()
+                "processors" => $processors
             ));
 
             $this->requiredPaths[] = $resolvedPath;
@@ -107,7 +114,7 @@ class Context
         return $this;
     }
 
-    protected function resolve($path)
+    function resolve($path)
     {
         # If the path has no extension, then use the extension of the
         # current source file.
@@ -127,8 +134,7 @@ class Context
             return realpath($path);
         }
 
-        $loadPaths = $this->environment->loadPaths;
-        return $loadPaths->find($path);
+        return $this->environment->loadPaths->find($path);
     }
 
     protected function createSubContext()
