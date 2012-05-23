@@ -1,37 +1,37 @@
 {
     "name": "chh/pipe",
-    "require": {
-        "php": ">=5.3.2",
-        "chh/meta-template": "*",
-        "chh/shellwords": "*",
-        "symfony/finder": ">=2.0.0,<2.1.0dev",
-        "symfony/http-foundation": ">=2.0.0,<2.1.0dev",
-        "symfony/yaml": ">=2.0.0",
-        "ulrichsg/getopt-php": "*",
-        "react/socket": "*",
-        "react/event-loop": "*",
-        "react/http": "*"
-    },
     "bin": ["bin/pipe-server", "bin/pipe-compile"],
-    "minimum-stability": "dev",
-    "description": "Pipe smokes your Assets",
+    "description": "Put your assets into the Pipe and smoke them.",
     "keywords": [
         "assets"
     ],
     "license": "MIT",
     "homepage": "https://github.com/CHH/pipe",
-    "autoload": {
-        "psr-0": {
-            "Pipe": "lib/"
-        }
-    },
     "authors": [
         {
             "name": "Christoph Hochstrasser",
-            "email": "christoph.hochstrasser@gmail.com"
+            "email": "christoph.hochstrasser@gmail.com",
+            "homepage": "http://christophh.net"
         }
     ],
     "repositories": [
         {"type": "vcs", "url": "git://github.com/CHH/meta-template.git"}
-    ]
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "chh/meta-template": "*@dev",
+        "chh/shellwords": "*@dev",
+        "symfony/yaml": "2.*@stable",
+        "ulrichsg/getopt-php": "*@dev",
+        "imagine/imagine": "*@dev",
+    },
+    "suggest": {
+        "react/http": "Needed for the standalone asset server (pipe-server).",
+        "symfony/http-foundation": "Needed for dynamic asset serving (via mod_php/FastCGI).",
+    },
+    "autoload": {
+        "psr-0": {
+            "Pipe": "lib/"
+        }
+    }
 }
