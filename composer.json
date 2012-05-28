@@ -23,11 +23,11 @@
         "chh/shellwords": "*@dev",
         "symfony/yaml": "2.*@stable",
         "ulrichsg/getopt-php": "*@dev",
-        "imagine/imagine": "*@dev",
+        "imagine/imagine": "*@dev"
     },
     "suggest": {
         "react/http": "Needed for the standalone asset server (pipe-server).",
-        "symfony/http-foundation": "Needed for dynamic asset serving (via mod_php/FastCGI).",
+        "symfony/http-foundation": "Needed for dynamic asset serving (via mod_php/FastCGI)."
     },
     "autoload": {
         "psr-0": {
