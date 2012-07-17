@@ -37,7 +37,7 @@ class Environment implements \ArrayAccess
     {
         $this->loadPaths = new Pathstack;
 
-        $this->engines          = new EngineRegistry;
+        $this->engines          = Template::getEngines();
         $this->preProcessors    = new ProcessorRegistry;
         $this->postProcessors   = new ProcessorRegistry;
         $this->bundleProcessors = new ProcessorRegistry;
@@ -45,11 +45,6 @@ class Environment implements \ArrayAccess
         # Register default processors
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
         $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
-
-        # Register default Template Engines
-        foreach (Template::getEngines()->getEngines() as $ext => $engine) {
-            $this->registerEngine($engine, $ext);
-        }
     }
 
     function registerEngine($engine, $extension)
