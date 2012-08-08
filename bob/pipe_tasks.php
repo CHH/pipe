@@ -1,6 +1,6 @@
 <?php
 
-namespace Bob;
+namespace Bob\BuildConfig;
 
 use Pipe\Config;
 
@@ -23,19 +23,23 @@ task("assets:dump", function() {
     $env = getEnvironment();
     $config = getConfig();
 
-    $manifests = $config["manifests"];
-    $generateDigest = $config["include_digests"] ?: false;
+    $targets = $config->precompile;
+    $manifest = new \StdClass;
 
-    foreach ($manifests as $manifest) {
-        $asset = $env->find("$manifest", true);
+    foreach ($targets as $t) {
+        $asset = $env->find("$t", array("bundled" => true));
 
         if (!$asset) {
-            println("Asset '$manifest' not found!", STDERR);
+            println("Asset '$t' not found!", STDERR);
             exit(1);
         }
 
-        println("Dumping '$manifest' as '{$asset->getTargetName($generateDigest)}'");
-        $asset->write($targetDir, $generateDigest);
+        println("Dumping '$t' as '{$asset->getTargetName()}'");
+        $asset->write($targetDir);
+
+        $manifest->{$asset->logicalPath} = $asset->getTargetName();
     }
+
+    @file_put_contents("$targetDir/manifest.json", json_encode($manifest));
 });
 

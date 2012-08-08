@@ -20,7 +20,7 @@ class Server
     function dispatch(HttpFoundation\Request $request)
     {
         $path  = ltrim($request->getPathInfo(), '/');
-        $asset = $this->environment->find($path, true);
+        $asset = $this->environment->find($path, array("bundled" => true));
         $debug = $request->query->get("debug", false);
 
         if (!$asset or $path == '') {

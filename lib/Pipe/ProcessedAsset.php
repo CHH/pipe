@@ -59,6 +59,11 @@ class ProcessedAsset extends Asset
             : false;
     }
 
+    # Determines the format extension.
+    #
+    # The format extension is the extension which is not
+    # assigned to an engine and is present in the environment's
+    # configured content types.
     protected function getFormatExtension()
     {
         $environment = $this->environment;

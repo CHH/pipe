@@ -103,25 +103,16 @@ abstract class Asset
     # Public: Writes the asset's content to the directory.
     #
     # directory  - Directory to write the asset to, optional.
-    # digestFile - Additionally write a file named like the asset,
-    #              but contains the asset's SHA1 hash.
     #
     # Returns Nothing.
-    function write($directory = '', $digestFile = true)
+    function write($directory = '')
     {
-        $filename = ($directory ? "$directory/" : '') . $this->getTargetName($digestFile);
+        $filename = ($directory ? "$directory/" : '') . $this->getTargetName();
 
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
         }
 
         @file_put_contents($filename, $this->getBody());
-
-        if ($digestFile) {
-            # Write a file which includes the asset's digest, so
-            # the filename can be reconstructed using the asset's name
-            # and this file.
-            @file_put_contents(($directory ? "$directory/" : '') . $this->getTargetName(false) . ".digest", $this->getChecksum());
-        }
     }
 }

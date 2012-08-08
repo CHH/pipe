@@ -83,7 +83,7 @@ class Environment implements \ArrayAccess
         return $this;
     }
 
-    function find($logicalPath, $bundled = false)
+    function find($logicalPath, $options = array())
     {
         $path = new Pathname($logicalPath);
 
@@ -101,7 +101,7 @@ class Environment implements \ArrayAccess
             return;
         }
 
-        if ($bundled) {
+        if (@$options["bundled"]) {
             $asset = new BundledAsset($this, $realPath, $logicalPath);
         } else {
             $asset = new ProcessedAsset($this, $realPath, $logicalPath);

@@ -4,7 +4,7 @@ namespace Pipe;
 
 use Symfony\Component\Yaml\Yaml;
 
-class Config extends \ArrayObject
+class Config
 {
     # Maps compressor names (available as js_compressor/css_compressor) 
     # to template classes.
@@ -12,13 +12,28 @@ class Config extends \ArrayObject
         "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
     );
 
+    public $precompile = array();
+    public $loadPaths = array();
+
+    public $jsCompressor;
+    public $cssCompressor;
+
     # Public: Creates a config object from the YAML file/string.
     #
     # Returns a new Config object.
     static function fromYaml($yaml)
     {
         $config = Yaml::parse($yaml);
-        return new static($config);
+        $self = new static;
+
+        foreach ($config as $key => $value) {
+            # Convert from underscore_separated to camelCase
+            $key = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
+
+            $self->$key = $value;
+        }
+
+        return $self;
     }
 
     # Creates an environment from the config keys.
@@ -28,10 +43,10 @@ class Config extends \ArrayObject
     {
         $env = new Environment;
 
-        $loadPaths = $this['load_paths'] ?: array();
+        $loadPaths = $this->loadPaths ?: array();
         $env->appendPath($loadPaths);
 
-        if ($jsCompressor = $this['js_compressor']) {
+        if ($jsCompressor = $this->jsCompressor) {
             if ($compressor = @$this->compressors[$jsCompressor]) {
                 $env->registerBundleProcessor('application/javascript', $compressor);
             } else {
@@ -39,7 +54,7 @@ class Config extends \ArrayObject
             }
         }
 
-        if ($cssCompressor = $this["css_compressor"]) {
+        if ($cssCompressor = $this->cssCompressor) {
             if ($compressor = @$this->compressors[$cssCompressor]) {
                 $env->registerBundleProcessor('text/css', $compressor);
             } else {
@@ -48,18 +63,5 @@ class Config extends \ArrayObject
         }
 
         return $env;
-    }
-
-    # Retrieves a config key. Makes no notices if the key
-    # does not exist.
-    #
-    # key - The config key to return.
-    #
-    # Returns the config value or null.
-    function offsetGet($key)
-    {
-        if (isset($this[$key])) {
-            return parent::offsetGet($key);
-        }
     }
 }

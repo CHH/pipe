@@ -56,7 +56,7 @@ $httpServer->on("request", function($request, $response) use ($env) {
         $debug = true;
     }
 
-    $asset = $env->find($path, !$debug);
+    $asset = $env->find($path, array("bundled" => !$debug));
 
     if (!$asset) {
         $response->writeHead(404);
