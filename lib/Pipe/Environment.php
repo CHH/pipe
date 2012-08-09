@@ -45,6 +45,7 @@ class Environment implements \ArrayAccess
         # Register default processors
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
         $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
+        $this->registerPostProcessor('application/javascript', '\\Pipe\\SafetyColons');
     }
 
     function registerEngine($engine, $extension)
