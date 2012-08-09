@@ -7,7 +7,7 @@ use Pipe\Util\Pathname;
 class ProcessedAsset extends Asset
 {
     # The asset's declared dependencies.
-    var $dependencies = array();
+    public $dependencies = array();
 
     # Processes and stores the asset's body.
     #
@@ -57,6 +57,17 @@ class ProcessedAsset extends Asset
         return isset($this->environment->contentTypes[$formatExtension])
             ? $this->environment->contentTypes[$formatExtension]
             : false;
+    }
+
+    function getProcessors()
+    {
+        $contentType = $this->getContentType();
+
+        return array_merge(
+            $this->environment->preProcessors->get($contentType),
+            array_reverse($this->getEngines()),
+            $this->environment->postProcessors->get($contentType)
+        );
     }
 
     # Determines the format extension.
@@ -115,17 +126,6 @@ class ProcessedAsset extends Asset
                 return $engine::getDefaultContentType();
             }
         }
-    }
-
-    function getProcessors()
-    {
-        $contentType = $this->getContentType();
-
-        return array_merge(
-            $this->environment->preProcessors->get($contentType),
-            array_reverse($this->getEngines()),
-            $this->environment->postProcessors->get($contentType)
-        );
     }
 
     protected function getEngines()

@@ -4,17 +4,24 @@ namespace Pipe;
 
 abstract class Asset
 {
-    var $path;
-    var $logicalPath;
+    public $path;
+    public $logicalPath;
 
     # The asset's declared dependencies.
-    var $dependencies = array();
+    public $dependencies = array();
 
     protected $environment;
     protected $body;
 
     # List of the file's extensions.
     protected $extensions;
+
+    # The determination of the asset's content type is up to the specific
+    # implementation, and could be either derived from the file extension
+    # or by looking into the file's contents.
+    #
+    # Returns a MIME type as String, for example "text/javascript".
+    abstract function getContentType();
 
     # Initializes the asset.
     #
@@ -27,8 +34,6 @@ abstract class Asset
         $this->path = $path;
         $this->logicalPath = $logicalPath;
     }
-
-    abstract function getContentType();
 
     function getBody()
     {
