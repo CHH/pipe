@@ -102,13 +102,13 @@ $config = Config::fromYaml("pipe_config.yml");
 $env = $config->createEnvironment();
 ```
 
-To retrieve a custom config key, use the config object as
-array.
+To retrieve a custom config key, access the "camelCased" name as
+property:
 
 ```php
 <?php
 
-$key = $config["my_custom_key"];
+$key = $config->myCustomKey;
 ```
 
 ### Dumping an Asset to a File

@@ -18,7 +18,7 @@ function getEnvironment()
 
 desc("Dumps all assets.");
 task("assets:dump", function() {
-    $targetDir = @$_ENV["TARGET_DIR"] ?: "htdocs/assets";
+    $targetDir = @$_ENV["TARGET_DIR"] ?: $config->precompilePrefix;
 
     $env = getEnvironment();
     $config = getConfig();

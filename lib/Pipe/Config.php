@@ -13,6 +13,7 @@ class Config
     );
 
     public $precompile = array();
+    public $precompilePrefix = "htdocs/assets/";
     public $loadPaths = array();
 
     public $jsCompressor;
