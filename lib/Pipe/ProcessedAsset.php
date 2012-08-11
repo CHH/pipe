@@ -18,7 +18,10 @@ class ProcessedAsset extends Asset
             $ctx    = new Context($this->environment);
             $result = "";
 
-            $body = $ctx->evaluate($this->path, array("processors" => $this->getProcessors()));
+            $body = $ctx->evaluate($this->path, array(
+                "data" => parent::getBody(), 
+                "processors" => $this->getProcessors()
+            ));
 
             $this->dependencies = array_merge($this->dependencies, $ctx->dependencyPaths);
 
