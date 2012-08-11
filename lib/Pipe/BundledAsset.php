@@ -2,30 +2,12 @@
 
 namespace Pipe;
 
-class BundledAsset
+class BundledAsset extends ProcessedAsset
 {
-    var $path;
-    var $logicalPath;
-
-    protected $environment;
-    protected $body;
-
-    protected $processedAsset;
-
-    function __construct(Environment $environment, $path, $logicalPath = null)
-    {
-        $this->environment = $environment;
-        $this->path = $path;
-        $this->logicalPath = $logicalPath;
-
-        $this->processedAsset = $this->environment->find($path);
-        $this->processedAsset->logicalPath = $logicalPath;
-    }
-
     function getBody()
     {
         if (null === $this->body) {
-            $body = $this->processedAsset->getBody();
+            $body = parent::getBody();
 
             $bundleProcessors = $this->environment->bundleProcessors->get($this->getContentType());
             $context = new Context($this->environment);
@@ -37,15 +19,5 @@ class BundledAsset
         }
 
         return $this->body;
-    }
-
-    function __toString()
-    {
-        return $this->getBody();
-    }
-
-    function __call($method, $argv)
-    {
-        return call_user_func_array(array($this->processedAsset, $method), $argv);
     }
 }
