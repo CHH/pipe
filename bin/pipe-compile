@@ -46,11 +46,11 @@ if (file_exists($configFile)) {
 }
 
 if ($cssCompressor = $opts->getOption("css-compressor")) {
-    $config["css_compressor"] = $cssCompressor;
+    $config->cssCompressor = $cssCompressor;
 }
 
 if ($jsCompressor = $opts->getOption("js-compressor")) {
-    $config["js_compressor"] = $jsCompressor;
+    $config->jsCompressor = $jsCompressor;
 }
 
 $env = $config->createEnvironment();
