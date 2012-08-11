@@ -22,6 +22,15 @@ class Pathname
         return $extension;
     }
 
+    static function join($parts)
+    {
+        if ($parts instanceof \Iterator) {
+            $parts = iterator_to_array($parts);
+        }
+
+        return join(DIRECTORY_SEPARATOR, $parts);
+    }
+
     function __construct($path)
     {
         $this->originalPath = (string) $path;

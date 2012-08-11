@@ -53,10 +53,16 @@ class Context
             $processors = array();
         }
 
-        foreach ($processors as $class) {
-            $processor = new $class(function() use ($data) {
+        foreach ($processors as $p) {
+            $block = function() use ($data) {
                 return $data;
-            });
+            };
+
+            if (is_callable($p)) {
+                $processor = $p($block);
+            } else {
+                $processor = new $p($block);
+            }
 
             $subContext->path = $processor->source = $path;
             $data = $processor->render($subContext);
@@ -116,25 +122,37 @@ class Context
 
     function resolve($path)
     {
-        # If the path has no extension, then use the extension of the
-        # current source file.
-        if (!pathinfo($path, PATHINFO_EXTENSION)) {
-            $path .= Pathname::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
-        }
-
         # Skip the load path if the path starts with `./`
         if (preg_match('{^\.(/|\\\\)}', $path)) {
             $path = dirname($this->path) . DIRECTORY_SEPARATOR . $path;
-            return realpath($path);
+        }
+
+        if (is_dir($path)) {
+            $index = Pathname::join(array($path, "index{$this->getExtension()}"));
+
+            if (file_exists($index)) {
+                $path = $index;
+            }
+        }
+
+        # If the path has no extension, then use the extension of the
+        # current source file.
+        if (!pathinfo($path, PATHINFO_EXTENSION)) {
+            $ext = $this->getExtension();
         }
 
         $pathinfo = new Pathname($path);
 
         if ($pathinfo->isAbsolute()) {
-            return realpath($path);
+            return $path;
         }
 
         return $this->environment->loadPaths->find($path);
+    }
+
+    protected function getExtension()
+    {
+        return Pathname::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
     }
 
     protected function createSubContext()
