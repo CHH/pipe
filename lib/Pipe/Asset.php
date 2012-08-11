@@ -236,12 +236,12 @@ abstract class Asset
 
     protected function getEngineExtensions()
     {
-        $environment = $this->environment;
+        $env = $this->environment;
 
         return array_filter(
             $this->getExtensions(),
-            function($ext) use ($environment) {
-                return $environment->engines->get($ext);
+            function($ext) use ($env) {
+                return $env->engines->get($ext);
             }
         );
     }
