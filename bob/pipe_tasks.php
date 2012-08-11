@@ -34,10 +34,10 @@ task("assets:dump", function() {
             exit(1);
         }
 
-        println("Dumping '$t' as '{$asset->getTargetName()}'");
-        $asset->write($targetDir);
+        println("Dumping '$t' as '{$asset->getDigestName()}'");
+        $asset->write(array("dir" => $targetDir, "include_digest" => true));
 
-        $manifest->{$asset->logicalPath} = $asset->getTargetName();
+        $manifest->{$asset->logicalPath} = $asset->getDigestName();
     }
 
     @file_put_contents("$targetDir/manifest.json", json_encode($manifest));
