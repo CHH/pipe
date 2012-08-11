@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+if (!$command = @$_SERVER["argv"][1]) {
+    echo <<<EOT
+Usage: pipe <command>
+
+EOT;
+    exit(1);
+}
+
+array_shift($_SERVER["argv"]);
+array_shift($_SERVER["argv"]);
+
+putenv(sprintf('PATH=%s', join(PATH_SEPARATOR, array(
+    __DIR__, $_SERVER['PATH']
+))));
+
+system("pipe-$command " . join(' ', $_SERVER['argv']));
+
