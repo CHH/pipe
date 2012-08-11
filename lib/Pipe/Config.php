@@ -21,23 +21,31 @@ class Config
     public $jsCompressor;
     public $cssCompressor;
 
-    # Public: Creates a config object from the YAML file/string.
+    # Public: Creates a config object from the YAML file.
     #
     # Returns a new Config object.
-    static function fromYaml($yaml)
+    static function fromYaml($file)
     {
-        $config = Yaml::parse($yaml);
-        $self = new static;
-        $self->filename = $yaml;
+        if (!file_exists($file)) {
+            throw new \InvalidArgumentException("Config file '$file' not found.");
+        }
 
-        foreach ($config as $key => $value) {
+        $values = Yaml::parse(file_get_contents($file));
+        $config = new static($values, $file);
+
+        return $config;
+    }
+
+    function __construct($values = array(), $filename = null)
+    {
+        foreach ($values as $key => $value) {
             # Convert from underscore_separated to camelCase
             $key = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $key))));
 
-            $self->$key = $value;
+            $this->$key = $value;
         }
 
-        return $self;
+        $this->filename = $filename;
     }
 
     # Creates an environment from the config keys.
