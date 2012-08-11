@@ -43,6 +43,7 @@ class Environment implements \ArrayAccess
         $this->bundleProcessors = new ProcessorRegistry;
 
         # Register default processors
+        $this->registerPreProcessor('text/css', '\\Pipe\\ImportProcessor');
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
         $this->registerPreProcessor('application/javascript', '\\Pipe\\DirectiveProcessor');
         $this->registerPostProcessor('application/javascript', '\\Pipe\\SafetyColons');

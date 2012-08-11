@@ -17,9 +17,7 @@ class Context
         $dependencyPaths  = array(),
 
         # Array of the dependencies' contents.
-        $dependencyAssets = array();
-
-    protected
+        $dependencyAssets = array(),
         $environment;
 
     function __construct(Environment $environment)
