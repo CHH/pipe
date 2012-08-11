@@ -54,7 +54,7 @@ class Context
         }
 
         foreach ($processors as $p) {
-            $block = function() use ($data) {
+            $block = function() use (&$data) {
                 return $data;
             };
 
