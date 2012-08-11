@@ -19,6 +19,7 @@ class BundledAsset
         $this->logicalPath = $logicalPath;
 
         $this->processedAsset = $this->environment->find($path);
+        $this->processedAsset->logicalPath = $logicalPath;
     }
 
     function getBody()
