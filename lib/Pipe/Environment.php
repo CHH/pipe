@@ -89,10 +89,10 @@ class Environment implements \ArrayAccess
         $path = new Pathname($logicalPath);
 
         if ($path->isAbsolute()) {
-            return new ProcessedAsset($this, $path->toString(), $path->toString());
+            $realPath = $logicalPath;
+        } else {
+            $realPath = $this->loadPaths->find($logicalPath);
         }
-
-        $realPath = $this->loadPaths->find($logicalPath);
 
         if (!is_file($realPath)) {
             return;
