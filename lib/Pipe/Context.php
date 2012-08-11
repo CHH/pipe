@@ -138,7 +138,7 @@ class Context
         # If the path has no extension, then use the extension of the
         # current source file.
         if (!pathinfo($path, PATHINFO_EXTENSION)) {
-            $ext = $this->getExtension();
+            $path .= $this->getExtension();
         }
 
         $pathinfo = new Pathname($path);
