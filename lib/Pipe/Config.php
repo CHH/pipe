@@ -12,6 +12,8 @@ class Config
         "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
     );
 
+    public $filename;
+
     public $precompile = array();
     public $precompilePrefix = "htdocs/assets/";
     public $loadPaths = array();
@@ -26,6 +28,7 @@ class Config
     {
         $config = Yaml::parse($yaml);
         $self = new static;
+        $self->filename = $yaml;
 
         foreach ($config as $key => $value) {
             # Convert from underscore_separated to camelCase
@@ -45,7 +48,10 @@ class Config
         $env = new Environment;
 
         $loadPaths = $this->loadPaths ?: array();
-        $env->appendPath($loadPaths);
+
+        foreach ($loadPaths as $path) {
+            $env->appendPath(dirname($this->filename) . "/" . $path);
+        }
 
         if ($jsCompressor = $this->jsCompressor) {
             if ($compressor = @$this->compressors[$jsCompressor]) {
