@@ -30,6 +30,10 @@
         "react/http": "Needed for the standalone asset server (pipe-server).",
         "symfony/http-foundation": "Needed for dynamic asset serving (via mod_php/FastCGI)."
     },
+    "require-dev": {
+        "react/http": "*@dev",
+        "symfony/http-foundation": "*@stable"
+    },
     "autoload": {
         "psr-0": {
             "Pipe": "lib/"
