@@ -2,11 +2,12 @@
 
 namespace Pipe;
 
-use Pipe\Util\Pathstack,
-    Pipe\Util\Pathname,
-    Pipe\Util\ProcessorRegistry,
+use Pipe\Util\ProcessorRegistry,
     MetaTemplate\Template,
-    MetaTemplate\Util\EngineRegistry;
+    MetaTemplate\Util\EngineRegistry,
+    CHH\FileUtils,
+    CHH\FileUtils\PathInfo,
+    CHH\FileUtils\PathStack;
 
 class Environment implements \ArrayAccess
 {
@@ -27,8 +28,7 @@ class Environment implements \ArrayAccess
     var $engines;
 
     # Processors are like engines, but are associated with
-    # a specific content type and one processor can be 
-    # associated with one or more content types
+    # a mime type.
     var $preProcessors;
     var $postProcessors;
     var $bundleProcessors;
@@ -75,7 +75,7 @@ class Environment implements \ArrayAccess
 
     function prependPath($path)
     {
-        $this->loadPaths->unshift($path);
+        $this->loadPaths->prepend($path);
         return $this;
     }
 
@@ -87,7 +87,7 @@ class Environment implements \ArrayAccess
 
     function find($logicalPath, $options = array())
     {
-        $path = new Pathname($logicalPath);
+        $path = new PathInfo($logicalPath);
 
         if ($path->isAbsolute()) {
             $realPath = $logicalPath;

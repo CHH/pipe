@@ -2,6 +2,8 @@
 
 namespace Pipe\Util;
 
+use CHH\FileUtils;
+
 class ProcessorRegistry
 {
     protected $processors = array();

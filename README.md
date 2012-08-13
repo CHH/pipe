@@ -2,9 +2,22 @@
 
 _Put your assets into the pipe and smoke them._
 
-Pipe is an asset pipeline in the spirit of [Sprockets][]. Its focus
-is on ease of use.
+Pipe is an asset pipeline in the spirit of [Sprockets][]. It's meant
+as the practical way for managing assets. It aims to provide a useful
+out of the box setup for managing assets and support for common
+preprocessor languages found in the web world, like CoffeeScript or
+LESS.
 
+What Pipe provides for you:
+
+ - Out of the box support for [Less](http://lesscss.org) and [CoffeeScript][]
+ - Integrated **Dependency Managment**.
+ - Support for multiple **asset load paths**, which allows you to split
+   your vendor libraries and your application libraries.
+ - Tries to take the pain out of asset deployment, by dealing with
+   **cache busting** and **minification**.
+
+[coffeescript]: http://coffeescript.org/
 [sprockets]: https://github.com/sstephenson/sprockets
 
 ## Install
@@ -113,18 +126,16 @@ $key = $config->myCustomKey;
 
 ### Dumping an Asset to a File
 
-To dump an asset to a file, use the `write` method. The `write` method
-has the following signature:
+To dump an asset to a file, use the `write` method. 
 
-```php
-write($directory = '', $digestFile = true)
-```
+The `write` method takes an array of options:
 
-The directory is the prefix of the file. A hash of the asset's contents
-is automatically included in the resulting filename. This hash is
-written to a file named `.digest` and dumped to the same directory as
-the asset itself. You can use the digest from the file to get the 
-hash for reconstructing the filename.
+ * `dir (string)`: The directory is the prefix of the file. A hash of the asset's contents
+   is automatically included in the resulting filename.
+ * `include_digest (bool)`: Should the SHA1 hash of the asset's contents
+   be included in the filename?
+ * `compress (bool)`: Compresses the contents with GZIP and writes it
+   with an `.gz` extension.
 
 ### Enabling Compression
 

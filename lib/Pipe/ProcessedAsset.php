@@ -2,8 +2,6 @@
 
 namespace Pipe;
 
-use Pipe\Util\Pathname;
-
 class ProcessedAsset extends Asset
 {
     # The asset's declared dependencies.

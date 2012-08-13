@@ -21,6 +21,7 @@
         "php": ">=5.3.2",
         "chh/meta-template": "*@dev",
         "chh/shellwords": "*@dev",
+        "chh/fileutils": "*@dev",
         "symfony/yaml": "2.*@stable",
         "ulrichsg/getopt-php": "*@dev",
         "imagine/imagine": "*@dev"

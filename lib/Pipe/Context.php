@@ -2,7 +2,8 @@
 
 namespace Pipe;
 
-use Pipe\Util\Pathname,
+use CHH\FileUtils,
+    CHH\FileUtils\PathInfo,
     UnexpectedValueException;
 
 class Context
@@ -126,7 +127,7 @@ class Context
         }
 
         if (is_dir($path)) {
-            $index = Pathname::join(array($path, "index{$this->getExtension()}"));
+            $index = FileUtils::join(array($path, "index{$this->getExtension()}"));
 
             if (file_exists($index)) {
                 $path = $index;
@@ -139,7 +140,7 @@ class Context
             $path .= $this->getExtension();
         }
 
-        $pathinfo = new Pathname($path);
+        $pathinfo = new PathInfo($path);
 
         if ($pathinfo->isAbsolute()) {
             return $path;
@@ -150,7 +151,7 @@ class Context
 
     protected function getExtension()
     {
-        return Pathname::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
+        return FileUtils::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
     }
 
     protected function createSubContext()

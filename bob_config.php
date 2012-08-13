@@ -1,6 +1,6 @@
 <?php
 
-namespace Bob;
+namespace Bob\BuildConfig;
 
 task('test', array('phpunit.xml'), function() {
     sh('phpunit tests/');

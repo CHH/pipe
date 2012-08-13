@@ -2,7 +2,7 @@
 
 namespace Pipe;
 
-use Pipe\Util\Pathname;
+use CHH\FileUtils;
 
 abstract class Asset
 {
@@ -57,8 +57,7 @@ abstract class Asset
 
     # Public: Returns the asset's basename.
     #
-    # includeExtensions: Set to false to strip all extensions from the filename,
-    #                    defaults to True.
+    # includeExtensions: Set to false to strip all extensions from the filename (default: true)
     #
     # Returns the basename as String.
     function getBasename($includeExtensions = true)
@@ -109,11 +108,10 @@ abstract class Asset
         $target = $this->getBasename(false);
 
         if ($includeHash) {
-            $target .= '-' . $this->getChecksum();
+            $target .= '-' . $this->getDigest();
         }
 
-        $ext = array_search($this->getContentType(), $this->environment->contentTypes);
-        $target .= $ext;
+        $target .= $this->getFormatExtension();
 
         return $target;
     }
@@ -132,17 +130,17 @@ abstract class Asset
         $compress = @$options["compress"] ?: false;
         $includeDigest = @$options["include_digest"] ?: false;
 
-        $filename = Pathname::join(array($dir, ($includeDigest ? $this->getDigestName() : $this->logicalPath)));
+        $filename = FileUtils::join(array($dir, ($includeDigest ? $this->getDigestName() : $this->logicalPath)));
 
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
         }
 
+        $body = $this->getBody();
+
         if ($compress) {
-            $body = gzencode($this->getBody(), 9);
+            $body = gzencode($body, 9);
             $filename .= ".gz";
-        } else {
-            $body = $this->getBody();
         }
 
         @file_put_contents($filename, $body);
@@ -204,7 +202,7 @@ abstract class Asset
             $extensions = explode('.', substr($basename, $pos + 1));
 
             $this->extensions = array_map(function($ext) {
-                return Pathname::normalizeExtension($ext);
+                return FileUtils::normalizeExtension($ext);
             }, $extensions);
         }
 
