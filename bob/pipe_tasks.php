@@ -4,22 +4,21 @@ namespace Bob\BuildConfig;
 
 use Pipe\Config;
 
-function getConfig()
+function config()
 {
     static $config;
     return $config ?: $config = Config::fromYaml("pipe_config.yml");
 }
 
-function getEnvironment()
+function env()
 {
     static $env;
-    return $env ?: $env = getConfig()->createEnvironment();
+    return $env ?: $env = config()->createEnvironment();
 }
 
 desc("Dumps all assets.");
 task("assets:dump", function() {
-    $config = getConfig();
-    $env = getEnvironment();
+    $config = config();
 
     $targetDir = @$_ENV["TARGET_DIR"] ?: $config->precompilePrefix;
 
@@ -27,7 +26,7 @@ task("assets:dump", function() {
     $manifest = new \StdClass;
 
     foreach ($targets as $t) {
-        $asset = $env->find("$t", array("bundled" => true));
+        $asset = env()->find("$t", array("bundled" => true));
 
         if (!$asset) {
             println("Asset '$t' not found!", STDERR);
