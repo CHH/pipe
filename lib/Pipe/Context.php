@@ -26,6 +26,15 @@ class Context
         $this->environment = $environment;
     }
 
+    # Add a dependency on a path.
+    #
+    # These dependencies are not included with the parent's body,
+    # but are taken account of when the freshness of the asset is 
+    # checked.
+    #
+    # path - Logical path or relative path.
+    #
+    # Returns the Context Instance.
     function dependOn($path)
     {
         $this->dependencyPaths[] = $this->resolve($path);
@@ -74,6 +83,12 @@ class Context
         return $data;
     }
 
+    # Renders the asset as Data URI, e.g. for including sprite images 
+    # directly in CSS files.
+    #
+    # path - Logical path or relative path (./<path>)
+    #
+    # Returns the Data URI as String.
     function dataUri($path)
     {
         $data = $this->evaluate($this->resolve($path));
@@ -94,6 +109,12 @@ class Context
         return $asset->getContentType();
     }
 
+    # Adds an asset to the list of dependencies which should be included
+    # with their body.
+    #
+    # path - Path relative to load path, relative path.
+    #
+    # Returns the Context Instance.
     function requireAsset($path)
     {
         $resolvedPath = $this->resolve($path);
@@ -119,6 +140,31 @@ class Context
         return $this;
     }
 
+    # Requires all assets in the given directory.
+    #
+    # path - Directory which should be included.
+    #
+    # Returns the Context Instance.
+    function requireTree($path)
+    {
+        $resolved = $this->resolve($path);
+
+        if (!$resolved) {
+            throw new \InvalidArgumentException("Path '$path' not found.");
+        }
+
+        $dir = new \FilesystemIterator($resolved);
+
+        foreach ($dir as $file) {
+            # Ignore dotted files
+            if (substr($file->getBasename(), 0, 1) !== '.') {
+                $this->requireAsset($file->getRealpath());
+            }
+        }
+
+        return $this;
+    }
+
     function resolve($path)
     {
         # Skip the load path if the path starts with `./`
@@ -126,11 +172,22 @@ class Context
             $path = dirname($this->path) . DIRECTORY_SEPARATOR . $path;
         }
 
+        # When resolving a directory either look for a file named
+        # "$dir/index.$ext" or return the path to the directory (e.g.
+        # for "require_tree").
         if (is_dir($path)) {
             $index = FileUtils::join(array($path, "index{$this->getExtension()}"));
 
             if (file_exists($index)) {
                 $path = $index;
+            } else {
+                $pathinfo = new PathInfo($path);
+
+                if ($pathinfo->isAbsolute()) {
+                    return $path;
+                }
+
+                return $this->environment->loadPaths->find($path);
             }
         }
 

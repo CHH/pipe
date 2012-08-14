@@ -64,14 +64,16 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
     {
         $this->parser = new Parser;
 
-        $this->register('require', function($context, $argv = array()) {
-            $path = array_shift($argv);
+        $this->register('require', function($context, $path) {
             $context->requireAsset($path);
         });
 
-        $this->register('depend_on', function($context, $argv = array()) {
-            $path = array_shift($argv);
+        $this->register('depend_on', function($context, $path) {
             $context->dependOn($path);
+        });
+
+        $this->register('require_tree', function($context, $path) {
+            $context->requireTree($path);
         });
 
         $this->processed = array();
@@ -123,6 +125,9 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
         }
 
         $callback = $this->directives[$directive];
-        return $callback($context, $argv);
+
+        array_unshift($argv, $context);
+
+        return call_user_func_array($callback, $argv);
     }
 }
