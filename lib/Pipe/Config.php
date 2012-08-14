@@ -6,20 +6,20 @@ use Symfony\Component\Yaml\Yaml;
 
 class Config
 {
-    # Maps compressor names (available as js_compressor/css_compressor) 
-    # to template classes.
-    var $compressors = array(
-        "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
-    );
+    public
+        # Maps compressor names (available as js_compressor/css_compressor) 
+        # to template classes.
+        $compressors = array(
+            "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
+        ),
 
-    public $filename;
-
-    public $precompile = array();
-    public $precompilePrefix = "htdocs/assets/";
-    public $loadPaths = array();
-
-    public $jsCompressor;
-    public $cssCompressor;
+        $filename,
+        $precompile,
+        $precompilePrefix,
+        $loadPaths = array(),
+        $jsCompressor,
+        $cssCompressor,
+        $debug = false;
 
     # Public: Creates a config object from the YAML file.
     #
@@ -61,19 +61,21 @@ class Config
             $env->appendPath(dirname($this->filename) . "/" . $path);
         }
 
-        if ($jsCompressor = $this->jsCompressor) {
-            if ($compressor = @$this->compressors[$jsCompressor]) {
-                $env->registerBundleProcessor('application/javascript', $compressor);
-            } else {
-                throw new \UnexpectedValueException("JS compressor '$jsCompressor' not found.");
+        if (!$this->debug) {
+            if ($jsCompressor = $this->jsCompressor) {
+                if ($compressor = @$this->compressors[$jsCompressor]) {
+                    $env->registerBundleProcessor('application/javascript', $compressor);
+                } else {
+                    throw new \UnexpectedValueException("JS compressor '$jsCompressor' not found.");
+                }
             }
-        }
 
-        if ($cssCompressor = $this->cssCompressor) {
-            if ($compressor = @$this->compressors[$cssCompressor]) {
-                $env->registerBundleProcessor('text/css', $compressor);
-            } else {
-                throw new \UnexpectedValueException("CSS compressor '$cssCompressor' not found.");
+            if ($cssCompressor = $this->cssCompressor) {
+                if ($compressor = @$this->compressors[$cssCompressor]) {
+                    $env->registerBundleProcessor('text/css', $compressor);
+                } else {
+                    throw new \UnexpectedValueException("CSS compressor '$cssCompressor' not found.");
+                }
             }
         }
 
