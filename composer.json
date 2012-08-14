@@ -1,6 +1,6 @@
 {
     "name": "chh/pipe",
-    "bin": ["bin/pipe-server", "bin/pipe-compile"],
+    "bin": ["bin/pipe", "bin/pipe-server", "bin/pipe-compile"],
     "description": "Put your assets into the Pipe and smoke them.",
     "keywords": [
         "assets"
