@@ -10,6 +10,8 @@ use Ulrichsg\Getopt,
 $opts = new Getopt(array(
     array("c", "config", Getopt::REQUIRED_ARGUMENT),
     array('p', 'path', Getopt::REQUIRED_ARGUMENT),
+    array(null, 'debug', Getopt::NO_ARGUMENT),
+    array('C', 'compress', Getopt::NO_ARGUMENT),
     array(null, 'js-compressor', Getopt::REQUIRED_ARGUMENT),
     array(null, 'css-compressor', Getopt::REQUIRED_ARGUMENT),
 ));
@@ -53,6 +55,10 @@ if ($jsCompressor = $opts->getOption("js-compressor")) {
     $config->jsCompressor = $jsCompressor;
 }
 
+if ($opts->getOption("debug")) {
+    $config->debug = true;
+}
+
 $env = $config->createEnvironment();
 $env->appendPath(getcwd());
 
@@ -60,12 +66,21 @@ foreach ($paths as $path) {
     $env->appendPath($path);
 }
 
-$asset = $env->find($files[0], true);
+$out = '';
 
-if (!$asset) {
-    fwrite(STDERR, "pipe-compile: Asset '{$files[0]}' not found.\n");
-    exit(1);
+foreach ($files as $file) {
+    $asset = $env->find($file, array("bundled" => true));
+
+    if (!$asset) {
+        fwrite(STDERR, "pipe-compile: Asset '$file' not found.\n");
+        exit(1);
+    }
+
+    $out .= $asset->getBody() . "\n";
 }
 
-echo $asset->getBody();
+if ($opts->getOption('compress')) {
+    $out = gzencode($out, 9);
+}
 
+echo $out;
