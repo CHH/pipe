@@ -83,7 +83,7 @@ class Context
         return $data;
     }
 
-    # Renders the asset as Data URI, e.g. for including sprite images 
+    # Renders the asset as Data URI, excellent when including sprite images
     # directly in CSS files.
     #
     # path - Logical path or relative path (./<path>)
@@ -94,7 +94,7 @@ class Context
         $data = $this->evaluate($this->resolve($path));
 
         return sprintf("data:%s;base64,%s",
-            $this->contentType($path), urlencode(base64_encode($data))
+            $this->contentType($path), rawurlencode(base64_encode($data))
         );
     }
 
