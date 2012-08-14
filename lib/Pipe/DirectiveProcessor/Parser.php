@@ -25,8 +25,8 @@ class Parser
         $source = (string) $source;
 
         if (empty($source)) {
-            throw new \InvalidArgumentException("Source cannot be empty");
-        } 
+            return array();
+        }
 
         $header = true;
         $source = trim($source);
