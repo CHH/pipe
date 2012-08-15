@@ -6,18 +6,20 @@ use CHH\FileUtils;
 
 abstract class Asset
 {
-    public $path;
-    public $logicalPath;
+    public
+        $path,
+        $logicalPath,
+        $digest,
 
-    # The asset's declared dependencies.
-    public $dependencies = array();
-    public $digest;
+        # The asset's declared dependencies.
+        $dependencies = array();
 
-    protected $environment;
-    protected $body;
+    protected
+        $environment,
+        $body,
 
-    # List of the file's extensions.
-    protected $extensions;
+        # List of the file's extensions.
+        $extensions;
 
     # The determination of the asset's content type is up to the specific
     # implementation, and could be either derived from the file extension
