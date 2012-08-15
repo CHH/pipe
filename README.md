@@ -234,11 +234,11 @@ file extensions:
         <th>Extensions</th>
     </tr>
     <tr>
-        <td>CoffeeScript</td>
+        <td><a href="http://coffeescript.org">CoffeeScript</a></td>
         <td>.coffee</td>
     </tr>
     <tr>
-        <td>LESS</td>
+        <td><a href="http://lesscss.org">LESS</a></td>
         <td>.less</td>
     </tr>
     <tr>
@@ -247,14 +247,21 @@ file extensions:
     </tr>
     <tr>
         <td>
-            Mustache (requires
-            <a href="https://github.com/weierophinney/phly_mustache">Phly/Mustache</a>)
+            Mustache
         </td>
         <td>.mustache</td>
     </tr>
     <tr>
-        <td>Markdown (requires <a href="https://github.com/michelf/php-markdown">php-markdown</a> to be loaded)</td>
+        <td>Markdown</td>
         <td>.markdown, .md</td>
+    </tr>
+    <tr>
+        <td>
+            <a href="http://twig.sensiolabs.com">Twig</a>
+        </td>
+        <td>
+            .twig
+        </td>
     </tr>
 </table>
 
