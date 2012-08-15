@@ -12,8 +12,8 @@ What Pipe provides for you:
 
  - Out of the box support for [Less](http://lesscss.org) and [CoffeeScript][]
  - Integrated **Dependency Managment**.
- - Support for multiple **asset load paths**, which allows you to split
-   your vendor libraries and your application libraries.
+ - Support for multiple **asset load paths**, which allows you to untie
+   your _application's libraries_ from your _vendor libraries_.
  - Tries to take the pain out of asset deployment, by being designed for
    dealing with **cache busting** and **minification**.
 
