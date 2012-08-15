@@ -33,9 +33,10 @@ class Environment implements \ArrayAccess
     var $postProcessors;
     var $bundleProcessors;
 
-    function __construct()
+    function __construct($root = null)
     {
-        $this->loadPaths = new Pathstack;
+        $this->root = $root;
+        $this->loadPaths = new Pathstack($this->root);
 
         $this->engines          = Template::getEngines();
         $this->preProcessors    = new ProcessorRegistry;
