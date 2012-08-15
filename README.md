@@ -250,35 +250,47 @@ Pipe includes a `Pipe\Server` which is able to serve assets dynamically
 via HTTP. The server is designed to be called in `.php` file, served via
 `mod_php` or FastCGI.
 
-The Server must be initialized with an Environment instance.
+To use the dynamic asset server, you've to additionally require
+`symfony/http-foundation`. The `require` section of your `composer.json`
+should look like this:
+
+    {
+        "require": {
+            "chh/pipe": "*@dev",
+            "symfony/http-foundation": "*"
+        }
+    }
+
+The server's constructor expects an environment as only argument. You
+can either construct the environment from scratch or use the `Config`
+class.
+
+Put this in a file named `assets.php`:
 
 ```php
 <?php
 
 use Pipe\Server,
-    Pipe\Environment;
+    Pipe\Environment,
+    Symfony\Component\HttpFoundation\Request;
 
 $env = new Environment;
 $env->appendPath("vendor_assets");
 $env->appendPath("assets");
 
 $server = new Server($env);
+$server->dispatch(Request::createFromGlobals())
+       ->send();
 ```
 
-To serve an asset use the server's `dispatch` method. It takes an
-`Symfony\Component\HttpFoundation\Request` and returns a Response object (Symfony HttpFoundation
-is included with Pipe).
+The server resolves all request URIs relative to the environment's load
+path. So to render the Javascript file `js/index.js` you would request
+the URI `/assets.php/js/index.js`.
 
-Call `send` on the response object to send the asset to the client.
-
-```php
-<?php
-
-use Symfony\Component\HttpFoundation\Request;
-
-$response = $server->dispatch(Request::createFromGlobals());
-$response->send();
-```
+The server also applies some conditional caching via `Last-Modified` and
+`If-Not-Modified-Since` HTTP headers. Should a change to a dependency
+not be instantly visible, try to make a hard refresh in your browser or
+clear your browser's cache.
 
 ## License
 
