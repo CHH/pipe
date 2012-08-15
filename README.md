@@ -14,8 +14,8 @@ What Pipe provides for you:
  - Integrated **Dependency Managment**.
  - Support for multiple **asset load paths**, which allows you to split
    your vendor libraries and your application libraries.
- - Tries to take the pain out of asset deployment, by dealing with
-   **cache busting** and **minification**.
+ - Tries to take the pain out of asset deployment, by being designed for
+   dealing with **cache busting** and **minification**.
 
 [coffeescript]: http://coffeescript.org/
 [sprockets]: https://github.com/sstephenson/sprockets
@@ -95,7 +95,8 @@ Pipe environments can also be created from YAML config files. First you
 need an instance of `Pipe\Config`. Use the `fromYaml` static method to
 parse an YAML file into a config instance.
 
-To create an Environment, use the config instance's `createEnvironment`.
+Use the config's `createEnvironment` method to convert a config to an
+environment instance.
 
 ```yaml
 # pipe_config.yml
