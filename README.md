@@ -174,6 +174,8 @@ with either single or double quotes.
 
 #### require
 
+Usage:
+
     require <path>
 
 The require directive takes an asset path as argument, processes the
@@ -185,11 +187,31 @@ asset.
 
 #### depend\_on
 
+Usage:
+
     depend_on <path>
 
 Defines that the `path` is a dependency of the current asset, but does
 not process anything. Assets defined this way get considered when the
 last modified time is calculated, but the contents get not prepended.
+
+#### require\_tree
+
+Usage:
+
+    require_tree <path>
+
+Requires all files found in the directory specified by `path`.
+
+For example, if you have a directory for all individual widgets and a
+widget base prototype, then you could `require_tree` the `widgets/`
+directory. This way every developer can just drop a file into the
+`widgets/` directory without having to maintain a massive list of
+individual assets.
+
+    // index.js
+    //= require ./widget_base
+    //= require_tree ./widgets
 
 ### Engines
 
