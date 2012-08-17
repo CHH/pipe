@@ -5,7 +5,7 @@ namespace Pipe;
 use Pipe\Util\ProcessorRegistry,
     MetaTemplate\Template,
     MetaTemplate\Util\EngineRegistry,
-    CHH\FileUtils,
+    CHH\FileUtils\Path,
     CHH\FileUtils\PathInfo,
     CHH\FileUtils\PathStack;
 

@@ -2,7 +2,7 @@
 
 namespace Pipe;
 
-use CHH\FileUtils;
+use CHH\FileUtils\Path;
 
 abstract class Asset
 {
@@ -204,7 +204,7 @@ abstract class Asset
             $extensions = explode('.', substr($basename, $pos + 1));
 
             $this->extensions = array_map(function($ext) {
-                return FileUtils::normalizeExtension($ext);
+                return Path::normalizeExtension($ext);
             }, $extensions);
         }
 

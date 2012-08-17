@@ -2,7 +2,7 @@
 
 namespace Pipe;
 
-use CHH\FileUtils,
+use CHH\FileUtils\Path,
     CHH\FileUtils\PathInfo,
     UnexpectedValueException;
 
@@ -176,7 +176,7 @@ class Context
         # "$dir/index.$ext" or return the path to the directory (e.g.
         # for "require_tree").
         if (is_dir($path)) {
-            $index = FileUtils::join(array($path, "index{$this->getExtension()}"));
+            $index = Path::join(array($path, "index{$this->getExtension()}"));
 
             if (file_exists($index)) {
                 $path = $index;
@@ -208,7 +208,7 @@ class Context
 
     protected function getExtension()
     {
-        return FileUtils::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
+        return Path::normalizeExtension(pathinfo($this->path, PATHINFO_EXTENSION));
     }
 
     protected function createSubContext()
