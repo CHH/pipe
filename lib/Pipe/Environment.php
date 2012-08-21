@@ -12,10 +12,10 @@ use Pipe\Util\ProcessorRegistry,
 class Environment implements \ArrayAccess
 {
     # Stack of Load Paths for Assets.
-    var $loadPaths;
+    public $loadPaths;
 
     # Map of file extensions to content types.
-    var $contentTypes = array(
+    public $contentTypes = array(
         '.css' => 'text/css',
         '.js'  => 'application/javascript',
         '.jpeg' => 'image/jpeg',
@@ -25,13 +25,13 @@ class Environment implements \ArrayAccess
     );
 
     # Engine Registry, stores engines per file extension.
-    var $engines;
+    public $engines;
 
     # Processors are like engines, but are associated with
     # a mime type.
-    var $preProcessors;
-    var $postProcessors;
-    var $bundleProcessors;
+    public $preProcessors;
+    public $postProcessors;
+    public $bundleProcessors;
 
     function __construct($root = null)
     {
