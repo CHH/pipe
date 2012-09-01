@@ -76,7 +76,6 @@ class Context
             $data = $processor->render($subContext);
         }
 
-        $this->requiredPaths = array_merge($this->requiredPaths, $subContext->requiredPaths);
         $this->dependencyPaths = array_merge($this->dependencyPaths, $subContext->dependencyPaths);
         $this->dependencyAssets = array_merge($this->dependencyAssets, $subContext->dependencyAssets);
 
@@ -215,7 +214,7 @@ class Context
     {
         $context = new static($this->environment);
         $context->path = $this->path;
-        $context->requiredPaths = $this->requiredPaths;
+        $context->requiredPaths =& $this->requiredPaths;
 
         return $context;
     }
