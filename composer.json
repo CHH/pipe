@@ -23,16 +23,17 @@
         "chh/shellwords": "*@dev",
         "chh/fileutils": "*@dev",
         "symfony/yaml": "2.*@stable",
-        "ulrichsg/getopt-php": "*@dev",
-        "imagine/imagine": "*@dev"
+        "ulrichsg/getopt-php": "*@dev"
     },
     "suggest": {
-        "react/http": "Needed for the standalone asset server (pipe-server).",
-        "symfony/http-foundation": "Needed for dynamic asset serving (via mod_php/FastCGI)."
+        "react/http": "Enable the standalone asset server",
+        "symfony/http-foundation": "Enable dynamic asset serving with Pipe\\Server",
+        "imagine/imagine": "Enable image compressors"
     },
     "require-dev": {
         "react/http": "*@dev",
-        "symfony/http-foundation": "*@stable"
+        "symfony/http-foundation": "*@stable",
+        "imagine/imagine": "*@dev"
     },
     "autoload": {
         "psr-0": {
