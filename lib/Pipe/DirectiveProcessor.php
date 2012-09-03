@@ -25,12 +25,28 @@ use Pipe\DirectiveProcessor\Parser,
 #
 class DirectiveProcessor extends \MetaTemplate\Template\Base
 {
-    # Parser for directives.
-    protected $parser;
-
     # Map of directive name and the closure which is
     # invoked when the directive was used.
-    protected $directives;
+    protected $directives = array();
+    protected $parsedDirectives;
+
+    protected $header = '';
+    protected $body = '';
+
+    const HEADER_PATTERN = "/
+      \A (
+        (?m:\s*) (
+          (\\/\\* (?m:.*?) \\*\\/) |
+          (\\#\\#\\# (?m:.*?) \\#\\#\\#) |
+          (\\/\\/ .* \\\n?)+ |
+          (\\# .* \\\n?)+
+        )
+      )+
+    /x";
+
+    const DIRECTIVE_PATTERN = '/
+      ^ [\W]* = \s* (\w+.*?) (\\*\\/)? $
+    /x';
 
     # Is the directive registered?
     #
@@ -62,8 +78,6 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
     # Returns nothing.
     protected function prepare()
     {
-        $this->parser = new Parser;
-
         $this->register('require', function($context, $path) {
             $context->requireAsset($path);
         });
@@ -76,8 +90,14 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
             $context->requireTree($path);
         });
 
+        $this->body = $this->getData();
+
+        if (preg_match(self::HEADER_PATTERN, $this->getData(), $matches)) {
+            $this->header = $matches[0];
+            $this->body = substr($this->getData(), strlen($matches[0])) ?: '';
+        }
+
         $this->processed = array();
-        $this->tokens = $this->parser->parse($this->getData());
     }
 
     # Loops through all tokens returned by the parser and invokes
@@ -91,22 +111,49 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
     {
         $newSource = '';
 
-        foreach ($this->tokens as $token) {
-            list($type, $content, $line) = $token;
+        $directives = $this->getDirectives();
 
-            if ($type !== Parser::T_DIRECTIVE) {
-                $newSource .= $content . "\n";
+        foreach ($directives as $directive) {
+            list($i, $name, $argv) = $directive;
+            $this->executeDirective($name, $context, $argv);
+        }
 
-            } else {
-                // TODO: Split by Shell Argument Rules
-                $argv = Shellwords::split($content);
-                $directive = array_shift($argv);
+        return $this->getProcessedSource();
+    }
 
-                $this->executeDirective($directive, $context, $argv);
+    protected function getProcessedHeader()
+    {
+        $header = $this->header;
+
+        foreach (explode("\n", $header) as $i => $line) {
+            if (isset($this->parsedDirectives[$i])) {
+                $header = str_replace($line, "\n", $header);
             }
         }
 
-        return $newSource;
+        return trim($header);
+    }
+
+    protected function getDirectives()
+    {
+        if (null === $this->parsedDirectives) {
+            $this->parsedDirectives = array();
+
+            foreach (explode("\n", $this->header) as $i => $line) {
+                if (preg_match(self::DIRECTIVE_PATTERN, $line, $matches)) {
+                    $argv = Shellwords::split($matches[1]);
+                    $name = array_shift($argv);
+                    $this->parsedDirectives[$i] = array($i, $name, $argv);
+                }
+            }
+        }
+
+        return $this->parsedDirectives;
+    }
+
+    protected function getProcessedSource()
+    {
+        return $this->getProcessedHeader() . "\n" . $this->body;
     }
 
     # Executes a directive.
@@ -120,7 +167,7 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
     {
         if (!$this->isRegistered($directive)) {
             throw new \RuntimeException(sprintf(
-                "Undefined Directive \"%s\" in %s on line %d", $directive, $this->source, $line
+                "Undefined Directive \"%s\" in %s", $directive, $this->source
             ));
         }
 

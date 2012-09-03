@@ -34,24 +34,28 @@ class DirectiveProcessorTest extends \PHPUnit_Framework_TestCase
 // util.js
 // Some Utils
 
+;
 // module/ui/base.js
 var UI = {
     foo: "bar"
 };
 
 // module/ui/colorpicker.js
+
 UI.ColorPicker = (function() {
 })();
 
 // module/ui/datepicker.js
+
 UI.DatePicker = (function() {
 })();
 
 // ui.js
 // Some UI Components
-// The Main Manifest
-//
 
+;// The Main Manifest
+//
+;
 EOL;
 
         $this->assertEquals($asserted, $asset->getBody());
