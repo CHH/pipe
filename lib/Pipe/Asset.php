@@ -59,7 +59,7 @@ abstract class Asset
 
     # Public: Returns the asset's basename.
     #
-    # includeExtensions: Set to false to strip all extensions from the filename (default: true)
+    # includeExtensions - Include extensions in the filename (default: true)
     #
     # Returns the basename as String.
     function getBasename($includeExtensions = true)
@@ -121,9 +121,9 @@ abstract class Asset
     # Public: Writes the asset's content to the directory.
     #
     # options - Array of options.
-    #           dir:            Write the asset to the given directory. (default: '')
-    #           include_digest: Should the digest be spliced into the filenames? (default: false)
-    #           compress:       Should the contents be GZIP compressed? (default: false)
+    #           'dir'            => Write asset to a directory. (default: '')
+    #           'include_digest' => Include SHA1 digest in filename (default: false)
+    #           'compress'       => Compress contents with GZIP (default: false)
     #
     # Returns Nothing.
     function write($options = array())
@@ -132,7 +132,7 @@ abstract class Asset
         $compress = @$options["compress"] ?: false;
         $includeDigest = @$options["include_digest"] ?: false;
 
-        $filename = FileUtils::join(array($dir, ($includeDigest ? $this->getDigestName() : $this->logicalPath)));
+        $filename = Path::join(array($dir, ($includeDigest ? $this->getDigestName() : $this->logicalPath)));
 
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
