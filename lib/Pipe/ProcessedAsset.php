@@ -14,10 +14,10 @@ class ProcessedAsset extends Asset
     {
         if (null === $this->body) {
             $ctx    = new Context($this->environment);
-            $result = "";
+            $result = '';
 
             $body = $ctx->evaluate($this->path, array(
-                "data" => parent::getBody(), 
+                "data" => parent::getBody(),
                 "processors" => $this->getProcessors()
             ));
 
