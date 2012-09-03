@@ -4,11 +4,11 @@ namespace Pipe;
 
 class ImportProcessor extends \MetaTemplate\Template\Base
 {
+    const IMPORT_PATTERN = '/[\s]*@import (?:"(.+)"|url\\((.+)\\));[\s]*$/';
+
     function render($context = null, $vars = array())
     {
-        $pattern = '/^\s*@import\s+(?:"(.+)"|url\((.+)\));/';
-
-        $data = preg_replace_callback($pattern, function($matches) use ($context) {
+        $data = preg_replace_callback(self::IMPORT_PATTERN, function($matches) use ($context) {
             if (!empty($matches[1])) {
                 $path = $matches[1];
             } else if (!empty($matches[2])) {
@@ -36,7 +36,7 @@ class ImportProcessor extends \MetaTemplate\Template\Base
             return $context->evaluate($resolvedPath, array(
                 "processors" => $processors
             ));
-        }, $this->data);
+        }, $this->getData());
 
         return $data;
     }
