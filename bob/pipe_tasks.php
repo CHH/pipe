@@ -2,7 +2,8 @@
 
 namespace Bob\BuildConfig;
 
-use Pipe\Config;
+use Pipe\Config,
+    Pipe\AssetDumper;
 
 function config()
 {
@@ -19,13 +20,10 @@ function env()
 desc("Dumps all assets.");
 task("assets:dump", function() {
     $config = config();
-
     $targetDir = @$_ENV["TARGET_DIR"] ?: $config->precompilePrefix;
+    $dumper = new AssetDumper($targetDir);
 
-    $targets = $config->precompile;
-    $manifest = new \StdClass;
-
-    foreach ($targets as $t) {
+    foreach ($config->precompile as $logicalPath) {
         $asset = env()->find("$t", array("bundled" => true));
 
         if (!$asset) {
@@ -33,12 +31,9 @@ task("assets:dump", function() {
             exit(1);
         }
 
-        println("Dumping '$t' as '{$asset->getDigestName()}'");
-        $asset->write(array("dir" => $targetDir, "include_digest" => true));
-
-        $manifest->{$asset->logicalPath} = $asset->getDigestName();
+        $dumper->add($asset);
     }
 
-    @file_put_contents("$targetDir/manifest.json", json_encode($manifest));
+    $dumper->dump();
 });
 
