@@ -13,7 +13,7 @@ class UglifyJs extends \MetaTemplate\Template\Base
 
     function render($context = null, $vars = array())
     {
-        $cmd = "/usr/local/bin/uglifyjs";
+        $cmd = "/usr/bin/env uglifyjs";
 
         $process = new Process($cmd);
         $process->setStdin($this->data);
