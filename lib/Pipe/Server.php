@@ -22,6 +22,7 @@ class Server
         $path  = ltrim($request->getPathInfo(), '/');
         $asset = $this->environment->find($path, array("bundled" => true));
         $debug = $request->query->get("debug", false);
+        $cache = !$request->query->get("nocache", false);
 
         if (!$asset or $path == '') {
             return $this->renderNotFound($request);
@@ -38,12 +39,13 @@ class Server
         $response->setPublic();
         $response->setLastModified($lastModified);
 
-        if ($response->isNotModified($request)) {
+        if ($cache and $response->isNotModified($request)) {
             return $response;
         }
 
         $response->setContent($asset->getBody());
         $response->headers->set('Content-Type', $asset->getContentType());
+        $response->prepare($request);
 
         return $response;
     }
