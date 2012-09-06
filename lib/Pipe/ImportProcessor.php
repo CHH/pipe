@@ -15,6 +15,10 @@ class ImportProcessor extends \MetaTemplate\Template\Base
                 $path = $matches[2];
             }
 
+            if (false === strpos($path, '.css')) {
+                return $matches[0];
+            }
+
             $resolvedPath = $context->resolve($path);
 
             if (!$resolvedPath and !($resolvedPath = $context->resolve("./$path"))) {
