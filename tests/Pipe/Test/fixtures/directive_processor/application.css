@@ -1,0 +1,6 @@
+/* The Main Manifest
+ *
+ *= require module/util.css
+ *= require module/ui.css
+ *= depend_on module/some_other_dep.css
+ */
