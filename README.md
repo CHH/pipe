@@ -20,6 +20,8 @@ What Pipe provides for you:
 [coffeescript]: http://coffeescript.org/
 [sprockets]: https://github.com/sstephenson/sprockets
 
+[![Build Status](https://secure.travis-ci.org/CHH/pipe.png)](http://travis-ci.org/CHH/pipe)
+
 ## Install
 
 Get composer (if you haven't):
