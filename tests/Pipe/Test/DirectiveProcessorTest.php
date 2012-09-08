@@ -96,13 +96,7 @@ EOL;
 
 
 EOL;
-    
-        $myFile = "out";
-        $fh = fopen($myFile, 'w') or die("can't open file");
-        fwrite($fh, $asset->getBody());
-        fclose($fh);
+
         $this->assertEquals($asserted, $asset->getBody());
     }
-
-
 }
