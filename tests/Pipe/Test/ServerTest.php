@@ -41,25 +41,4 @@ class ServerTest extends \PHPUnit_Framework_TestCase
             'application/javascript', $response->headers->get('Content-Type')
         );
     }
-
-    function testReturnsNotModified()
-    {
-        $time = time();
-        $fixture = __DIR__ . "/fixtures/directive_processor/module/ui/base.js";
-        touch($fixture, $time);
-
-        $request = Request::create('application.js');
-
-        $modifiedSince = new \DateTime;
-        $modifiedSince->setTimestamp($time);
-        $modifiedSince->setTimezone(new \DateTimeZone("UTC"));
-
-        $request->headers->set(
-            'If-Modified-Since', $modifiedSince->format(\DateTime::RFC1123)
-        );
-
-        $response = $this->server->dispatch($request);
-
-        $this->assertEquals(304, $response->getStatusCode());
-    }
 }
