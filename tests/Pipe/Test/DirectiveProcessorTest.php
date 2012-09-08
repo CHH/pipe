@@ -26,7 +26,7 @@ class DirectiveProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($time, $asset->getLastModified());
     }
 
-    function test()
+    function testAssemblesJavascript()
     {
         $asset = $this->env->find('application.js');
 
@@ -60,4 +60,49 @@ EOL;
 
         $this->assertEquals($asserted, $asset->getBody());
     }
+
+    function testAssemblesStylesheets()
+    {
+        $asset = $this->env->find('application.css');
+
+        $asserted = <<<'EOL'
+/* util.css
+ * Some Utils
+ */
+
+
+
+/* module/ui/base.css */
+
+
+.ui {}
+
+/* module/ui/color.css */
+
+
+.ui .color_picker {}
+
+/* module/ui/datepicker.css */
+
+
+.ui .date_picker {}
+
+/* ui.css
+ * Some UI Components */
+
+
+/* The Main Manifest
+ * */
+
+
+EOL;
+    
+        $myFile = "out";
+        $fh = fopen($myFile, 'w') or die("can't open file");
+        fwrite($fh, $asset->getBody());
+        fclose($fh);
+        $this->assertEquals($asserted, $asset->getBody());
+    }
+
+
 }
