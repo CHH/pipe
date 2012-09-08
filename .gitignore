@@ -3,4 +3,4 @@ coverage/
 tags
 phpunit.xml
 composer.lock
-
+composer.phar

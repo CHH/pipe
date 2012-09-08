@@ -36,8 +36,8 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
     const HEADER_PATTERN = "/
       \A (
         (?m:\s*) (
-          (\\/\\* (?m:.*?) \\*\\/) |
-          (\\#\\#\\# (?m:.*?) \\#\\#\\#) |
+          (\\/\\* (?s:.*?) \\*\\/) |
+          (\\#\\#\\# (?s:.*?) \\#\\#\\#) |
           (\\/\\/ .* \\\n?)+ |
           (\\# .* \\\n?)+
         )
@@ -127,10 +127,10 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
 
         foreach (explode("\n", $header) as $i => $line) {
             if (isset($this->parsedDirectives[$i])) {
-                $header = str_replace($line, "\n", $header);
+                $header = str_replace($line, "\r", $header);
             }
         }
-
+        $header = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "", $header);
         return trim($header);
     }
 
