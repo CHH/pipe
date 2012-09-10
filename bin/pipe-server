@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require(dirname(__DIR__) . "/vendor/autoload.php");
+require_once(__DIR__ . "/../../../autoload.php");
 
 use Ulrichsg\Getopt,
     React\Http\Server as HttpServer,
