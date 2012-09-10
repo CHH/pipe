@@ -109,8 +109,6 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
     # Returns the processed asset, with all directives stripped.
     function render($context = null, $vars = array())
     {
-        $newSource = '';
-
         $directives = $this->getDirectives();
 
         foreach ($directives as $directive) {
@@ -127,10 +125,12 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
 
         foreach (explode("\n", $header) as $i => $line) {
             if (isset($this->parsedDirectives[$i])) {
-                $header = str_replace($line, "\r", $header);
+                $header = str_replace($line, "\n", $header);
             }
         }
-        $header = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "", $header);
+
+        //$header = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "", $header);
+
         return trim($header);
     }
 
