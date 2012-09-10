@@ -38,10 +38,15 @@ class Environment implements \ArrayAccess
         $this->root = $root;
         $this->loadPaths = new Pathstack($this->root);
 
-        $this->engines          = Template::getEngines();
+        $this->engines = Template::getEngines();
+
+        array_map(array($this->loadPaths, "appendExtensions"), array_keys($this->engines->getEngines()));
+
         $this->preProcessors    = new ProcessorRegistry;
         $this->postProcessors   = new ProcessorRegistry;
         $this->bundleProcessors = new ProcessorRegistry;
+
+        $this->registerEngine('\\Pipe\\JstProcessor', '.jst');
 
         # Register default processors
         $this->registerPreProcessor('text/css', '\\Pipe\\ImportProcessor');
@@ -52,6 +57,7 @@ class Environment implements \ArrayAccess
 
     function registerEngine($engine, $extension)
     {
+        $this->loadPaths->appendExtensions((array) $extension);
         $this->engines->register($engine, $extension);
         return $this;
     }
