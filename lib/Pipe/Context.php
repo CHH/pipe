@@ -190,12 +190,6 @@ class Context
             }
         }
 
-        # If the path has no extension, then use the extension of the
-        # current source file.
-        if (!pathinfo($path, PATHINFO_EXTENSION)) {
-            $path .= $this->getExtension();
-        }
-
         $pathinfo = new PathInfo($path);
 
         if ($pathinfo->isAbsolute()) {

@@ -40,7 +40,9 @@ class Environment implements \ArrayAccess
 
         $this->engines = Template::getEngines();
 
-        array_map(array($this->loadPaths, "appendExtensions"), array_keys($this->engines->getEngines()));
+        # Enable resolving logical paths without extension.
+        $this->loadPaths->appendExtensions(array_keys($this->engines->getEngines()));
+        $this->loadPaths->appendExtensions(array_keys($this->contentTypes));
 
         $this->preProcessors    = new ProcessorRegistry;
         $this->postProcessors   = new ProcessorRegistry;
