@@ -1,6 +1,6 @@
 /* ui.css
  * Some UI Components
- *= require ./ui/base
+ *= require ./ui/base.css
  *= require ./ui/colorpicker.css
  *= require ./ui/datepicker.css
  */
