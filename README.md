@@ -234,14 +234,17 @@ file extensions:
     <tr>
         <th>Engine</th>
         <th>Extensions</th>
+        <th>Requirements</th>
     </tr>
     <tr>
         <td><a href="http://coffeescript.org">CoffeeScript</a></td>
         <td>.coffee</td>
+        <td><code>coffee</code> &mdash; install with <code>npm install -g coffee-script</code></td>
     </tr>
     <tr>
         <td><a href="http://lesscss.org">LESS</a></td>
         <td>.less</td>
+        <td><code>lessc</code> &mdash; install with <code>npm install -g less</code></td>
     </tr>
     <tr>
         <td>PHP</td>
@@ -252,10 +255,12 @@ file extensions:
             Mustache
         </td>
         <td>.mustache</td>
+        <td>Add <code>phly/mustache</code> package</td>
     </tr>
     <tr>
         <td>Markdown</td>
         <td>.markdown, .md</td>
+        <td>Add <code>dflydev/markdown</code> package</td>
     </tr>
     <tr>
         <td>
@@ -264,6 +269,7 @@ file extensions:
         <td>
             .twig
         </td>
+        <td>Add <code>twig/twig</code> package</td>
     </tr>
 </table>
 
