@@ -43,8 +43,8 @@ class ProcessedAsset extends Asset
             $this->getBody();
         }
 
-        $dependenciesLastModified = array_map("filemtime", $this->dependencies);
-        return max(parent::getLastModified(), max($dependenciesLastModified));
+        $dependenciesLastModified = array_merge(array_map("filemtime", $this->dependencies), array(parent::getLastModified()));
+        return max($dependenciesLastModified);
     }
 
     # Public: Determines the asset's content type, based on its extensions.

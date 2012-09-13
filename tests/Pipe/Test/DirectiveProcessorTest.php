@@ -64,7 +64,6 @@ EOL;
     function testAssemblesStylesheets()
     {
         $asset = $this->env->find('application.css');
-
         $asserted = <<<'EOL'
 /* util.css
  * Some Utils
@@ -88,13 +87,39 @@ EOL;
 .ui .date_picker {}
 
 /* ui.css
- * Some UI Components */
+ * Some UI Components
+
+
+
+
+
+
+ */
 
 
 /* The Main Manifest
- * */
+ *
 
 
+
+
+
+
+ */
+
+
+EOL;
+
+        $this->assertEquals($asserted, $asset->getBody());
+    }
+
+    function testAssemblesSingularJS()
+    {
+        $asset = $this->env->find('singular.js');
+
+        $asserted = <<<'EOL'
+//Singular.js
+;
 EOL;
 
         $this->assertEquals($asserted, $asset->getBody());
