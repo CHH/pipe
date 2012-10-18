@@ -1,0 +1,227 @@
+@import "http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic";
+.flash-notice {
+  padding: 10px 20px;
+  background: #ffff99;
+  border: 1px solid #cccc00;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+.button {
+  display: inline-block;
+  padding: 10px 16px;
+  margin: 0 4px 0 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: none;
+  background: #eee;
+  box-shadow: 0 4px 0 #ddd;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  color: #222;
+  text-decoration: none;
+}
+.button:hover {
+  cursor: pointer;
+  background: #eef;
+  text-decoration: none;
+  box-shadow: 0 4px 0 #d5d5ff;
+}
+.button:active {
+  position: relative;
+  top: 2px;
+  box-shadow: 0 2px 0 #d5d5ff;
+}
+.button.primary {
+  background: #3333ff;
+  color: white;
+  box-shadow: 0 4px #0000e6;
+}
+.button.primary:active {
+  box-shadow: 0 2px #0000e6;
+}
+body {
+  font-family: "Lato", "Helvetica Neue", "Arial", sans-serif;
+  width: 960px;
+  margin: 0 auto;
+}
+.posts > dl > dt {
+  margin: 20px 0 10px;
+}
+.posts > dl > dd {
+  font-size: 22px;
+}
+article > header {
+  border-bottom: 1px solid #bbb;
+  padding: 10px 0;
+}
+article > header > h1 {
+  font-size: 48px;
+  font-weight: 300;
+  margin: 0.5em 0;
+}
+article > header .admin-options {
+  overflow: hidden;
+  margin-left: -10px;
+}
+article > header .admin-options > a {
+  display: inline-block;
+  padding: 10px 16px;
+  margin: 0 4px 0 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: none;
+  background: #eee;
+  box-shadow: 0 4px 0 #ddd;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  color: #222;
+  text-decoration: none;
+  float: left;
+  margin-bottom: 4px;
+}
+article > header .admin-options > a:hover {
+  cursor: pointer;
+  background: #eef;
+  text-decoration: none;
+  box-shadow: 0 4px 0 #d5d5ff;
+}
+article > header .admin-options > a:active {
+  position: relative;
+  top: 2px;
+  box-shadow: 0 2px 0 #d5d5ff;
+}
+article > header .admin-options > a.primary {
+  background: #3333ff;
+  color: white;
+  box-shadow: 0 4px #0000e6;
+}
+article > header .admin-options > a.primary:active {
+  box-shadow: 0 2px #0000e6;
+}
+article > header .article-info {
+  font-size: 14px;
+  color: #888;
+}
+article > .content {
+  font-size: 18px;
+}
+form input[type=submit] {
+  display: inline-block;
+  padding: 10px 16px;
+  margin: 0 4px 0 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: none;
+  background: #eee;
+  box-shadow: 0 4px 0 #ddd;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  color: #222;
+  text-decoration: none;
+}
+form input[type=submit]:hover {
+  cursor: pointer;
+  background: #eef;
+  text-decoration: none;
+  box-shadow: 0 4px 0 #d5d5ff;
+}
+form input[type=submit]:active {
+  position: relative;
+  top: 2px;
+  box-shadow: 0 2px 0 #d5d5ff;
+}
+form input[type=submit].primary {
+  background: #3333ff;
+  color: white;
+  box-shadow: 0 4px #0000e6;
+}
+form input[type=submit].primary:active {
+  box-shadow: 0 2px #0000e6;
+}
+form.inline {
+  display: inline-block;
+}
+form.delete input[type=submit] {
+  display: inline-block;
+  padding: 10px 16px;
+  margin: 0 4px 0 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: none;
+  background: #eee;
+  box-shadow: 0 4px 0 #ddd;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  color: #222;
+  text-decoration: none;
+}
+form.delete input[type=submit]:hover {
+  cursor: pointer;
+  background: #eef;
+  text-decoration: none;
+  box-shadow: 0 4px 0 #d5d5ff;
+}
+form.delete input[type=submit]:active {
+  position: relative;
+  top: 2px;
+  box-shadow: 0 2px 0 #d5d5ff;
+}
+form.delete input[type=submit].primary {
+  background: #3333ff;
+  color: white;
+  box-shadow: 0 4px #0000e6;
+}
+form.delete input[type=submit].primary:active {
+  box-shadow: 0 2px #0000e6;
+}
+form.post {
+  border-radius: 3px;
+}
+form.post label {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+form.post > section,
+form.post > footer {
+  padding: 10px 0;
+}
+form.post section.title {
+  font-size: 28px;
+}
+form.post section.title label {
+  color: #666;
+  display: block;
+}
+form.post section.title input {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+  margin-top: 10px;
+  width: 100%;
+  font-size: 28px;
+  font-weight: 700;
+  border: none;
+  border-bottom: 1px dashed #bbb;
+}
+form.post section.content > label {
+  display: none;
+}
+form.post section.content > textarea {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: none;
+  background: #f9f9f9;
+  border-radius: 4px;
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  min-height: 400px;
+  font-family: Menlo, Consolas, "Droid Sans Mono", monospace;
+  font-size: 18px;
+}

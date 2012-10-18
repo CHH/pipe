@@ -10,7 +10,9 @@ class Config
         # Maps compressor names (available as js_compressor/css_compressor) 
         # to template classes.
         $compressors = array(
-            "uglify_js" => "\\Pipe\\Compressor\\UglifyJs"
+            "uglify_js" => "\\Pipe\\Compressor\\UglifyJs",
+            "yuglify_css" => "\\Pipe\\Compressor\\YuglifyCss",
+            "yuglify_js" => "\\Pipe\\Compressor\\YuglifyJs",
         ),
 
         $filename,
