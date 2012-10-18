@@ -4,7 +4,9 @@ namespace Pipe;
 
 class ImportProcessor extends \MetaTemplate\Template\Base
 {
-    const IMPORT_PATTERN = '/[\s]*@import (?:"(.+)"|url\\((.+)\\));[\s]*$/';
+    const IMPORT_PATTERN = '/
+        @import[\s]*(?:"([^"]+)"|url\\((.+)\\));
+    /xm';
 
     function render($context = null, $vars = array())
     {
