@@ -145,7 +145,18 @@ The `write` method takes an array of options:
 You can turn on compression by setting the `js_compressor` and
 `css_compressor` config keys.
 
-For now only the `uglify_js` compressor is supported.
+Supported Javascript Compressors:
+
+* `uglify_js`, uses the popular Uglify JS compressor built for NodeJS.
+  Install with `npm -g install uglify-js`.
+* `yuglify_js`, Compressor built upon Uglify JS, and behaves like YUI
+  compressor. Install with `npm -g install yuglify`.
+
+Supported CSS Compressors:
+
+* `yuglify_css`, uses the Yuglify compressor's ability to compress CSS
+  using [CSSmin](https://github.com/yui/ycssmin). Requires the `yuglify`
+  NPM package.
 
 ### Directives
 
