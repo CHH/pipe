@@ -17,31 +17,16 @@ class ImportProcessor extends \MetaTemplate\Template\Base
                 $path = $matches[2];
             }
 
-            if (false === strpos($path, '.css')) {
-                return $matches[0];
-            }
-
             $resolvedPath = $context->resolve($path);
 
-            if (!$resolvedPath and !($resolvedPath = $context->resolve("./$path"))) {
-                throw new \UnexpectedValueException(
-                    "Could not import '$path'. Not found."
-                );
-            }
-
-            $asset = $context->environment->find($resolvedPath);
-
-            if (is_callable(array($asset, "getProcessors"))) {
-                $processors = $asset->getProcessors();
-            } else {
-                $processors = array();
+            if (!$resolvedPath) {
+                return $matches[0];
             }
 
             $context->dependOn($resolvedPath);
 
-            return $context->evaluate($resolvedPath, array(
-                "processors" => $processors
-            ));
+            # Import source code without processing, for LESS files.
+            return $context->evaluate($resolvedPath, array('processors' => array()));
         }, $this->getData());
 
         return $data;
