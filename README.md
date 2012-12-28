@@ -341,6 +341,51 @@ The server also applies some conditional caching via `Last-Modified` and
 not be instantly visible, try to make a hard refresh in your browser or
 clear your browser's cache.
 
+### Preparing Assets for Production Deployment
+
+It's a good idea to compile assets in a way that they don't need the
+runtime support of Pipe. The `Pipe\Manifest` class is responsible for
+just that.
+
+The Manifest is used to compile assets and writes a JSON encoded file
+which maps the logical paths (which the app knows anyway) to the paths
+including the digest (which the app can't know in advance).
+
+To add a file to the manifest, call the manifest's `compile` method:
+
+    <?php
+    
+    $env = new \Pipe\Environment;
+    $env->appendPath('assets/javascripts');
+
+    $manifest = new \Pipe\Manifest($env, 'build/assets/manifest.json');
+    $manifest->compile('index.js');
+
+This creates the `index-<SHA1 digest>.js` file, and a `manifest.json`
+both in the `build/assets` directory.
+
+This file looks a bit like this:
+
+    {
+        "assets": {
+            "index.js": "index-0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33.js"
+        }
+    }
+
+An app running in a production environment could use the manifest like
+this:
+
+    <?php
+    
+    # Better cache this, but omitted for brevity
+    $manifest = json_decode(file_get_contents('/path/to/manifest.json'), true);
+
+    # Path where the contents of "build/assets" are deployed.
+    # Could be a path to a CDN.
+    $prefix = "/assets";
+
+    printf('<script type="text/javascript" src="%s/%s"></script>', $prefix, $manifest['index.js']);
+
 ## License
 
 The MIT License
