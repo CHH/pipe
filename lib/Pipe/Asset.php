@@ -4,7 +4,7 @@ namespace Pipe;
 
 use CHH\FileUtils\Path;
 
-abstract class Asset
+class Asset
 {
     public
         $path,
@@ -19,14 +19,8 @@ abstract class Asset
         $body,
 
         # List of the file's extensions.
-        $extensions;
-
-    # The determination of the asset's content type is up to the specific
-    # implementation, and could be either derived from the file extension
-    # or by looking into the file's contents.
-    #
-    # Returns a MIME type as String, for example "text/javascript".
-    abstract function getContentType();
+        $extensions,
+        $contentType;
 
     # Initializes the asset.
     #
@@ -38,6 +32,26 @@ abstract class Asset
         $this->environment = $environment;
         $this->path = $path;
         $this->logicalPath = $logicalPath;
+    }
+
+    function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    # The determination of the asset's content type is up to the specific
+    # implementation, and could be either derived from the file extension
+    # or by looking into the file's contents.
+    #
+    # Returns a MIME type as String, for example "text/javascript".
+    function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    function setBody($body)
+    {
+        $this->body = $body;
     }
 
     function getBody()

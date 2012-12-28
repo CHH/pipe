@@ -4,9 +4,6 @@ namespace Pipe;
 
 class ProcessedAsset extends Asset
 {
-    # The asset's declared dependencies.
-    public $dependencies = array();
-
     # Processes and stores the asset's body.
     #
     # Returns the body as String.
