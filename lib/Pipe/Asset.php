@@ -57,6 +57,14 @@ abstract class Asset
         }
     }
 
+    # Public: Returns the asset's path relative to the environment.
+    #
+    # Returns a String.
+    function getLogicalPath()
+    {
+        return $this->logicalPath;
+    }
+
     # Public: Returns the asset's basename.
     #
     # includeExtensions - Include extensions in the filename (default: true)

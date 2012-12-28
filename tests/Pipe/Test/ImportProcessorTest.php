@@ -27,11 +27,11 @@ class ImportProcessorTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 "screen1.css",
-                "\nbody { font-size: 0.625em; }\n"
+                "body { font-size: 0.625em; }\n\n\n"
             ),
             array(
                 "screen2.css",
-                "\nbody { font-size: 0.625em; }\n"
+                "body { font-size: 0.625em; }\n\n\n"
             )
         );
     }
