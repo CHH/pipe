@@ -26,7 +26,12 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($digestName, $json["assets"]["asset1.js"]);
 
-        $this->assertNotEmpty($json["files"][$digestName]);
+        $fileInfo = $json['files'][$digestName];
+
+        $this->assertArrayHasKey('size', $fileInfo);
+        $this->assertArrayHasKey('logical_path', $fileInfo);
+        $this->assertArrayHasKey('content_type', $fileInfo);
+        $this->assertArrayHasKey('digest', $fileInfo);
 
         $this->assertTrue($dir->hasChild('manifest.json'));
         $this->assertTrue($dir->hasChild($digestName));
