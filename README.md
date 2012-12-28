@@ -372,8 +372,11 @@ This file looks a bit like this:
         }
     }
 
+Then deploy everything located in `build/assets`, e.g. to some CDN or
+static file server.
+
 An app running in a production environment could use the manifest like
-this:
+this, to create links to the assets:
 
     <?php
     
