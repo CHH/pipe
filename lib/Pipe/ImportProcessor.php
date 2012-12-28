@@ -26,7 +26,7 @@ class ImportProcessor extends \MetaTemplate\Template\Base
             $context->dependOn($resolvedPath);
 
             # Import source code without processing, for LESS files.
-            return $context->evaluate($resolvedPath, array('processors' => array()));
+            return $context->evaluate($resolvedPath, array('processors' => array())) . "\n";
         }, $this->getData());
 
         return $data;

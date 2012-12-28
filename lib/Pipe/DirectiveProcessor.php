@@ -92,7 +92,7 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
 
         $this->body = $this->getData();
 
-        if (preg_match(self::HEADER_PATTERN, $this->getData(), $matches)) {
+        if (preg_match(static::HEADER_PATTERN, $this->getData(), $matches)) {
             $this->header = $matches[0];
             $this->body = substr($this->getData(), strlen($matches[0])) ?: '';
         }
@@ -140,7 +140,7 @@ class DirectiveProcessor extends \MetaTemplate\Template\Base
             $this->parsedDirectives = array();
 
             foreach (explode("\n", $this->header) as $i => $line) {
-                if (preg_match(self::DIRECTIVE_PATTERN, $line, $matches)) {
+                if (preg_match(static::DIRECTIVE_PATTERN, $line, $matches)) {
                     $argv = Shellwords::split($matches[1]);
                     $name = array_shift($argv);
                     $this->parsedDirectives[$i] = array($i, $name, $argv);

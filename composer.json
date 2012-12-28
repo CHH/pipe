@@ -33,7 +33,8 @@
     "require-dev": {
         "react/http": "*@dev",
         "symfony/http-foundation": "*@stable",
-        "imagine/imagine": "*@dev"
+        "imagine/imagine": "*@dev",
+        "mikey179/vfsStream": "1.1.*@stable"
     },
     "autoload": {
         "psr-0": {

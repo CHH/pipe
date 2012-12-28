@@ -3,7 +3,7 @@
 namespace Bob\BuildConfig;
 
 use Pipe\Config,
-    Pipe\AssetDumper;
+    Pipe\Manifest;
 
 function config()
 {
@@ -21,19 +21,10 @@ desc("Dumps all assets.");
 task("assets:dump", function() {
     $config = config();
     $targetDir = @$_ENV["TARGET_DIR"] ?: $config->precompilePrefix;
-    $dumper = new AssetDumper($targetDir);
 
-    foreach ($config->precompile as $logicalPath) {
-        $asset = env()->find("$t", array("bundled" => true));
+    $manifest = new Manifest(env(), "$targetDir/manifest.json", $targetDir);
+    $manifest->compress = true;
 
-        if (!$asset) {
-            println("Asset '$t' not found!", STDERR);
-            exit(1);
-        }
-
-        $dumper->add($asset);
-    }
-
-    $dumper->dump();
+    $manifest->compile($config->precompile);
 });
 

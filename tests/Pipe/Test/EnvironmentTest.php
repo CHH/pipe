@@ -16,10 +16,21 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->environment = $env;
     }
 
-    function testReadSingleAsset()
+    function testFindSingleAsset()
     {
         $asset = $this->environment['asset1.js'];
         $this->assertInstanceOf('\\Pipe\\Asset', $asset);
+    }
+
+    function testFindBundledAsset()
+    {
+        $asset = $this->environment->find('asset1.js', array('bundled' => true));
+        $this->assertInstanceOf('\\Pipe\\BundledAsset', $asset);
+    }
+
+    function testFindWithoutExtension()
+    {
+        $this->assertNotNull($this->environment->find('asset1'));
     }
 
     function testReturnsNullWhenAssetIsNotFound()
