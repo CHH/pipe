@@ -79,7 +79,8 @@ class Manifest
                 'logical_path' => $asset->getLogicalPath(),
                 'mtime'        => date(DATE_ISO8601, $asset->getLastModified()),
                 'size'         => strlen($asset->getBody()),
-                'digest'       => $asset->getDigest()
+                'digest'       => $asset->getDigest(),
+                'content_type' => $asset->getContentType()
             );
 
             $this->assets->{$asset->getLogicalPath()} = $asset->getDigestName();
