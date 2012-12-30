@@ -5,7 +5,7 @@ _Put your assets into the pipe and smoke them._
 Pipe is an asset pipeline in the spirit of [Sprockets][]. It's meant
 as the practical way for managing assets. It aims to provide a useful
 out of the box setup for managing assets and support for common
-preprocessor languages found in the web world, like CoffeeScript or
+preprocessor languages found in the web environment, like CoffeeScript or
 LESS.
 
 What Pipe provides for you:
