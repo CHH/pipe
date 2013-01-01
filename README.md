@@ -387,7 +387,7 @@ this, to create links to the assets:
     # Could be a path to a CDN.
     $prefix = "/assets";
 
-    printf('<script type="text/javascript" src="%s/%s"></script>', $prefix, $manifest['index.js']);
+    printf('<script type="text/javascript" src="%s/%s"></script>', $prefix, $manifest['assets']['index.js']);
 
 ## License
 
