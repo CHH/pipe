@@ -34,11 +34,13 @@
         "react/http": "*@dev",
         "symfony/http-foundation": "*@stable",
         "imagine/imagine": "*@dev",
-        "mikey179/vfsStream": "1.1.*@stable"
+        "mikey179/vfsStream": "1.1.*@stable",
+        "chh/bob": "*@dev"
     },
     "autoload": {
         "psr-0": {
             "Pipe": "lib/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
