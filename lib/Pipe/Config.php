@@ -7,14 +7,6 @@ use Symfony\Component\Yaml\Yaml;
 class Config
 {
     public
-        # Maps compressor names (available as js_compressor/css_compressor) 
-        # to template classes.
-        $compressors = array(
-            "uglify_js" => "\\Pipe\\Compressor\\UglifyJs",
-            "yuglify_css" => "\\Pipe\\Compressor\\YuglifyCss",
-            "yuglify_js" => "\\Pipe\\Compressor\\YuglifyJs",
-        ),
-
         $filename,
         $precompile,
         $precompilePrefix,
@@ -65,19 +57,11 @@ class Config
 
         if (!$this->debug) {
             if ($jsCompressor = $this->jsCompressor) {
-                if ($compressor = @$this->compressors[$jsCompressor]) {
-                    $env->registerBundleProcessor('application/javascript', $compressor);
-                } else {
-                    throw new \UnexpectedValueException("JS compressor '$jsCompressor' not found.");
-                }
+                $env->setJsCompressor($jsCompressor);
             }
 
             if ($cssCompressor = $this->cssCompressor) {
-                if ($compressor = @$this->compressors[$cssCompressor]) {
-                    $env->registerBundleProcessor('text/css', $compressor);
-                } else {
-                    throw new \UnexpectedValueException("CSS compressor '$cssCompressor' not found.");
-                }
+                $env->setCssCompressor($cssCompressor);
             }
         }
 

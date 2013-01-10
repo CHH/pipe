@@ -34,6 +34,25 @@ class ProcessorRegistry
         return $this;
     }
 
+    function isRegistered($mimeType, $processor)
+    {
+        if (empty($this->processors[$mimeType])) {
+            return false;
+        }
+
+        $index = array_search($processor, $this->processors[$mimeType]);
+
+        return $index !== false;
+    }
+
+    function unregister($mimeType, $processor)
+    {
+        if ($this->isRegistered($mimeType, $processor)) {
+            $index = array_search($processor, $this->processors[$mimeType]);
+            unset($this->processors[$mimeType][$index]);
+        }
+    }
+
     function clear()
     {
         $this->processors = array();

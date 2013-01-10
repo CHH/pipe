@@ -33,6 +33,15 @@ class Environment implements \ArrayAccess
     public $postProcessors;
     public $bundleProcessors;
 
+    public $compressors = array(
+        "uglify_js" => "\\Pipe\\Compressor\\UglifyJs",
+        "yuglify_css" => "\\Pipe\\Compressor\\YuglifyCss",
+        "yuglify_js" => "\\Pipe\\Compressor\\YuglifyJs",
+    );
+
+    protected $jsCompressor;
+    protected $cssCompressor;
+
     function __construct($root = null)
     {
         $this->root = $root;
@@ -119,6 +128,43 @@ class Environment implements \ArrayAccess
         }
 
         return $asset;
+    }
+
+    function setJsCompressor($compressor)
+    {
+        if (!isset($this->compressors[$compressor])) {
+            throw new \InvalidArgumentException(sprintf('Undefined compressor "%s"', $compressor));
+        }
+
+        $js = $this->contentType('.js');
+
+        if ($this->jsCompressor !== null) {
+            $this->bundleProcessors->unregister($js, $this->jsCompressor);
+        }
+
+        $this->jsCompressor = $compressor;
+        $this->bundleProcessors->register($js, $this->compressors[$compressor]);
+    }
+
+    function setCssCompressor($compressor)
+    {
+        if (!isset($this->compressors[$compressor])) {
+            throw new \InvalidArgumentException(sprintf('Undefined compressor "%s"', $compressor));
+        }
+
+        $css = $this->contentType('.css');
+
+        if ($this->cssCompressor !== null) {
+            $this->bundleProcessors->unregister($css, $this->cssCompressor);
+        }
+
+        $this->cssCompressor = $compressor;
+        $this->bundleProcessors->register($css, $this->compressors[$compressor]);
+    }
+
+    function contentType($extension)
+    {
+        return @$this->contentTypes[Path::normalizeExtension($extension)];
     }
 
     # Sugar for find().

@@ -143,7 +143,8 @@ The `write` method takes an array of options:
 ### Enabling Compression
 
 You can turn on compression by setting the `js_compressor` and
-`css_compressor` config keys.
+`css_compressor` config keys, or by calling `setJsCompressor` or
+`setCssCompressor` on an Environment instance.
 
 Supported Javascript Compressors:
 
