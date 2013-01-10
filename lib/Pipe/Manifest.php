@@ -2,6 +2,8 @@
 
 namespace Pipe;
 
+use Monolog\Logger;
+
 class Manifest
 {
     public $compress = false;
@@ -14,6 +16,8 @@ class Manifest
 
     # Path to manifest file
     protected $manifest;
+
+    protected $logger;
 
     function __construct(Environment $env, $manifest, $dir = '')
     {
@@ -75,6 +79,9 @@ class Manifest
         }, (array) $assets));
 
         foreach ($assets as $asset) {
+            $this->getLogger()->info("Compiling \"{$asset->getLogicalPath()}\"");
+            $start = microtime(true);
+
             $this->files->{$asset->getDigestName()} = array(
                 'logical_path' => $asset->getLogicalPath(),
                 'mtime'        => date(DATE_ISO8601, $asset->getLastModified()),
@@ -99,6 +106,10 @@ class Manifest
                 ));
             }
 
+            $this->getLogger()->info(sprintf(
+                'Finished compiling "%s" in %f seconds', $asset->getLogicalPath(), microtime(true) - $start
+            ));
+
             $this->save();
         }
     }
@@ -114,6 +125,20 @@ class Manifest
             'assets' => $this->assets,
             'files' => $this->files,
         ));
+    }
+
+    function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    function getLogger()
+    {
+        if (null === $this->logger) {
+            $this->logger = new Logger("pipe/manifest: ");
+        }
+
+        return $this->logger;
     }
 }
 

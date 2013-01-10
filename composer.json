@@ -23,7 +23,8 @@
         "chh/shellwords": "~0.1",
         "chh/fileutils": "1.0.*@dev",
         "symfony/yaml": "~2.0",
-        "ulrichsg/getopt-php": "*@dev"
+        "ulrichsg/getopt-php": "*@dev",
+        "monolog/monolog": "~1.0"
     },
     "suggest": {
         "react/http": "Enable the standalone asset server",
