@@ -5,6 +5,8 @@ namespace Pipe\Test;
 use Pipe\Manifest;
 use Pipe\Environment;
 use org\bovigo\vfs\vfsStream;
+use Monolog\Logger;
+use Monolog\Handler\TestHandler;
 
 class ManifestTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +20,11 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         $asset = $env->find('asset1.js', array('bundled' => true));
         $digestName = $asset->getDigestName();
 
+        $logger = new Logger('pipe');
+        $logger->pushHandler(new TestHandler);
+
         $manifest = new Manifest($env, vfsStream::url('assets') . '/manifest.json');
+        $manifest->setLogger($logger);
         $manifest->compress = true;
         $manifest->compile('asset1.js');
 
