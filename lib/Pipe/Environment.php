@@ -139,7 +139,7 @@ class Environment implements \ArrayAccess
         $js = $this->contentType('.js');
 
         if ($this->jsCompressor !== null) {
-            $this->bundleProcessors->unregister($js, $this->jsCompressor);
+            $this->bundleProcessors->unregister($js, $this->compressors[$this->jsCompressor]);
         }
 
         $this->jsCompressor = $compressor;
@@ -155,7 +155,7 @@ class Environment implements \ArrayAccess
         $css = $this->contentType('.css');
 
         if ($this->cssCompressor !== null) {
-            $this->bundleProcessors->unregister($css, $this->cssCompressor);
+            $this->bundleProcessors->unregister($css, $this->compressors[$this->cssCompressor]);
         }
 
         $this->cssCompressor = $compressor;

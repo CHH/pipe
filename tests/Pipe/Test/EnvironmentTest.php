@@ -37,4 +37,52 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNull($this->environment['foo/bar/baz']);
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    function testSetJsCompressorThrowsExceptionWhenCompressorNotExists()
+    {
+        $this->environment->setJsCompressor('foobarbaz');
+    }
+
+    function testSetJsCompressorRegistersBundleProcessor()
+    {
+        $this->environment->setJsCompressor('uglify_js');
+        $bundleProcessors = $this->environment->bundleProcessors;
+
+        $this->assertTrue($bundleProcessors->isRegistered(
+            $this->environment->contentType('.js'), '\Pipe\Compressor\UglifyJs'
+        ));
+    }
+
+    function testSetCssCompressorRegistersBundleProcessor()
+    {
+        $this->environment->setCssCompressor('yuglify_css');
+        $bundleProcessors = $this->environment->bundleProcessors;
+
+        $this->assertTrue($bundleProcessors->isRegistered(
+            $this->environment->contentType('.css'), '\Pipe\Compressor\YuglifyCss'
+        ));
+    }
+
+    function testSetJsCompressorUnregistersPreviousBundleProcessor()
+    {
+        $bundleProcessors = $this->environment->bundleProcessors;
+
+        $this->environment->setJsCompressor('uglify_js');
+        $this->environment->setJsCompressor('yuglify_js');
+
+        $this->assertFalse($bundleProcessors->isRegistered(
+            $this->environment->contentType('.js'), '\Pipe\Compressor\UglifyJs'
+        ));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    function testSetCssCompressorThrowsExceptionWhenCompressorNotExists()
+    {
+        $this->environment->setCssCompressor('foobarbaz');
+    }
 }
