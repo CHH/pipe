@@ -43,20 +43,20 @@ class Context
 
     function evaluate($path, $options = array())
     {
-        if (!is_file($path)) {
-            throw new UnexpectedValueException("Asset $path not found");
-        }
-
         if (isset($options['data'])) {
             $data = $options['data'];
         } else {
+            if (!is_file($path)) {
+                throw new UnexpectedValueException("Asset $path not found");
+            }
+
             $data = @file_get_contents($path);
         }
 
         $subContext = $this->createSubContext();
 
         if (array_key_exists("processors", $options)) {
-            $processors = $options["processors"];
+            $processors = (array) $options["processors"];
         } else {
             $processors = array();
         }
