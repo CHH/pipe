@@ -15,7 +15,14 @@ class JstProcessor extends \MetaTemplate\Template\Base
     {
         $namespace = static::$defaultNamespace;
         $name = json_encode($context->logicalPath);
+
+        # Indent with four spaces
         $value = preg_replace('/$(.)/m', '\\1    ', $this->getData());
+
+        if (@$this->options['quote']) {
+            # Escape quotes, and quote data
+            $value = sprintf('"%s"', str_replace('"', '\\"', $value));
+        }
 
         return <<<JST
 (function() {
