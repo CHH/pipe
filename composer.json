@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "chh/meta-template": "*@dev",
+        "chh/meta-template": "1.0.*@dev",
         "chh/shellwords": "~0.1",
         "chh/fileutils": "1.0.*@dev",
         "symfony/yaml": "~2.0",
@@ -36,7 +36,8 @@
         "symfony/http-foundation": "~2.1",
         "imagine/imagine": "~0.4",
         "mikey179/vfsStream": "~1.1",
-        "chh/bob": "1.0.*@dev"
+        "chh/bob": "1.0.*@dev",
+        "phpunit/phpunit": "~3.7"
     },
     "autoload": {
         "psr-0": {
