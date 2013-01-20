@@ -283,6 +283,11 @@ file extensions:
         </td>
         <td>Add <code>twig/twig</code> package</td>
     </tr>
+    <tr>
+        <td><a href="http://www.typescriptlang.org/">TypeScript</a></td>
+        <td>.ts</td>
+        <td><code>tsc</code> &mdash; install with <code>npm install -g typescript</code></td>
+    </tr>
 </table>
 
 Under the hood, Pipe Engines are [meta-template][] templates. Look at
