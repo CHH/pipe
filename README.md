@@ -159,6 +159,27 @@ Supported CSS Compressors:
   using [CSSmin](https://github.com/yui/ycssmin). Requires the `yuglify`
   NPM package.
 
+Example:
+
+```php
+<?php
+
+$env = new Environment;
+$env->appendPath("assets/stylesheets");
+$env->appendPath("assets/vendor/stylesheets");
+$env->appendPath("assets/javascripts");
+$env->appendPath("assets/vendor/javascripts");
+
+$env->setJsCompressor('yuglify_js');
+$env->setCssCompressor('yuglify_css');
+
+# Compressors are Bundle Processors. Bundle Processors are only run on Bundled Assets.
+# Pass 'bundled' => true to get a Bundled Asset.
+$asset = $env->find('application.js', ['bundled' => true]);
+
+echo $asset->getBody();
+```
+
 ### Directives
 
 Each file with content type `application/javascript` or `text/css` is
