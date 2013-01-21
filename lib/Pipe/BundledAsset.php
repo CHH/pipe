@@ -9,7 +9,7 @@ class BundledAsset extends ProcessedAsset
         if (null === $this->body) {
             $body = parent::getBody();
 
-            $bundleProcessors = $this->environment->bundleProcessors->get($this->getContentType());
+            $bundleProcessors = $this->environment->bundleProcessors->all($this->getContentType());
             $context = new Context($this->environment);
 
             $this->body = $context->evaluate($this->path, array(

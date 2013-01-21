@@ -62,9 +62,9 @@ class ProcessedAsset extends Asset
         $contentType = $this->getContentType();
 
         return array_merge(
-            $this->environment->preProcessors->get($contentType),
+            $this->environment->preProcessors->all($contentType),
             array_reverse($this->getEngines()),
-            $this->environment->postProcessors->get($contentType)
+            $this->environment->postProcessors->all($contentType)
         );
     }
 }

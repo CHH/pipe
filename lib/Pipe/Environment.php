@@ -2,12 +2,10 @@
 
 namespace Pipe;
 
-use Pipe\Util\ProcessorRegistry,
-    MetaTemplate\Template,
-    MetaTemplate\Util\EngineRegistry,
-    CHH\FileUtils\Path,
-    CHH\FileUtils\PathInfo,
-    CHH\FileUtils\PathStack;
+use Pipe\Util\ProcessorRegistry;
+use MetaTemplate\Template;
+use MetaTemplate\Util\EngineRegistry;
+use CHH\FileUtils;
 
 class Environment implements \ArrayAccess
 {
@@ -45,7 +43,7 @@ class Environment implements \ArrayAccess
     function __construct($root = null)
     {
         $this->root = $root;
-        $this->loadPaths = new Pathstack($this->root);
+        $this->loadPaths = new FileUtils\Pathstack($this->root);
 
         $this->engines = Template::getEngines();
 
@@ -103,9 +101,24 @@ class Environment implements \ArrayAccess
         return $this;
     }
 
+    /**
+     * Finds the logical path in the stack of load paths
+     * and returns the Asset.
+     *
+     * Example:
+     *
+     *     <?php
+     *     // Get the bundled application.js
+     *     $asset = $env->find('application.js', ['bundled' => true]);
+     *
+     * @param string $logicalPath Path relative to the load path.
+     * @param array $options
+     *
+     * @return Asset
+     */
     function find($logicalPath, $options = array())
     {
-        $path = new PathInfo($logicalPath);
+        $path = new FileUtils\PathInfo($logicalPath);
 
         if ($path->isAbsolute()) {
             $realPath = $logicalPath;
@@ -130,6 +143,14 @@ class Environment implements \ArrayAccess
         return $asset;
     }
 
+    /**
+     * Set the JS compressor
+     *
+     * Adds the compressor class as bundle processor for JavaScript files.
+     * See $compressors for all available compressors.
+     *
+     * @param string $compressor Identifier of the compressor
+     */
     function setJsCompressor($compressor)
     {
         if (!isset($this->compressors[$compressor])) {
@@ -146,6 +167,14 @@ class Environment implements \ArrayAccess
         $this->bundleProcessors->register($js, $this->compressors[$compressor]);
     }
 
+    /**
+     * Set the CSS compressor
+     *
+     * Adds the compressor class as bundle processor for CSS files.
+     * See $compressors for all available compressors.
+     *
+     * @param string $compressor Identifier of the compressor
+     */
     function setCssCompressor($compressor)
     {
         if (!isset($this->compressors[$compressor])) {
@@ -162,16 +191,24 @@ class Environment implements \ArrayAccess
         $this->bundleProcessors->register($css, $this->compressors[$compressor]);
     }
 
+    /**
+     * Returns the content type for the extension, .e.g. "application/javascript"
+     * for ".js".
+     *
+     * @param string $extension
+     * @return string
+     */
     function contentType($extension)
     {
-        return @$this->contentTypes[Path::normalizeExtension($extension)];
+        return @$this->contentTypes[FileUtils\Path::normalizeExtension($extension)];
     }
 
-    # Sugar for find().
-    #
-    # logicalPath - The path relative to the virtual file system.
-    #
-    # Returns an Asset.
+    /**
+     * Sugar for find()
+     *
+     * @param string $logicalPath
+     * @return \Pipe\Asset
+     */
     function offsetGet($logicalPath)
     {
         return $this->find($logicalPath);

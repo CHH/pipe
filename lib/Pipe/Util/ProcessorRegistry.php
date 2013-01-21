@@ -4,6 +4,7 @@ namespace Pipe\Util;
 
 class ProcessorRegistry
 {
+    /** @var array Engines per MIME type */
     protected $processors = array();
 
     function prepend($mimeType, $processor)
@@ -58,7 +59,13 @@ class ProcessorRegistry
         $this->processors = array();
     }
 
-    function get($mimeType)
+    /**
+     * Returns all processor classes for the MIME type.
+     *
+     * @param string $mimeType
+     * @return array
+     */
+    function all($mimeType)
     {
         if (empty($this->processors[$mimeType])) {
             return array();
