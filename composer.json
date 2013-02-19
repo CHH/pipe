@@ -21,7 +21,7 @@
         "php": ">=5.3.2",
         "chh/meta-template": "1.0.*@dev",
         "chh/shellwords": "~0.1",
-        "chh/fileutils": "1.0.*@dev",
+        "chh/fileutils": "~1.0",
         "symfony/yaml": "~2.0",
         "ulrichsg/getopt-php": "*@dev",
         "monolog/monolog": "~1.0"
@@ -37,14 +37,13 @@
         "imagine/imagine": "~0.4",
         "mikey179/vfsStream": "~1.1",
         "chh/bob": "1.0.*@dev",
-        "phpunit/phpunit": "~3.7"
+        "phpunit/phpunit": "~3.7@stable"
     },
     "autoload": {
         "psr-0": {
             "Pipe": "lib/"
         }
     },
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
