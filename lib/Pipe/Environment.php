@@ -43,7 +43,7 @@ class Environment implements \ArrayAccess
     function __construct($root = null)
     {
         $this->root = $root;
-        $this->loadPaths = new FileUtils\Pathstack($this->root);
+        $this->loadPaths = new FileUtils\PathStack($this->root);
 
         $this->engines = Template::getEngines();
 

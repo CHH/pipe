@@ -18,12 +18,12 @@
         {"type": "vcs", "url": "git://github.com/CHH/meta-template.git"}
     ],
     "require": {
-        "php": ">=5.3.2",
-        "chh/meta-template": "1.0.*@dev",
+        "php": ">=5.3.3",
+        "chh/meta-template": "~1.0@dev",
         "chh/shellwords": "~0.1",
-        "chh/fileutils": "1.0.*@dev",
+        "chh/fileutils": "~1.0@dev",
         "symfony/yaml": "~2.0",
-        "ulrichsg/getopt-php": "*@dev",
+        "ulrichsg/getopt-php": "@dev",
         "monolog/monolog": "~1.0"
     },
     "suggest": {
@@ -44,7 +44,6 @@
             "Pipe": "lib/"
         }
     },
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
