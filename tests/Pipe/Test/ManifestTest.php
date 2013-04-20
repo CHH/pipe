@@ -43,5 +43,15 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($dir->hasChild($digestName));
         $this->assertTrue($dir->hasChild($digestName . '.gz'));
     }
-}
 
+    /**
+     * @expectedException \UnexpectedValueException
+     */
+    function testReadThrowsExceptionWhenNotFound()
+    {
+        $env = new Environment;
+        $manifest = new Manifest($env, __DIR__ . "/foo.json");
+
+        $manifest->read();
+    }
+}

@@ -24,16 +24,17 @@
         "chh/fileutils": "~1.0@dev",
         "symfony/yaml": "~2.0",
         "ulrichsg/getopt-php": "@dev",
-        "monolog/monolog": "~1.0"
+        "monolog/monolog": "~1.0",
+        "psr/log": "~1.0"
     },
     "suggest": {
         "react/http": "Enable the standalone asset server (~0.2.0)",
-        "symfony/http-foundation": "Enable dynamic asset serving with Pipe\\Server",
+        "symfony/http-kernel": "Enable dynamic asset serving with Pipe\\Server",
         "imagine/imagine": "Enable image compressors"
     },
     "require-dev": {
         "react/http": "~0.2.0",
-        "symfony/http-foundation": "~2.1",
+        "symfony/http-kernel": "~2.1",
         "imagine/imagine": "~0.4",
         "mikey179/vfsStream": "~1.1",
         "chh/bob": "1.0.*@dev",

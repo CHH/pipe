@@ -2,22 +2,30 @@
 
 namespace Pipe;
 
-use Symfony\Component\HttpFoundation,
-    DateTime;
+use Symfony\Component\HttpFoundation;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use DateTime;
+use Psr\Log;
 
-class Server
+class Server implements HttpKernelInterface
 {
     /**
      * @var Environment
      */
     protected $environment;
+    protected $log;
 
-    function __construct(Environment $environment)
+    function __construct(Environment $environment, Log\LoggerInterface $logger = null)
     {
+        if (null === $logger) {
+            $logger = new Log\NullLogger;
+        }
+
+        $this->log = $logger;
         $this->environment = $environment;
     }
 
-    function dispatch(HttpFoundation\Request $request)
+    function handle(HttpFoundation\Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         $path  = ltrim($request->getPathInfo(), '/');
         $asset = $this->environment->find($path, array("bundled" => true));
@@ -48,6 +56,11 @@ class Server
         $response->prepare($request);
 
         return $response;
+    }
+
+    function dispatch(HttpFoundation\Request $request)
+    {
+        return $this->handle($request);
     }
 
     protected function renderNotFound($request)

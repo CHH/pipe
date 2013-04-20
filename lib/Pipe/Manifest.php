@@ -3,6 +3,7 @@
 namespace Pipe;
 
 use Monolog\Logger;
+use Psr\Log;
 
 class Manifest
 {
@@ -17,7 +18,7 @@ class Manifest
     # Path to manifest file
     protected $manifest;
 
-    protected $logger;
+    protected $log;
 
     function __construct(Environment $env, $manifest, $dir = '')
     {
@@ -37,13 +38,15 @@ class Manifest
 
     function read()
     {
-        if (!realpath($this->manifest)) {
+        $data = @file_get_contents($this->manifest);
+
+        if (false === $data) {
             throw new \UnexpectedValueException(sprintf(
                 'Manifest file "%s" not found', $this->manifest
             ));
         }
 
-        $m = json_decode(file_get_contents($this->manifest));
+        $m = json_decode($data);
 
         if (isset($m->files)) {
             foreach ($m->files as $file => $info) {
@@ -127,18 +130,18 @@ class Manifest
         ));
     }
 
-    function setLogger(Logger $logger)
+    function setLogger(Log\LoggerInterface $logger)
     {
-        $this->logger = $logger;
+        $this->log = $logger;
     }
 
     function getLogger()
     {
-        if (null === $this->logger) {
-            $this->logger = new Logger("pipe/manifest: ");
+        if (null === $this->log) {
+            $this->setLogger(new Logger("pipe/manifest: "));
         }
 
-        return $this->logger;
+        return $this->log;
     }
 }
 
