@@ -9,8 +9,8 @@ class ProcessorRegistry
 
     function prepend($mimeType, $processor)
     {
-        if (!class_exists($processor)) {
-            throw new \InvalidArgumentException("Class $processor is not defined");
+        if (!class_exists($processor) and !is_callable($processor)) {
+            throw new \InvalidArgumentException("Processor must be either a factory callback or a class name");
         }
 
         if (empty($this->processors[$mimeType])) {
