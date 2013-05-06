@@ -91,42 +91,6 @@ echo $asset->getBody();
 You can get the asset's last modified timestamp with the
 `getLastModified` method.
 
-### Creating an Environment from a YAML File
-
-Pipe environments can also be created from YAML config files. First you
-need an instance of `Pipe\Config`. Use the `fromYaml` static method to
-parse an YAML file into a config instance.
-
-Use the config's `createEnvironment` method to convert a config to an
-environment instance.
-
-```yaml
-# pipe_config.yml
-load_paths:
-    - assets
-    - vendor_assets
-
-my_custom_key: "foo bar"
-```
-
-```php
-<?php
-
-use Pipe\Config;
-
-$config = Config::fromYaml("pipe_config.yml");
-$env = $config->createEnvironment();
-```
-
-To retrieve a custom config key, access the "camelCased" name as
-property:
-
-```php
-<?php
-
-$key = $config->myCustomKey;
-```
-
 ### Dumping an Asset to a File
 
 To dump an asset to a file, use the `write` method. 
