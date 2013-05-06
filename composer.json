@@ -14,9 +14,6 @@
             "homepage": "http://christophh.net"
         }
     ],
-    "repositories": [
-        {"type": "vcs", "url": "git://github.com/CHH/meta-template.git"}
-    ],
     "require": {
         "php": ">=5.3.3",
         "chh/meta-template": "~1.0@dev",
