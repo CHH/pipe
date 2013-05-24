@@ -14,7 +14,11 @@ abstract class BaseYuglifyCompressor extends \MetaTemplate\Template\Base
     {
         $finder = new ExecutableFinder;
 
-        $builder = new ProcessBuilder(array($finder->find('yuglify')));
+        if (!$cmd = $finder->find('yuglify')) {
+            throw new \UnexpectedValueException('"yuglify command not found in PATH."');
+        }
+
+        $builder = new ProcessBuilder(array($cmd));
         $builder->add('--terminal')
                 ->add('--type')->add($type);
 
