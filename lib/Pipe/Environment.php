@@ -57,6 +57,10 @@ class Environment implements \ArrayAccess
 
         $this->registerEngine('\\Pipe\\JstProcessor', '.jst');
 
+        # Override Mustache compiler with more useful Mustache to JS compiler,
+        # which is usable with the JST processor
+        $this->registerEngine('\\MetaTemplate\\Template\\MustacheJsTemplate', '.mustache');
+
         # Register default processors
         $this->registerPreProcessor('text/css', '\\Pipe\\ImportProcessor');
         $this->registerPreProcessor('text/css', '\\Pipe\\DirectiveProcessor');
