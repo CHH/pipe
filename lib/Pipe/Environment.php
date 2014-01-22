@@ -148,6 +148,23 @@ class Environment implements \ArrayAccess
     }
 
     /**
+     * Calculates the logical path for the given absolute path
+     *
+     * @param string $absolutePath
+     * @return string
+     */
+    function logicalPath($absolutePath)
+    {
+        foreach ($this->loadPaths->paths() as $lp) {
+            $absoluteLoadPath = realpath($lp);
+
+            if (strpos($absolutePath, $absoluteLoadPath) === 0) {
+                return ltrim(substr($absolutePath, strlen($absoluteLoadPath)), '/');
+            }
+        }
+    }
+
+    /**
      * Set the JS compressor
      *
      * Adds the compressor class as bundle processor for JavaScript files.

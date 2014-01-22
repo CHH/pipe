@@ -14,7 +14,9 @@ class JstProcessor extends \MetaTemplate\Template\Base
     function render($context = null, $vars = array())
     {
         $namespace = static::$defaultNamespace;
-        $name = json_encode($context->logicalPath);
+        $logicalPath = $context->environment->logicalPath($context->path);
+        $basename = substr($logicalPath, 0, strpos($logicalPath, '.'));
+        $name = json_encode($basename);
 
         # Indent with four spaces
         $value = preg_replace('/$(.)/m', '\\1    ', $this->getData());

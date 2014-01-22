@@ -85,4 +85,11 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     {
         $this->environment->setCssCompressor('foobarbaz');
     }
+
+    function testConvertAbsolutePathToLogicalPath()
+    {
+        $this->assertEquals(
+            'asset1.js', $this->environment->logicalPath(__DIR__ . '/fixtures/asset1.js')
+        );
+    }
 }

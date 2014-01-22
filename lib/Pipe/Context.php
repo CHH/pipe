@@ -131,7 +131,7 @@ class Context
 
             $this->dependencyAssets[] = $this->evaluate($resolvedPath, array(
                 "processors" => $processors
-            ));
+            ), $path);
 
             $this->requiredPaths[] = $resolvedPath;
         }
